@@ -6,7 +6,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { getDb } from './src/db';
-import { RootTabs } from './src/navigation/RootTabs';
+import { RootStack } from './src/navigation/RootStack';
 import { UI } from './src/theme/colors';
 
 type InitState =
@@ -36,7 +36,7 @@ export default function App() {
       <SafeAreaProvider>
         {state.status === 'ready' ? (
           <NavigationContainer>
-            <RootTabs />
+            <RootStack />
           </NavigationContainer>
         ) : (
           <View style={styles.splash}>

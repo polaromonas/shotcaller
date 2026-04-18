@@ -1,25 +1,146 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import {
+  Alert,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { UI } from '../theme/colors';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { MODE, UI } from '../theme/colors';
+import {
+  getMostRecentSession,
+  type PracticeSessionWithContext,
+} from '../db/sessions';
+import type { RootStackParamList } from '../navigation/types';
+
+type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 export function HomeScreen() {
+  const navigation = useNavigation<Nav>();
+  const [lastSession, setLastSession] =
+    useState<PracticeSessionWithContext | null>(null);
+
+  const load = useCallback(async () => {
+    const s = await getMostRecentSession();
+    setLastSession(s);
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      void load();
+    }, [load])
+  );
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  const notImplemented = () =>
+    Alert.alert('Not yet', 'This mode comes in a later step.');
+
   return (
     <SafeAreaView style={styles.root} edges={['top']}>
-      <View style={styles.body}>
-        <Text style={styles.title}>ShotCaller</Text>
-        <Text style={styles.subtitle}>You call the shots.</Text>
-        <Text style={styles.note}>
-          Mode picker comes here once Practice, Game Plan, and Tournament screens are built.
-        </Text>
-      </View>
+      <ScrollView contentContainerStyle={styles.content}>
+        <View style={styles.hero}>
+          <Text style={styles.title}>ShotCaller</Text>
+          <Text style={styles.subtitle}>You call the shots.</Text>
+        </View>
+
+        <View style={styles.modes}>
+          <ModeCard
+            label="Practice round"
+            description="Log throws and build data"
+            color={MODE.practice}
+            onPress={() => navigation.navigate('PracticeStart')}
+          />
+          <ModeCard
+            label="Game plan"
+            description="Review recommendations, lock in"
+            color={MODE.gamePlan}
+            onPress={notImplemented}
+          />
+          <ModeCard
+            label="Tournament round"
+            description="Execute the plan"
+            color={MODE.tournament}
+            onPress={notImplemented}
+          />
+        </View>
+
+        {lastSession && (
+          <View style={styles.lastSession}>
+            <Text style={styles.lastSessionLabel}>Last practice</Text>
+            <Text style={styles.lastSessionTitle}>
+              {lastSession.course_name} · {lastSession.layout_name}
+            </Text>
+            <Text style={styles.lastSessionMeta}>
+              {lastSession.session_date} · {lastSession.throw_count}{' '}
+              {lastSession.throw_count === 1 ? 'throw' : 'throws'} logged
+            </Text>
+          </View>
+        )}
+      </ScrollView>
     </SafeAreaView>
+  );
+}
+
+type ModeCardProps = {
+  label: string;
+  description: string;
+  color: string;
+  onPress: () => void;
+};
+
+function ModeCard({ label, description, color, onPress }: ModeCardProps) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.modeCard,
+        { backgroundColor: color },
+        pressed && styles.pressed,
+      ]}
+    >
+      <Text style={styles.modeLabel}>{label}</Text>
+      <Text style={styles.modeDescription}>{description}</Text>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: UI.bg },
-  body: { flex: 1, padding: 24, justifyContent: 'center', gap: 6 },
-  title: { fontSize: 32, fontWeight: '700', color: UI.text },
+  content: { padding: 20, paddingTop: 24, gap: 24 },
+  hero: { gap: 4 },
+  title: { fontSize: 34, fontWeight: '700', color: UI.text },
   subtitle: { fontSize: 16, color: UI.textMuted },
-  note: { marginTop: 24, fontSize: 13, color: UI.textMuted, lineHeight: 18 },
+  modes: { gap: 12 },
+  modeCard: {
+    borderRadius: 16,
+    padding: 20,
+    gap: 4,
+  },
+  pressed: { opacity: 0.85 },
+  modeLabel: { fontSize: 20, fontWeight: '700', color: UI.textInverse },
+  modeDescription: { fontSize: 14, color: UI.textInverse, opacity: 0.9 },
+  lastSession: {
+    padding: 16,
+    borderRadius: 12,
+    backgroundColor: UI.surface,
+    borderWidth: 1,
+    borderColor: UI.border,
+    gap: 2,
+  },
+  lastSessionLabel: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: UI.textMuted,
+    letterSpacing: 0.5,
+    textTransform: 'uppercase',
+  },
+  lastSessionTitle: { fontSize: 16, fontWeight: '600', color: UI.text },
+  lastSessionMeta: { fontSize: 13, color: UI.textMuted },
 });
