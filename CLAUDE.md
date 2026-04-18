@@ -6,16 +6,30 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 `SHOTCALLER_HANDOFF.md` at the repo root is the authoritative design document. Read it before writing code. If this file and the handoff disagree, the handoff wins — update CLAUDE.md to match.
 
-## Project status
-
-Greenfield. As of this writing, the repo contains only design docs — no source, no `package.json`, no Expo scaffold. The first coding task is to initialize a React Native Expo project with TypeScript and Expo SQLite, then scaffold every table in the handoff's data model before building any screens. Update this file with build/test/lint commands once they exist.
-
 ## Stack
 
-- React Native + Expo (single codebase, iOS + Android)
-- TypeScript required throughout
+- React Native + Expo SDK 54 (single codebase, iOS + Android)
+- TypeScript, `strict: true`
 - Expo SQLite for on-device storage — **offline-first, no network dependency in v1**
 - Supabase is planned for future sync/auth; do **not** add it in v1
+
+## Commands
+
+- `npm run ios` — launch in iOS simulator
+- `npm run android` — launch on Android emulator/device
+- `npm run web` — launch the web build (useful for quick smoke tests)
+- `npm start` — Expo dev server with a QR code for device
+- `npx tsc --noEmit` — type-check the project
+- `npx expo install <pkg>` — add a native module (picks the version matching the current Expo SDK); prefer this over `npm install` for anything native
+
+No test runner or linter is wired up yet. Add one deliberately when first needed rather than pre-emptively.
+
+## Database
+
+- Single on-device SQLite file, opened lazily via `getDb()` in `src/db/index.ts`. The first call runs `SCHEMA_SQL` (idempotent `CREATE TABLE IF NOT EXISTS`) and seeds the 8 default tags from `DEFAULT_TAGS`.
+- Schema lives in `src/db/schema.ts` and uses SQL `CHECK` constraints to enforce every enum from the handoff. Enum values themselves are defined once in `src/db/types.ts` and reused in both the schema DDL and TypeScript types — **do not duplicate enum string literals elsewhere**.
+- `resetDb()` exists for dev use; it deletes the DB file and clears the cached handle. Don't ship a path that calls it from the UI.
+- There is no migration framework yet. When the schema changes before v1 ships, either bump the DB filename or add a migration step — don't silently mutate existing DBs.
 
 ## Architecture notes worth knowing before editing
 
