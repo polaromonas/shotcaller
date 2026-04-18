@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StyleSheet, Text, View } from 'react-native';
 import { HomeScreen } from '../screens/HomeScreen';
 import { MyDiscsScreen } from '../screens/MyDiscsScreen';
-import { CoursesScreen } from '../screens/CoursesScreen';
+import { CoursesStack } from './CoursesStack';
 import { StatsScreen } from '../screens/StatsScreen';
 import { UI } from '../theme/colors';
 
@@ -44,7 +44,7 @@ export function RootTabs() {
       />
       <Tab.Screen
         name="Courses"
-        component={CoursesScreen}
+        component={CoursesStack}
         options={{
           tabBarIcon: ({ focused }) => <TabIcon glyph="⛳" focused={focused} />,
         }}
