@@ -289,20 +289,31 @@ export function AddDiscSheet({ visible, onClose, onSubmit }: Props) {
 
           <Field label="Flight numbers (optional)">
             <View style={styles.flightRow}>
-              {FLIGHT_FIELDS.map(({ key, label }) => (
-                <View key={key} style={styles.flightCell}>
-                  <Text style={styles.flightLabel}>{label}</Text>
-                  <TextInput
-                    style={[styles.input, styles.flightInput]}
-                    value={flight[key]}
-                    onChangeText={(v) =>
-                      setFlight((prev) => ({ ...prev, [key]: v }))
+              {FLIGHT_FIELDS.map(({ key, label }) =>
+                key === 'turn' ? (
+                  <TurnCell
+                    key={key}
+                    label={label}
+                    value={flight.turn}
+                    onChange={(v) =>
+                      setFlight((prev) => ({ ...prev, turn: v }))
                     }
-                    keyboardType="decimal-pad"
-                    placeholder="—"
                   />
-                </View>
-              ))}
+                ) : (
+                  <View key={key} style={styles.flightCell}>
+                    <Text style={styles.flightLabel}>{label}</Text>
+                    <TextInput
+                      style={[styles.input, styles.flightInput]}
+                      value={flight[key]}
+                      onChangeText={(v) =>
+                        setFlight((prev) => ({ ...prev, [key]: v }))
+                      }
+                      keyboardType="decimal-pad"
+                      placeholder="—"
+                    />
+                  </View>
+                )
+              )}
             </View>
           </Field>
 
@@ -324,6 +335,54 @@ function Field({
     <View style={styles.field}>
       <Text style={styles.fieldLabel}>{label}</Text>
       {children}
+    </View>
+  );
+}
+
+function TurnCell({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (next: string) => void;
+}) {
+  const isNegative = value.startsWith('-');
+  const magnitude = isNegative ? value.slice(1) : value;
+
+  const toggleSign = () => {
+    onChange(isNegative ? magnitude : '-' + magnitude);
+  };
+
+  const handleMagnitudeChange = (text: string) => {
+    onChange((isNegative ? '-' : '') + text);
+  };
+
+  return (
+    <View style={styles.flightCell}>
+      <Text style={styles.flightLabel}>{label}</Text>
+      <View style={styles.turnInputRow}>
+        <Pressable
+          onPress={toggleSign}
+          style={[styles.signBtn, isNegative && styles.signBtnOn]}
+          accessibilityLabel={isNegative ? 'Make positive' : 'Make negative'}
+          hitSlop={4}
+        >
+          <Text
+            style={[styles.signLabel, isNegative && styles.signLabelOn]}
+          >
+            {isNegative ? '−' : '+'}
+          </Text>
+        </Pressable>
+        <TextInput
+          style={[styles.input, styles.flightInput, styles.turnMagnitudeInput]}
+          value={magnitude}
+          onChangeText={handleMagnitudeChange}
+          keyboardType="decimal-pad"
+          placeholder="—"
+        />
+      </View>
     </View>
   );
 }
@@ -426,5 +485,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   flightInput: { textAlign: 'center' },
+  turnInputRow: { flexDirection: 'row', alignItems: 'stretch', gap: 4 },
+  turnMagnitudeInput: { flex: 1, paddingHorizontal: 4 },
+  signBtn: {
+    width: 28,
+    borderRadius: 10,
+    backgroundColor: UI.surface,
+    borderWidth: 1,
+    borderColor: UI.border,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  signBtnOn: { backgroundColor: UI.text, borderColor: UI.text },
+  signLabel: { fontSize: 16, fontWeight: '700', color: UI.textMuted },
+  signLabelOn: { color: UI.textInverse },
   error: { color: UI.danger, fontSize: 14, marginTop: 4 },
 });
