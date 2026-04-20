@@ -44,7 +44,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
   const [flight, setFlight] = useState<Record<FlightField, string>>({
     speed: '',
     glide: '',
-    turn: '',
+    turn: '-',
     fade: '',
   });
 
@@ -65,7 +65,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
       setFlight({
         speed: flightToText(disc.speed),
         glide: flightToText(disc.glide),
-        turn: flightToText(disc.turn),
+        turn: disc.turn !== null ? flightToText(disc.turn) : '-',
         fade: flightToText(disc.fade),
       });
       setSelectedTagIds(new Set(disc.tags.map((t) => t.id)));
