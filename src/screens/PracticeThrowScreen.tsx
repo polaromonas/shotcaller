@@ -129,7 +129,7 @@ export function PracticeThrowScreen() {
     resetAttempt();
   };
 
-  const distanceRequired = useMemo(() => {
+  const distanceApplies = useMemo(() => {
     if (result === null) return false;
     return !DISTANCE_HIDDEN_RESULTS.includes(result);
   }, [result]);
@@ -146,8 +146,7 @@ export function PracticeThrowScreen() {
     discId !== null &&
     throwType !== null &&
     shotShape !== null &&
-    result !== null &&
-    (!distanceRequired || parsedDistance !== null);
+    result !== null;
 
   const handleLog = async () => {
     if (!canLog || !currentHole || discId === null || throwType === null || shotShape === null || result === null) return;
@@ -161,7 +160,7 @@ export function PracticeThrowScreen() {
         throwType,
         shotShape,
         result,
-        distanceFt: distanceRequired ? parsedDistance : null,
+        distanceFt: distanceApplies ? parsedDistance : null,
         notes,
       });
       resetAttempt();
@@ -278,8 +277,8 @@ export function PracticeThrowScreen() {
             <ResultPicker value={result} onChange={setResult} />
           </Section>
 
-          {distanceRequired && (
-            <Section title="Distance from basket">
+          {distanceApplies && (
+            <Section title="Distance from basket (optional)">
               <View style={styles.distRow}>
                 <TextInput
                   style={styles.distInput}
