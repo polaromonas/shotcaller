@@ -13,13 +13,17 @@ import {
 import { DISC_CATEGORIES, type DiscCategory } from '../db/types';
 import { DISC_SWATCHES, INBAG_GREEN, UI } from '../theme/colors';
 import { createTag, listTags, type Tag } from '../db/tags';
-import type { NewDiscInput } from '../db/discs';
+import type { DiscWithTags, NewDiscInput } from '../db/discs';
 
 type Props = {
   visible: boolean;
+  disc?: DiscWithTags | null;
   onClose: () => void;
   onSubmit: (input: NewDiscInput) => Promise<void>;
 };
+
+const flightToText = (n: number | null): string =>
+  n === null || !Number.isFinite(n) ? '' : String(n);
 
 type FlightField = 'speed' | 'glide' | 'turn' | 'fade';
 
@@ -30,7 +34,9 @@ const FLIGHT_FIELDS: { key: FlightField; label: string }[] = [
   { key: 'fade', label: 'Fade' },
 ];
 
-export function AddDiscSheet({ visible, onClose, onSubmit }: Props) {
+export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
+  const isEditing = disc != null;
+
   const [manufacturer, setManufacturer] = useState('');
   const [model, setModel] = useState('');
   const [category, setCategory] = useState<DiscCategory | null>(null);
@@ -51,7 +57,29 @@ export function AddDiscSheet({ visible, onClose, onSubmit }: Props) {
   useEffect(() => {
     if (!visible) return;
     void listTags().then(setTags);
-  }, [visible]);
+    if (disc) {
+      setManufacturer(disc.manufacturer);
+      setModel(disc.model);
+      setCategory(disc.category);
+      setColor(disc.color);
+      setFlight({
+        speed: flightToText(disc.speed),
+        glide: flightToText(disc.glide),
+        turn: flightToText(disc.turn),
+        fade: flightToText(disc.fade),
+      });
+      setSelectedTagIds(new Set(disc.tags.map((t) => t.id)));
+    } else {
+      setManufacturer('');
+      setModel('');
+      setCategory(null);
+      setColor(null);
+      setFlight({ speed: '', glide: '', turn: '', fade: '' });
+      setSelectedTagIds(new Set());
+    }
+    setNewTagName('');
+    setError(null);
+  }, [visible, disc]);
 
   const resetForm = () => {
     setManufacturer('');
@@ -152,7 +180,7 @@ export function AddDiscSheet({ visible, onClose, onSubmit }: Props) {
           <Pressable onPress={handleClose} hitSlop={10}>
             <Text style={styles.headerAction}>Cancel</Text>
           </Pressable>
-          <Text style={styles.headerTitle}>New disc</Text>
+          <Text style={styles.headerTitle}>{isEditing ? 'Edit disc' : 'New disc'}</Text>
           <Pressable onPress={handleSubmit} disabled={!canSubmit} hitSlop={10}>
             <Text
               style={[

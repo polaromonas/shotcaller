@@ -111,6 +111,39 @@ export async function setDiscTags(
   }
 }
 
+export type UpdateDiscInput = Omit<NewDiscInput, 'in_bag'>;
+
+export async function updateDisc(
+  discId: number,
+  input: UpdateDiscInput
+): Promise<void> {
+  const db = await getDb();
+  await db.runAsync(
+    `UPDATE disc SET
+       manufacturer = $manufacturer,
+       model = $model,
+       color = $color,
+       category = $category,
+       speed = $speed,
+       glide = $glide,
+       turn = $turn,
+       fade = $fade
+     WHERE id = $id`,
+    {
+      $manufacturer: input.manufacturer.trim(),
+      $model: input.model.trim(),
+      $color: input.color,
+      $category: input.category,
+      $speed: input.speed ?? null,
+      $glide: input.glide ?? null,
+      $turn: input.turn ?? null,
+      $fade: input.fade ?? null,
+      $id: discId,
+    }
+  );
+  await setDiscTags(discId, input.tagIds ?? []);
+}
+
 export async function setInBag(discId: number, inBag: boolean): Promise<void> {
   const db = await getDb();
   await db.runAsync('UPDATE disc SET in_bag = $in_bag WHERE id = $id', {

@@ -17,6 +17,7 @@ import {
   deleteDisc,
   listDiscs,
   setInBag,
+  updateDisc,
   type DiscWithTags,
   type NewDiscInput,
 } from '../db/discs';
@@ -25,6 +26,7 @@ import { UI } from '../theme/colors';
 export function MyDiscsScreen() {
   const [discs, setDiscs] = useState<DiscWithTags[] | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [editingDisc, setEditingDisc] = useState<DiscWithTags | null>(null);
   const openRow = useRef<SwipeableMethods | null>(null);
 
   const refresh = useCallback(async () => {
@@ -45,11 +47,34 @@ export function MyDiscsScreen() {
 
   const handleSubmit = useCallback(
     async (input: NewDiscInput) => {
-      await createDisc(input);
+      if (editingDisc) {
+        await updateDisc(editingDisc.id, input);
+      } else {
+        await createDisc(input);
+      }
       await refresh();
     },
-    [refresh]
+    [editingDisc, refresh]
   );
+
+  const openAddSheet = useCallback(() => {
+    setEditingDisc(null);
+    setSheetOpen(true);
+  }, []);
+
+  const openEditSheet = useCallback((disc: DiscWithTags) => {
+    if (openRow.current) {
+      openRow.current.close();
+      openRow.current = null;
+    }
+    setEditingDisc(disc);
+    setSheetOpen(true);
+  }, []);
+
+  const closeSheet = useCallback(() => {
+    setSheetOpen(false);
+    setEditingDisc(null);
+  }, []);
 
   const handleToggleInBag = useCallback(
     async (disc: DiscWithTags) => {
@@ -86,7 +111,7 @@ export function MyDiscsScreen() {
       <View style={styles.header}>
         <Text style={styles.title}>My discs</Text>
         <Pressable
-          onPress={() => setSheetOpen(true)}
+          onPress={openAddSheet}
           style={styles.addBtn}
           hitSlop={8}
           accessibilityLabel="Add disc"
@@ -100,7 +125,7 @@ export function MyDiscsScreen() {
           <ActivityIndicator />
         </View>
       ) : discs.length === 0 ? (
-        <EmptyState onAdd={() => setSheetOpen(true)} />
+        <EmptyState onAdd={openAddSheet} />
       ) : (
         <FlatList
           data={discs}
@@ -108,6 +133,7 @@ export function MyDiscsScreen() {
           renderItem={({ item }) => (
             <DiscCard
               disc={item}
+              onPress={() => openEditSheet(item)}
               onToggleInBag={() => handleToggleInBag(item)}
               onDelete={() => handleDelete(item)}
               onOpen={handleRowOpen}
@@ -118,7 +144,8 @@ export function MyDiscsScreen() {
 
       <AddDiscSheet
         visible={sheetOpen}
-        onClose={() => setSheetOpen(false)}
+        disc={editingDisc}
+        onClose={closeSheet}
         onSubmit={handleSubmit}
       />
     </SafeAreaView>

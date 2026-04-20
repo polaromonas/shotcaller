@@ -9,12 +9,19 @@ import { InBagButton } from './InBagButton';
 
 type Props = {
   disc: DiscWithTags;
+  onPress: () => void;
   onToggleInBag: () => void;
   onDelete: () => void;
   onOpen: (methods: SwipeableMethods) => void;
 };
 
-export function DiscCard({ disc, onToggleInBag, onDelete, onOpen }: Props) {
+export function DiscCard({
+  disc,
+  onPress,
+  onToggleInBag,
+  onDelete,
+  onOpen,
+}: Props) {
   const ref = useRef<SwipeableMethods>(null);
 
   const renderRightActions = () => (
@@ -40,7 +47,11 @@ export function DiscCard({ disc, onToggleInBag, onDelete, onOpen }: Props) {
         if (ref.current) onOpen(ref.current);
       }}
     >
-      <View style={styles.row}>
+      <Pressable
+        onPress={onPress}
+        style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
+        accessibilityLabel={`Edit ${disc.manufacturer} ${disc.model}`}
+      >
         <View style={[styles.swatch, { backgroundColor: disc.color }]} />
         <View style={styles.body}>
           <View style={styles.headerRow}>
@@ -63,7 +74,7 @@ export function DiscCard({ disc, onToggleInBag, onDelete, onOpen }: Props) {
           )}
         </View>
         <InBagButton inBag={disc.in_bag} onToggle={onToggleInBag} />
-      </View>
+      </Pressable>
     </ReanimatedSwipeable>
   );
 }
@@ -78,6 +89,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: UI.border,
     gap: 12,
+  },
+  rowPressed: {
+    backgroundColor: UI.surface,
   },
   swatch: {
     width: 36,
