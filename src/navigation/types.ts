@@ -7,4 +7,6 @@ export type RootStackParamList = {
   Tabs: undefined;
   PracticeStart: undefined;
   PracticeThrow: { sessionId: number; layoutId: number };
+  GamePlanStart: undefined;
+  GamePlanReview: { sessionId: number };
 };

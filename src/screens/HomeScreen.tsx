@@ -61,7 +61,7 @@ export function HomeScreen() {
             label="Game plan"
             description="Review recommendations, lock in"
             color={MODE.gamePlan}
-            onPress={notImplemented}
+            onPress={() => navigation.navigate('GamePlanStart')}
           />
           <ModeCard
             label="Tournament round"
