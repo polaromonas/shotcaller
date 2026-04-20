@@ -8,5 +8,5 @@ export type RootStackParamList = {
   PracticeStart: undefined;
   PracticeThrow: { sessionId: number; layoutId: number };
   GamePlanStart: undefined;
-  GamePlanReview: { sessionId: number };
+  GamePlanReview: { layoutId: number };
 };

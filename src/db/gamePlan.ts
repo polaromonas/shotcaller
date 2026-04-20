@@ -2,9 +2,9 @@ import { getDb } from './index';
 import type { Hole } from './courses';
 import type { DiscCategory, ResultKind, ShotShape, ThrowType } from './types';
 
-const GOOD_RESULTS = ['Basket', 'C1', 'C2', 'Fairway'] as const;
-
-const RESULT_RANK: Record<ResultKind, number> = {
+// Display rank: Basket is strictly better than C1, etc. Used for "best result
+// achieved" stats where we want to surface rare good outcomes.
+const DISPLAY_RANK: Record<ResultKind, number> = {
   Basket: 6,
   C1: 5,
   C2: 4,
@@ -22,6 +22,18 @@ const RANK_TO_RESULT: Record<number, ResultKind> = {
   1: 'OB',
 };
 
+// Scoring weight for the recommendation engine. Basket and C1 are tied
+// because aces are luck-dependent; a reliable C1 is worth just as much.
+// OB is negative because it costs a real penalty stroke.
+const SCORE_CASE_SQL = `CASE result
+  WHEN 'Basket' THEN 5
+  WHEN 'C1' THEN 5
+  WHEN 'C2' THEN 4
+  WHEN 'Fairway' THEN 3
+  WHEN 'Rough' THEN 2
+  WHEN 'OB' THEN -1
+END`;
+
 export type ComboRec = {
   disc_id: number;
   disc_manufacturer: string;
@@ -33,6 +45,7 @@ export type ComboRec = {
   total: number;
   good: number;
   ob: number;
+  avg_score: number;
 };
 
 export type HoleStats = {
@@ -45,7 +58,7 @@ export type HoleStats = {
 
 export type SavedPlan = {
   id: number;
-  session_id: number;
+  layout_id: number;
   hole_id: number;
   disc_id: number;
   throw_type: ThrowType;
@@ -69,32 +82,30 @@ export type GamePlanContext = {
 };
 
 export async function loadGamePlanContext(
-  sessionId: number
+  layoutId: number
 ): Promise<GamePlanContext | null> {
   const db = await getDb();
 
-  const sessionRow = await db.getFirstAsync<{
-    layout_id: number;
+  const layoutRow = await db.getFirstAsync<{
     course_name: string;
     layout_name: string;
   }>(
-    `SELECT ps.layout_id, c.name AS course_name, l.name AS layout_name
-       FROM practice_session ps
-       JOIN layout l ON l.id = ps.layout_id
+    `SELECT c.name AS course_name, l.name AS layout_name
+       FROM layout l
        JOIN course c ON c.id = l.course_id
-      WHERE ps.id = $id`,
-    { $id: sessionId }
+      WHERE l.id = $id`,
+    { $id: layoutId }
   );
-  if (!sessionRow) return null;
+  if (!layoutRow) return null;
 
   const holes = await db.getAllAsync<Hole>(
     'SELECT * FROM hole WHERE layout_id = $id ORDER BY hole_number ASC',
-    { $id: sessionRow.layout_id }
+    { $id: layoutId }
   );
 
   const savedPlanRows = await db.getAllAsync<{
     id: number;
-    session_id: number;
+    layout_id: number;
     hole_id: number;
     disc_id: number;
     throw_type: ThrowType;
@@ -102,8 +113,8 @@ export async function loadGamePlanContext(
     notes: string | null;
     is_manual_override: number;
   }>(
-    'SELECT * FROM game_plan_shot WHERE session_id = $id',
-    { $id: sessionId }
+    'SELECT * FROM game_plan_shot WHERE layout_id = $id',
+    { $id: layoutId }
   );
   const savedByHole = new Map<number, SavedPlan>();
   for (const row of savedPlanRows) {
@@ -128,9 +139,9 @@ export async function loadGamePlanContext(
   }
 
   return {
-    layoutId: sessionRow.layout_id,
-    courseName: sessionRow.course_name,
-    layoutName: sessionRow.layout_name,
+    layoutId,
+    courseName: layoutRow.course_name,
+    layoutName: layoutRow.layout_name,
     holes: holeRecs,
   };
 }
@@ -191,12 +202,13 @@ async function computeBestCombo(holeId: number): Promise<ComboRec | null> {
         t.shot_shape,
         COUNT(*) AS total,
         SUM(CASE WHEN t.result IN ('Basket','C1','C2','Fairway') THEN 1 ELSE 0 END) AS good,
-        SUM(CASE WHEN t.result = 'OB' THEN 1 ELSE 0 END) AS ob
+        SUM(CASE WHEN t.result = 'OB' THEN 1 ELSE 0 END) AS ob,
+        AVG(${SCORE_CASE_SQL}) AS avg_score
        FROM throw t
        JOIN disc d ON d.id = t.disc_id
       WHERE t.hole_id = $hole_id
       GROUP BY t.disc_id, t.throw_type, t.shot_shape
-      ORDER BY good DESC, ob ASC, total DESC
+      ORDER BY avg_score DESC, total DESC
       LIMIT 1`,
     { $hole_id: holeId }
   );
@@ -213,25 +225,25 @@ export type HolePlanInput = {
 };
 
 export async function saveGamePlan(
-  sessionId: number,
+  layoutId: number,
   plans: HolePlanInput[]
 ): Promise<void> {
   const db = await getDb();
   await db.withTransactionAsync(async () => {
     await db.runAsync(
-      'DELETE FROM game_plan_shot WHERE session_id = $id',
-      { $id: sessionId }
+      'DELETE FROM game_plan_shot WHERE layout_id = $id',
+      { $id: layoutId }
     );
     const stmt = await db.prepareAsync(
       `INSERT INTO game_plan_shot
-         (session_id, hole_id, disc_id, throw_type, shot_shape, notes, is_manual_override)
+         (layout_id, hole_id, disc_id, throw_type, shot_shape, notes, is_manual_override)
        VALUES
-         ($session_id, $hole_id, $disc_id, $throw_type, $shot_shape, $notes, $is_manual_override)`
+         ($layout_id, $hole_id, $disc_id, $throw_type, $shot_shape, $notes, $is_manual_override)`
     );
     try {
       for (const p of plans) {
         await stmt.executeAsync({
-          $session_id: sessionId,
+          $layout_id: layoutId,
           $hole_id: p.holeId,
           $disc_id: p.discId,
           $throw_type: p.throwType,
@@ -246,35 +258,39 @@ export async function saveGamePlan(
   });
 }
 
-export type SessionCandidate = {
-  id: number;
-  session_date: string;
-  notes: string | null;
-  course_name: string;
+export type LayoutCandidate = {
+  layout_id: number;
   layout_name: string;
+  course_name: string;
+  course_location: string;
+  hole_count: number;
   throw_count: number;
-  has_plan: number;
+  session_count: number;
+  planned_holes: number;
 };
 
-export async function listSessionsForGamePlan(): Promise<SessionCandidate[]> {
+export async function listLayoutsForGamePlan(): Promise<LayoutCandidate[]> {
   const db = await getDb();
-  return db.getAllAsync<SessionCandidate>(
-    `SELECT ps.id, ps.session_date, ps.notes,
-            c.name AS course_name,
-            l.name AS layout_name,
-            (SELECT COUNT(*) FROM throw t WHERE t.session_id = ps.id) AS throw_count,
-            (SELECT COUNT(*) FROM game_plan_shot g WHERE g.session_id = ps.id) AS has_plan
-       FROM practice_session ps
-       JOIN layout l ON l.id = ps.layout_id
+  return db.getAllAsync<LayoutCandidate>(
+    `SELECT
+        l.id AS layout_id,
+        l.name AS layout_name,
+        c.name AS course_name,
+        c.location AS course_location,
+        (SELECT COUNT(*) FROM hole h WHERE h.layout_id = l.id) AS hole_count,
+        (SELECT COUNT(*) FROM throw t
+           JOIN hole h ON h.id = t.hole_id
+          WHERE h.layout_id = l.id) AS throw_count,
+        (SELECT COUNT(*) FROM practice_session ps
+          WHERE ps.layout_id = l.id) AS session_count,
+        (SELECT COUNT(*) FROM game_plan_shot g
+          WHERE g.layout_id = l.id) AS planned_holes
+       FROM layout l
        JOIN course c ON c.id = l.course_id
-      ORDER BY ps.session_date DESC, ps.id DESC`
+      ORDER BY throw_count DESC, c.name ASC, l.name ASC`
   );
 }
 
-export function resultRank(r: ResultKind): number {
-  return RESULT_RANK[r];
-}
-
-export function isGoodResult(r: ResultKind): boolean {
-  return (GOOD_RESULTS as readonly ResultKind[]).includes(r);
+export function displayRank(r: ResultKind): number {
+  return DISPLAY_RANK[r];
 }

@@ -10,8 +10,8 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
-  listSessionsForGamePlan,
-  type SessionCandidate,
+  listLayoutsForGamePlan,
+  type LayoutCandidate,
 } from '../db/gamePlan';
 import { MODE, UI } from '../theme/colors';
 import type { RootStackParamList } from '../navigation/types';
@@ -20,14 +20,14 @@ type Nav = NativeStackNavigationProp<RootStackParamList, 'GamePlanStart'>;
 
 export function GamePlanStartScreen() {
   const navigation = useNavigation<Nav>();
-  const [sessions, setSessions] = useState<SessionCandidate[] | null>(null);
+  const [layouts, setLayouts] = useState<LayoutCandidate[] | null>(null);
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
   const load = useCallback(async () => {
-    const rows = await listSessionsForGamePlan();
-    setSessions(rows);
+    const rows = await listLayoutsForGamePlan();
+    setLayouts(rows);
     if (rows.length > 0 && selectedId === null) {
-      setSelectedId(rows[0].id);
+      setSelectedId(rows[0].layout_id);
     }
   }, [selectedId]);
 
@@ -37,10 +37,10 @@ export function GamePlanStartScreen() {
 
   const handleContinue = () => {
     if (selectedId === null) return;
-    navigation.replace('GamePlanReview', { sessionId: selectedId });
+    navigation.replace('GamePlanReview', { layoutId: selectedId });
   };
 
-  if (sessions === null) {
+  if (layouts === null) {
     return (
       <View style={styles.center}>
         <ActivityIndicator />
@@ -48,13 +48,13 @@ export function GamePlanStartScreen() {
     );
   }
 
-  if (sessions.length === 0) {
+  if (layouts.length === 0) {
     return (
       <View style={styles.center}>
-        <Text style={styles.emptyTitle}>No practice sessions yet</Text>
+        <Text style={styles.emptyTitle}>No layouts yet</Text>
         <Text style={styles.emptyBody}>
-          Log a practice round first. Game plans draw their recommendations
-          from throws logged across your practice sessions.
+          Add a course and layout in the Courses tab before building a game
+          plan.
         </Text>
       </View>
     );
@@ -64,22 +64,25 @@ export function GamePlanStartScreen() {
     <View style={styles.root}>
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.hint}>
-          The game plan reviews every hole on the session's layout and
-          recommends disc and shape based on all throws you have ever logged
-          on that hole.
+          Game plans attach to a layout. Recommendations pull from every
+          throw you have ever logged on that layout, across all practice
+          sessions.
         </Text>
-        {sessions.map((s) => (
-          <SessionRow
-            key={s.id}
-            session={s}
-            selected={selectedId === s.id}
-            onSelect={() => setSelectedId(s.id)}
+        {layouts.map((l) => (
+          <LayoutRow
+            key={l.layout_id}
+            layout={l}
+            selected={selectedId === l.layout_id}
+            onSelect={() => setSelectedId(l.layout_id)}
           />
         ))}
       </ScrollView>
       <View style={styles.footer}>
         <Pressable
-          style={[styles.continueBtn, selectedId === null && styles.continueBtnDisabled]}
+          style={[
+            styles.continueBtn,
+            selectedId === null && styles.continueBtnDisabled,
+          ]}
           disabled={selectedId === null}
           onPress={handleContinue}
         >
@@ -91,25 +94,36 @@ export function GamePlanStartScreen() {
 }
 
 type RowProps = {
-  session: SessionCandidate;
+  layout: LayoutCandidate;
   selected: boolean;
   onSelect: () => void;
 };
 
-function SessionRow({ session, selected, onSelect }: RowProps) {
+function LayoutRow({ layout, selected, onSelect }: RowProps) {
+  const sessionsLabel =
+    layout.session_count === 1 ? 'session' : 'sessions';
+  const throwsLabel = layout.throw_count === 1 ? 'throw' : 'throws';
   return (
     <Pressable
       onPress={onSelect}
       style={[styles.row, selected && styles.rowOn]}
     >
       <View style={styles.rowText}>
-        <Text style={[styles.rowTitle, selected && styles.rowTitleOn]} numberOfLines={1}>
-          {session.course_name} · {session.layout_name}
+        <Text
+          style={[styles.rowTitle, selected && styles.rowTitleOn]}
+          numberOfLines={1}
+        >
+          {layout.layout_name}
+        </Text>
+        <Text style={styles.rowCourse} numberOfLines={1}>
+          {layout.course_name} · {layout.course_location}
         </Text>
         <Text style={styles.rowMeta} numberOfLines={1}>
-          {session.session_date} · {session.throw_count}{' '}
-          {session.throw_count === 1 ? 'throw' : 'throws'}
-          {session.has_plan > 0 ? ' · plan saved' : ''}
+          {layout.throw_count} {throwsLabel} · {layout.session_count}{' '}
+          {sessionsLabel}
+          {layout.planned_holes > 0
+            ? ` · plan saved (${layout.planned_holes}/${layout.hole_count})`
+            : ''}
         </Text>
       </View>
       {selected && <Text style={styles.check}>✓</Text>}
@@ -157,6 +171,7 @@ const styles = StyleSheet.create({
   rowText: { flex: 1, minWidth: 0, gap: 2 },
   rowTitle: { fontSize: 16, fontWeight: '600', color: UI.text },
   rowTitleOn: { color: MODE.gamePlan },
+  rowCourse: { fontSize: 13, color: UI.textMuted },
   rowMeta: { fontSize: 12, color: UI.textMuted },
   check: { fontSize: 18, color: MODE.gamePlan, fontWeight: '700' },
   footer: {

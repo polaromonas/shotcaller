@@ -107,7 +107,7 @@ function draftFromRec(rec: HoleRec, discs: DiscWithTags[]): HoleDraft {
 export function GamePlanReviewScreen() {
   const navigation = useNavigation<Nav>();
   const route = useRoute<Rt>();
-  const { sessionId } = route.params;
+  const { layoutId } = route.params;
 
   const [ctx, setCtx] = useState<GamePlanContext | null>(null);
   const [discs, setDiscs] = useState<DiscWithTags[] | null>(null);
@@ -119,7 +119,7 @@ export function GamePlanReviewScreen() {
   useEffect(() => {
     (async () => {
       const [loaded, ds] = await Promise.all([
-        loadGamePlanContext(sessionId),
+        loadGamePlanContext(layoutId),
         listDiscs(),
       ]);
       setCtx(loaded);
@@ -132,7 +132,7 @@ export function GamePlanReviewScreen() {
         setDrafts(seeded);
       }
     })();
-  }, [sessionId]);
+  }, [layoutId]);
 
   const currentRec = useMemo(
     () => (ctx && ctx.holes.length > 0 ? ctx.holes[currentIdx] : null),
@@ -238,7 +238,7 @@ export function GamePlanReviewScreen() {
           isManualOverride: d.isManualOverride,
         };
       });
-      await saveGamePlan(sessionId, plans);
+      await saveGamePlan(layoutId, plans);
       navigation.popToTop();
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to lock in plan');

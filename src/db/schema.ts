@@ -92,14 +92,14 @@ CREATE INDEX IF NOT EXISTS idx_throw_disc ON throw(disc_id);
 
 CREATE TABLE IF NOT EXISTS game_plan_shot (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  session_id INTEGER NOT NULL REFERENCES practice_session(id) ON DELETE CASCADE,
-  hole_id    INTEGER NOT NULL REFERENCES hole(id)             ON DELETE RESTRICT,
-  disc_id    INTEGER NOT NULL REFERENCES disc(id)             ON DELETE RESTRICT,
+  layout_id  INTEGER NOT NULL REFERENCES layout(id) ON DELETE CASCADE,
+  hole_id    INTEGER NOT NULL REFERENCES hole(id)   ON DELETE RESTRICT,
+  disc_id    INTEGER NOT NULL REFERENCES disc(id)   ON DELETE RESTRICT,
   throw_type TEXT NOT NULL CHECK (${THROW_TYPE_CHECK}),
   shot_shape TEXT NOT NULL CHECK (${SHOT_SHAPE_CHECK}),
   notes TEXT,
   is_manual_override INTEGER NOT NULL DEFAULT 0 CHECK (is_manual_override IN (0, 1)),
-  UNIQUE (session_id, hole_id)
+  UNIQUE (layout_id, hole_id)
 );
-CREATE INDEX IF NOT EXISTS idx_game_plan_shot_session ON game_plan_shot(session_id);
+CREATE INDEX IF NOT EXISTS idx_game_plan_shot_layout ON game_plan_shot(layout_id);
 `;

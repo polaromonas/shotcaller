@@ -39,6 +39,10 @@ No test runner or linter is wired up yet. Add one deliberately when first needed
 
 **HOLE belongs to LAYOUT, not COURSE.** A course has many layouts (Short/Long/Tournament); holes live under a layout. Practice sessions and game plans reference `layout_id`, never `course_id` directly. This is easy to get wrong in queries and joins.
 
+**Game plans attach to LAYOUTS, not practice sessions.** The handoff's data model has `GAME_PLAN_SHOT.session_id`; we deliberately changed it to `layout_id`. A tournament is played on a layout, and a player may practice the same layout across many sessions — a per-session plan would fragment the history and force picking "which session's plan is the plan." The recommendation engine already keys on `hole_id` (which implies a layout), so layout-scoped plans line up naturally. `db/index.ts` has a one-time migration that drops the old `game_plan_shot` if it was created with the pre-change schema.
+
+**Recommendation scoring weights** (in `db/gamePlan.ts`): Basket and C1 both score 5, C2 = 4, Fairway = 3, Rough = 2, OB = **−1**. The combo with the highest average score per throw wins; ties break on total throw count. Aces aren't weighted above C1 because aces are luck-dependent and a reliable inside-circle shot is just as good for tournament planning. OB is negative — not just low positive — because it costs a real penalty stroke in disc golf, so a combo that occasionally goes OB should rank below a slightly-less-good combo that never does. "Best result achieved" stats still use a strict display rank (Basket > C1 > ...) so players see when they have aced a hole.
+
 **Enums are fixed lists.** `throw_type`, `shot_shape`, `result`, and disc `category` must never accept free-text. See the handoff's §4 for exact values.
 
 **Thumber/Tomahawk coupling.** Selecting `Thumber` or `Tomahawk` as `shot_shape` must auto-set `throw_type = Overhand` and disable the throw_type selector. Switching away re-enables it. Enforce this in the form layer, not just visually.

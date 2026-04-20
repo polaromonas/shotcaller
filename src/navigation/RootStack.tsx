@@ -29,7 +29,7 @@ export function RootStack() {
       <Stack.Screen
         name="GamePlanStart"
         component={GamePlanStartScreen}
-        options={{ title: 'Pick a practice session' }}
+        options={{ title: 'Pick a layout' }}
       />
       <Stack.Screen
         name="GamePlanReview"
