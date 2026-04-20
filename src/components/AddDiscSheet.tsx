@@ -74,7 +74,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
       setModel('');
       setCategory(null);
       setColor(null);
-      setFlight({ speed: '', glide: '', turn: '', fade: '' });
+      setFlight({ speed: '', glide: '', turn: '-', fade: '' });
       setSelectedTagIds(new Set());
     }
     setNewTagName('');
@@ -86,7 +86,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
     setModel('');
     setCategory(null);
     setColor(null);
-    setFlight({ speed: '', glide: '', turn: '', fade: '' });
+    setFlight({ speed: '', glide: '', turn: '-', fade: '' });
     setSelectedTagIds(new Set());
     setNewTagName('');
     setError(null);
