@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
-  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -11,6 +10,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { confirmAction, notify } from '../util/confirm';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
@@ -192,18 +192,13 @@ export function GamePlanReviewScreen() {
 
   const handleClose = () => {
     if (anyOverride) {
-      Alert.alert(
-        'Discard game plan edits?',
-        'Your overrides on this session will not be saved.',
-        [
-          { text: 'Cancel', style: 'cancel' },
-          {
-            text: 'Discard',
-            style: 'destructive',
-            onPress: () => navigation.popToTop(),
-          },
-        ]
-      );
+      confirmAction({
+        title: 'Discard game plan edits?',
+        message: 'Your overrides on this session will not be saved.',
+        confirmLabel: 'Discard',
+        destructive: true,
+        onConfirm: () => navigation.popToTop(),
+      });
     } else {
       navigation.popToTop();
     }
@@ -213,10 +208,10 @@ export function GamePlanReviewScreen() {
     if (!ctx) return;
     if (incompleteHoles.length > 0) {
       const first = incompleteHoles[0];
-      Alert.alert(
-        'Missing plan for some holes',
-        `Hole ${first.hole.hole_number} has no disc or shape selected. Fill it in before locking the plan.`
-      );
+      notify({
+        title: 'Missing plan for some holes',
+        message: `Hole ${first.hole.hole_number} has no disc or shape selected. Fill it in before locking the plan.`,
+      });
       const idx = ctx.holes.findIndex(
         (r) => r.hole.id === first.hole.id
       );

@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
-  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -11,6 +10,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { confirmAction } from '../util/confirm';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
@@ -173,21 +173,16 @@ export function PracticeThrowScreen() {
   };
 
   const handleDeleteThrow = (t: ThrowWithDisc) => {
-    Alert.alert(
-      'Delete throw?',
-      `${t.disc_model} · ${t.shot_shape} · ${t.result}. This cannot be undone.`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            await deleteThrow(t.id);
-            await refreshThrowsForHole();
-          },
-        },
-      ]
-    );
+    confirmAction({
+      title: 'Delete throw?',
+      message: `${t.disc_model} · ${t.shot_shape} · ${t.result}. This cannot be undone.`,
+      confirmLabel: 'Delete',
+      destructive: true,
+      onConfirm: async () => {
+        await deleteThrow(t.id);
+        await refreshThrowsForHole();
+      },
+    });
   };
 
   const handleClose = () => {

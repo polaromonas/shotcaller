@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
-  Alert,
   FlatList,
   Pressable,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
+import { confirmAction } from '../util/confirm';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { SwipeableMethods } from 'react-native-gesture-handler/ReanimatedSwipeable';
 import { AddDiscSheet } from '../components/AddDiscSheet';
@@ -86,22 +86,17 @@ export function MyDiscsScreen() {
 
   const handleDelete = useCallback(
     (disc: DiscWithTags) => {
-      Alert.alert(
-        `Delete ${disc.model}?`,
-        `Remove ${disc.manufacturer} ${disc.model} from your collection. This cannot be undone.`,
-        [
-          { text: 'Cancel', style: 'cancel' },
-          {
-            text: 'Delete',
-            style: 'destructive',
-            onPress: async () => {
-              await deleteDisc(disc.id);
-              openRow.current = null;
-              await refresh();
-            },
-          },
-        ]
-      );
+      confirmAction({
+        title: `Delete ${disc.model}?`,
+        message: `Remove ${disc.manufacturer} ${disc.model} from your collection. This cannot be undone.`,
+        confirmLabel: 'Delete',
+        destructive: true,
+        onConfirm: async () => {
+          await deleteDisc(disc.id);
+          openRow.current = null;
+          await refresh();
+        },
+      });
     },
     [refresh]
   );
