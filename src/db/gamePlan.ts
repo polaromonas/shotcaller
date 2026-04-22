@@ -294,3 +294,26 @@ export async function listLayoutsForGamePlan(): Promise<LayoutCandidate[]> {
 export function displayRank(r: ResultKind): number {
   return DISPLAY_RANK[r];
 }
+
+export async function listSavedPlansForLayout(
+  layoutId: number
+): Promise<SavedPlan[]> {
+  const db = await getDb();
+  const rows = await db.getAllAsync<{
+    id: number;
+    layout_id: number;
+    hole_id: number;
+    disc_id: number;
+    throw_type: ThrowType;
+    shot_shape: ShotShape;
+    notes: string | null;
+    is_manual_override: number;
+  }>(
+    'SELECT * FROM game_plan_shot WHERE layout_id = $id',
+    { $id: layoutId }
+  );
+  return rows.map((r) => ({
+    ...r,
+    is_manual_override: r.is_manual_override === 1,
+  }));
+}

@@ -10,7 +10,6 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { confirmAction } from '../util/confirm';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
@@ -18,6 +17,10 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { listDiscs, type DiscWithTags } from '../db/discs';
 import { getLayout, listHoles, type Hole, type Layout } from '../db/courses';
 import { getDb } from '../db';
+import {
+  listSavedPlansForLayout,
+  type SavedPlan,
+} from '../db/gamePlan';
 import {
   deleteThrow,
   listThrowsForHole,
@@ -34,14 +37,15 @@ import {
   type ThrowType,
 } from '../db/types';
 import { MODE, UI } from '../theme/colors';
+import { confirmAction } from '../util/confirm';
 import type { RootStackParamList } from '../navigation/types';
 
-type Nav = NativeStackNavigationProp<RootStackParamList, 'PracticeThrow'>;
-type Rt = RouteProp<RootStackParamList, 'PracticeThrow'>;
+type Nav = NativeStackNavigationProp<RootStackParamList, 'TournamentThrow'>;
+type Rt = RouteProp<RootStackParamList, 'TournamentThrow'>;
 
 const DISTANCE_HIDDEN_RESULTS: readonly ResultKind[] = ['Basket', 'OB'];
 
-export function PracticeThrowScreen() {
+export function TournamentThrowScreen() {
   const navigation = useNavigation<Nav>();
   const route = useRoute<Rt>();
   const { sessionId, layoutId } = route.params;
@@ -50,6 +54,12 @@ export function PracticeThrowScreen() {
   const [courseName, setCourseName] = useState<string>('');
   const [holes, setHoles] = useState<Hole[] | null>(null);
   const [discs, setDiscs] = useState<DiscWithTags[] | null>(null);
+  const [plansByHole, setPlansByHole] = useState<Map<number, SavedPlan>>(
+    new Map()
+  );
+  const [discsById, setDiscsById] = useState<Map<number, DiscWithTags>>(
+    new Map()
+  );
   const [currentIdx, setCurrentIdx] = useState(0);
 
   const [discId, setDiscId] = useState<number | null>(null);
@@ -64,36 +74,52 @@ export function PracticeThrowScreen() {
   const [error, setError] = useState<string | null>(null);
 
   const currentHole = holes && holes.length > 0 ? holes[currentIdx] : null;
+  const currentPlan = currentHole ? plansByHole.get(currentHole.id) ?? null : null;
 
-  // Initial load: layout + course name + holes + discs.
+  // Initial load.
   useEffect(() => {
     (async () => {
-      const [l, hs, ds] = await Promise.all([
+      const [l, hs, ds, plans] = await Promise.all([
         getLayout(layoutId),
         listHoles(layoutId),
         listDiscs(),
+        listSavedPlansForLayout(layoutId),
       ]);
-      setLayout(l);
-      setHoles(hs);
-      setDiscs(ds);
 
+      let loadedCourseName = '';
       if (l) {
         const db = await getDb();
         const row = await db.getFirstAsync<{ name: string }>(
           'SELECT c.name FROM course c JOIN layout l ON l.course_id = c.id WHERE l.id = $id',
           { $id: layoutId }
         );
-        setCourseName(row?.name ?? '');
+        loadedCourseName = row?.name ?? '';
       }
+
+      setLayout(l);
+      setHoles(hs);
+      setDiscs(ds);
+      setDiscsById(new Map(ds.map((d) => [d.id, d])));
+      setPlansByHole(new Map(plans.map((p) => [p.hole_id, p])));
+      setCourseName(loadedCourseName);
     })();
   }, [layoutId]);
 
-  // Default selected disc to the first in-bag disc once discs load.
+  // Pre-select form fields from the plan whenever the current hole changes
+  // (and on initial load once plans are loaded).
   useEffect(() => {
-    if (!discs || discId !== null) return;
-    const firstInBag = discs.find((d) => d.in_bag);
-    if (firstInBag) setDiscId(firstInBag.id);
-  }, [discs, discId]);
+    if (!currentHole) return;
+    const plan = plansByHole.get(currentHole.id);
+    if (plan) {
+      setDiscId(plan.disc_id);
+      setThrowType(plan.throw_type);
+      setShotShape(plan.shot_shape);
+    } else {
+      setDiscId(null);
+      setThrowType(null);
+      setShotShape(null);
+    }
+  }, [currentHole, plansByHole]);
 
   // Thumber/Tomahawk forces throw_type = Overhand.
   useEffect(() => {
@@ -187,9 +213,9 @@ export function PracticeThrowScreen() {
 
   const handleClose = () => {
     confirmAction({
-      title: 'Leave practice round?',
+      title: 'Leave tournament round?',
       message:
-        'Your logged throws are saved. You can resume from Home → Practice round.',
+        'Your logged throws are saved. You can resume from Home → Tournament round.',
       confirmLabel: 'Leave',
       onConfirm: () => navigation.popToTop(),
     });
@@ -226,7 +252,7 @@ export function PracticeThrowScreen() {
         </Pressable>
         <View style={styles.headerText}>
           <View style={styles.modeBadge}>
-            <Text style={styles.modeBadgeLabel}>Practice</Text>
+            <Text style={styles.modeBadgeLabel}>Tournament</Text>
           </View>
           <Text style={styles.headerSubtitle} numberOfLines={1}>
             {courseName} · {layout.name}
@@ -252,6 +278,8 @@ export function PracticeThrowScreen() {
           contentContainerStyle={styles.content}
           keyboardShouldPersistTaps="handled"
         >
+          <PlanCard plan={currentPlan} discsById={discsById} />
+
           <Section title="Disc">
             <DiscPicker
               discs={discs}
@@ -379,6 +407,51 @@ function HoleNav({ hole, index, total, onPrev, onNext }: HoleNavProps) {
   );
 }
 
+type PlanCardProps = {
+  plan: SavedPlan | null;
+  discsById: Map<number, DiscWithTags>;
+};
+
+function PlanCard({ plan, discsById }: PlanCardProps) {
+  if (!plan) {
+    return (
+      <View style={[styles.planCard, styles.planCardEmpty]}>
+        <Text style={styles.planLabel}>Game plan</Text>
+        <Text style={styles.planEmptyBody}>
+          No plan saved for this hole. Pick a disc and shot below.
+        </Text>
+      </View>
+    );
+  }
+  const disc = discsById.get(plan.disc_id);
+  return (
+    <View style={styles.planCard}>
+      <Text style={styles.planLabel}>Game plan</Text>
+      <View style={styles.planBody}>
+        {disc && (
+          <View style={[styles.planSwatch, { backgroundColor: disc.color }]} />
+        )}
+        <View style={styles.planTextWrap}>
+          <Text style={styles.planDisc}>
+            {disc ? disc.model : `Disc #${plan.disc_id}`}
+          </Text>
+          <Text style={styles.planMfr}>
+            {disc ? disc.manufacturer : 'Disc not in collection'}
+          </Text>
+        </View>
+      </View>
+      <Text style={styles.planShot}>
+        {plan.throw_type} · {plan.shot_shape}
+      </Text>
+      {plan.notes && plan.notes.length > 0 && (
+        <Text style={styles.planNotes} numberOfLines={3}>
+          {plan.notes}
+        </Text>
+      )}
+    </View>
+  );
+}
+
 function Section({
   title,
   children,
@@ -420,11 +493,7 @@ function DiscPicker({ discs, selectedId, onSelect }: DiscPickerProps) {
           <Pressable
             key={d.id}
             onPress={() => onSelect(d.id)}
-            style={[
-              styles.discPill,
-              on && styles.discPillOn,
-              d.in_bag && styles.discPillInBag,
-            ]}
+            style={[styles.discPill, on && styles.discPillOn]}
           >
             <View style={[styles.discSwatch, { backgroundColor: d.color }]} />
             <View style={styles.discTextWrap}>
@@ -588,7 +657,7 @@ const styles = StyleSheet.create({
   headerText: { flex: 1, minWidth: 0, gap: 4 },
   modeBadge: {
     alignSelf: 'flex-start',
-    backgroundColor: MODE.practice,
+    backgroundColor: MODE.tournament,
     paddingHorizontal: 10,
     paddingVertical: 3,
     borderRadius: 10,
@@ -628,7 +697,39 @@ const styles = StyleSheet.create({
   holeNavBtnDisabled: { opacity: 0.35 },
   holeNavLabel: { fontSize: 20, fontWeight: '700', color: UI.text },
 
-  content: { padding: 16, gap: 20, paddingBottom: 40 },
+  content: { padding: 16, gap: 16, paddingBottom: 40 },
+
+  planCard: {
+    padding: 14,
+    borderRadius: 12,
+    backgroundColor: '#fff5f8',
+    borderWidth: 1,
+    borderColor: MODE.tournament,
+    gap: 6,
+  },
+  planCardEmpty: { backgroundColor: UI.surface, borderColor: UI.border },
+  planLabel: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: MODE.tournament,
+    letterSpacing: 0.5,
+    textTransform: 'uppercase',
+  },
+  planEmptyBody: { fontSize: 13, color: UI.textMuted, lineHeight: 18 },
+  planBody: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  planSwatch: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: UI.border,
+  },
+  planTextWrap: { flex: 1, minWidth: 0 },
+  planDisc: { fontSize: 18, fontWeight: '700', color: UI.text },
+  planMfr: { fontSize: 12, color: UI.textMuted },
+  planShot: { fontSize: 14, fontWeight: '600', color: UI.text },
+  planNotes: { fontSize: 12, color: UI.textMuted, lineHeight: 18, fontStyle: 'italic' },
+
   section: { gap: 8 },
   sectionTitle: {
     fontSize: 12,
@@ -651,8 +752,7 @@ const styles = StyleSheet.create({
     borderColor: UI.border,
     maxWidth: 200,
   },
-  discPillInBag: { borderColor: UI.border },
-  discPillOn: { backgroundColor: '#eef3ff', borderColor: MODE.practice },
+  discPillOn: { backgroundColor: '#fff0f4', borderColor: MODE.tournament },
   discSwatch: {
     width: 18,
     height: 18,
@@ -662,7 +762,7 @@ const styles = StyleSheet.create({
   },
   discTextWrap: { minWidth: 0 },
   discModel: { fontSize: 14, fontWeight: '600', color: UI.text },
-  discModelOn: { color: MODE.practice },
+  discModelOn: { color: MODE.tournament },
   discMfr: { fontSize: 11, color: UI.textMuted },
   pickerEmpty: { fontSize: 14, color: UI.textMuted },
 
@@ -681,7 +781,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 8,
   },
-  segmentOn: { backgroundColor: MODE.practice },
+  segmentOn: { backgroundColor: MODE.tournament },
   segmentLabel: { fontSize: 14, fontWeight: '600', color: UI.textMuted },
   segmentLabelOn: { color: UI.textInverse },
   segmentLabelDisabled: {},
@@ -695,7 +795,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: UI.border,
   },
-  chipOn: { backgroundColor: MODE.practice, borderColor: MODE.practice },
+  chipOn: { backgroundColor: MODE.tournament, borderColor: MODE.tournament },
   chipLabel: { fontSize: 13, color: UI.textMuted, fontWeight: '600' },
   chipLabelOn: { color: UI.textInverse },
 
@@ -727,7 +827,7 @@ const styles = StyleSheet.create({
 
   error: { color: UI.danger, fontSize: 14 },
   logBtn: {
-    backgroundColor: MODE.practice,
+    backgroundColor: MODE.tournament,
     paddingVertical: 14,
     borderRadius: 12,
     alignItems: 'center',

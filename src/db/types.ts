@@ -22,6 +22,9 @@ export type ResultKind = (typeof RESULTS)[number];
 export const DISC_CATEGORIES = ['DD', 'FWD', 'MID', 'P&A'] as const;
 export type DiscCategory = (typeof DISC_CATEGORIES)[number];
 
+export const SESSION_MODES = ['Practice', 'Tournament'] as const;
+export type SessionMode = (typeof SESSION_MODES)[number];
+
 export const DEFAULT_TAGS = [
   'Flippy',
   'Overstable',

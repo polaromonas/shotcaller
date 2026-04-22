@@ -1,6 +1,7 @@
 import {
   DISC_CATEGORIES,
   RESULTS,
+  SESSION_MODES,
   SHOT_SHAPES,
   THROW_TYPES,
 } from './types';
@@ -12,6 +13,7 @@ const DISC_CATEGORY_CHECK = `category IN (${quote(DISC_CATEGORIES)})`;
 const THROW_TYPE_CHECK = `throw_type IN (${quote(THROW_TYPES)})`;
 const SHOT_SHAPE_CHECK = `shot_shape IN (${quote(SHOT_SHAPES)})`;
 const RESULT_CHECK = `result IN (${quote(RESULTS)})`;
+const SESSION_MODE_CHECK = `mode IN (${quote(SESSION_MODES)})`;
 
 export const SCHEMA_SQL = `
 PRAGMA foreign_keys = ON;
@@ -67,6 +69,7 @@ CREATE TABLE IF NOT EXISTS practice_session (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   layout_id INTEGER NOT NULL REFERENCES layout(id) ON DELETE RESTRICT,
   session_date TEXT NOT NULL,
+  mode TEXT NOT NULL DEFAULT 'Practice' CHECK (${SESSION_MODE_CHECK}),
   notes TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_practice_session_layout ON practice_session(layout_id);

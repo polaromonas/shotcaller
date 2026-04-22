@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 import {
-  Alert,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -39,9 +38,6 @@ export function HomeScreen() {
     void load();
   }, [load]);
 
-  const notImplemented = () =>
-    Alert.alert('Not yet', 'This mode comes in a later step.');
-
   return (
     <SafeAreaView style={styles.root} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content}>
@@ -67,13 +63,15 @@ export function HomeScreen() {
             label="Tournament round"
             description="Execute the plan"
             color={MODE.tournament}
-            onPress={notImplemented}
+            onPress={() => navigation.navigate('TournamentStart')}
           />
         </View>
 
         {lastSession && (
           <View style={styles.lastSession}>
-            <Text style={styles.lastSessionLabel}>Last practice</Text>
+            <Text style={styles.lastSessionLabel}>
+              Last {lastSession.mode === 'Tournament' ? 'tournament' : 'practice'}
+            </Text>
             <Text style={styles.lastSessionTitle}>
               {lastSession.course_name} · {lastSession.layout_name}
             </Text>

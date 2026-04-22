@@ -17,7 +17,12 @@ import {
   type CourseWithLayouts,
   type Layout,
 } from '../db/courses';
-import { createSession, todayIso } from '../db/sessions';
+import {
+  createSession,
+  findActiveSession,
+  listActiveSessionsByLayout,
+  todayIso,
+} from '../db/sessions';
 import { MODE, UI } from '../theme/colors';
 import type { RootStackParamList } from '../navigation/types';
 
@@ -29,12 +34,22 @@ export function PracticeStartScreen() {
   const [selectedLayoutId, setSelectedLayoutId] = useState<number | null>(null);
   const [sessionDate] = useState<string>(todayIso());
   const [notes, setNotes] = useState('');
+  const [activeByLayout, setActiveByLayout] = useState<Map<number, number>>(
+    new Map()
+  );
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
-    const rows = await listCoursesWithLayouts();
+    const [rows, active] = await Promise.all([
+      listCoursesWithLayouts(),
+      listActiveSessionsByLayout({
+        sessionDate: todayIso(),
+        mode: 'Practice',
+      }),
+    ]);
     setCourses(rows);
+    setActiveByLayout(active);
   }, []);
 
   useEffect(() => {
@@ -46,11 +61,19 @@ export function PracticeStartScreen() {
     setSubmitting(true);
     setError(null);
     try {
-      const sessionId = await createSession({
+      const existing = await findActiveSession({
         layoutId: selectedLayoutId,
         sessionDate,
-        notes,
+        mode: 'Practice',
       });
+      const sessionId =
+        existing ??
+        (await createSession({
+          layoutId: selectedLayoutId,
+          sessionDate,
+          mode: 'Practice',
+          notes,
+        }));
       navigation.replace('PracticeThrow', {
         sessionId,
         layoutId: selectedLayoutId,
@@ -70,6 +93,8 @@ export function PracticeStartScreen() {
   }
 
   const layoutsExist = courses.some((c) => c.layouts.length > 0);
+  const isResuming =
+    selectedLayoutId !== null && activeByLayout.has(selectedLayoutId);
 
   return (
     <KeyboardAvoidingView
@@ -100,6 +125,7 @@ export function PracticeStartScreen() {
                     course={course}
                     layout={layout}
                     selected={selectedLayoutId === layout.id}
+                    inProgress={activeByLayout.has(layout.id)}
                     onSelect={() => setSelectedLayoutId(layout.id)}
                   />
                 ))
@@ -108,17 +134,19 @@ export function PracticeStartScreen() {
           )}
         </View>
 
-        <View style={styles.field}>
-          <Text style={styles.fieldLabel}>Notes (optional)</Text>
-          <TextInput
-            style={[styles.input, styles.notesInput]}
-            value={notes}
-            onChangeText={setNotes}
-            placeholder="How did it feel, wind, etc."
-            multiline
-            numberOfLines={3}
-          />
-        </View>
+        {!isResuming && (
+          <View style={styles.field}>
+            <Text style={styles.fieldLabel}>Notes (optional)</Text>
+            <TextInput
+              style={[styles.input, styles.notesInput]}
+              value={notes}
+              onChangeText={setNotes}
+              placeholder="How did it feel, wind, etc."
+              multiline
+              numberOfLines={3}
+            />
+          </View>
+        )}
 
         {error && <Text style={styles.error}>{error}</Text>}
       </ScrollView>
@@ -133,7 +161,11 @@ export function PracticeStartScreen() {
           onPress={handleStart}
         >
           <Text style={styles.startBtnLabel}>
-            {submitting ? 'Starting…' : 'Start practice round'}
+            {submitting
+              ? 'Starting…'
+              : isResuming
+              ? "Resume today's round"
+              : 'Start practice round'}
           </Text>
         </Pressable>
       </View>
@@ -145,22 +177,36 @@ type LayoutRowProps = {
   course: CourseWithLayouts;
   layout: Layout;
   selected: boolean;
+  inProgress: boolean;
   onSelect: () => void;
 };
 
-function LayoutRow({ course, layout, selected, onSelect }: LayoutRowProps) {
+function LayoutRow({
+  course,
+  layout,
+  selected,
+  inProgress,
+  onSelect,
+}: LayoutRowProps) {
   return (
     <Pressable
       onPress={onSelect}
       style={[styles.layoutRow, selected && styles.layoutRowOn]}
     >
       <View style={styles.layoutText}>
-        <Text
-          style={[styles.layoutName, selected && styles.layoutNameOn]}
-          numberOfLines={1}
-        >
-          {layout.name}
-        </Text>
+        <View style={styles.layoutNameRow}>
+          <Text
+            style={[styles.layoutName, selected && styles.layoutNameOn]}
+            numberOfLines={1}
+          >
+            {layout.name}
+          </Text>
+          {inProgress && (
+            <View style={styles.inProgressTag}>
+              <Text style={styles.inProgressTagLabel}>Today</Text>
+            </View>
+          )}
+        </View>
         <Text style={styles.layoutCourse} numberOfLines={1}>
           {course.name} · {course.location}
         </Text>
@@ -217,9 +263,28 @@ const styles = StyleSheet.create({
     borderColor: MODE.practice,
   },
   layoutText: { flex: 1, minWidth: 0, gap: 2 },
+  layoutNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flexWrap: 'wrap',
+  },
   layoutName: { fontSize: 16, fontWeight: '600', color: UI.text },
   layoutNameOn: { color: MODE.practice },
   layoutCourse: { fontSize: 12, color: UI.textMuted },
+  inProgressTag: {
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 8,
+    backgroundColor: MODE.practice,
+  },
+  inProgressTagLabel: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: UI.textInverse,
+    letterSpacing: 0.5,
+    textTransform: 'uppercase',
+  },
   check: { fontSize: 18, color: MODE.practice, fontWeight: '700' },
   input: {
     backgroundColor: UI.surface,

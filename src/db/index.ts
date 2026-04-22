@@ -22,11 +22,22 @@ async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
   // game_plan_shot moved from session_id to layout_id (see CLAUDE.md).
   // If a pre-migration table exists with session_id, drop it so the fresh
   // CREATE TABLE IF NOT EXISTS in SCHEMA_SQL builds the new shape.
-  const cols = await db.getAllAsync<{ name: string }>(
+  const planCols = await db.getAllAsync<{ name: string }>(
     "PRAGMA table_info('game_plan_shot')"
   );
-  if (cols.some((c) => c.name === 'session_id')) {
+  if (planCols.some((c) => c.name === 'session_id')) {
     await db.execAsync('DROP TABLE game_plan_shot');
+  }
+
+  // practice_session.mode added when Tournament round shipped. ALTER TABLE
+  // here so existing rows keep their throws and pick up the default 'Practice'.
+  const sessionCols = await db.getAllAsync<{ name: string }>(
+    "PRAGMA table_info('practice_session')"
+  );
+  if (sessionCols.length > 0 && !sessionCols.some((c) => c.name === 'mode')) {
+    await db.execAsync(
+      "ALTER TABLE practice_session ADD COLUMN mode TEXT NOT NULL DEFAULT 'Practice'"
+    );
   }
 }
 

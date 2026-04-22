@@ -9,4 +9,6 @@ export type RootStackParamList = {
   PracticeThrow: { sessionId: number; layoutId: number };
   GamePlanStart: undefined;
   GamePlanReview: { layoutId: number };
+  TournamentStart: undefined;
+  TournamentThrow: { sessionId: number; layoutId: number };
 };
