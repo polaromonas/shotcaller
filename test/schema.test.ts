@@ -78,6 +78,36 @@ describe('SCHEMA_SQL', () => {
 
   test('disc.category CHECK rejects a bogus enum', async () => {
     const db = await getDb();
+
+    // Diagnostic: dump disc DDL and try raw prepare+run on the same db.
+    const raw = (db as unknown as { raw: import('better-sqlite3').Database })
+      .raw;
+    const discSql = raw
+      .prepare("SELECT sql FROM sqlite_master WHERE name='disc'")
+      .get();
+    // eslint-disable-next-line no-console
+    console.log('[diag-check] disc DDL on this db:', discSql);
+
+    let rawThrew = false;
+    try {
+      raw
+        .prepare(
+          "INSERT INTO disc (manufacturer, model, color, category) VALUES ('x', 'y', '#000', 'NOPE')"
+        )
+        .run();
+    } catch (e) {
+      rawThrew = true;
+      // eslint-disable-next-line no-console
+      console.log('[diag-check] raw insert threw:', e instanceof Error ? e.message : e);
+    }
+    // eslint-disable-next-line no-console
+    console.log('[diag-check] raw insert threw?', rawThrew);
+    // eslint-disable-next-line no-console
+    console.log(
+      '[diag-check] rows in disc:',
+      raw.prepare('SELECT COUNT(*) AS n FROM disc').get()
+    );
+
     await expect(
       db.runAsync(
         "INSERT INTO disc (manufacturer, model, color, category) VALUES ('x', 'y', '#000', 'NOPE')"
