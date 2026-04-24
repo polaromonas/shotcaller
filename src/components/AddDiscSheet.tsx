@@ -44,9 +44,10 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
   const [flight, setFlight] = useState<Record<FlightField, string>>({
     speed: '',
     glide: '',
-    turn: '-',
+    turn: '',
     fade: '',
   });
+  const [turnNegative, setTurnNegative] = useState(true);
 
   const [tags, setTags] = useState<Tag[]>([]);
   const [selectedTagIds, setSelectedTagIds] = useState<Set<number>>(new Set());
@@ -65,16 +66,18 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
       setFlight({
         speed: flightToText(disc.speed),
         glide: flightToText(disc.glide),
-        turn: disc.turn !== null ? flightToText(disc.turn) : '-',
+        turn: disc.turn !== null ? flightToText(Math.abs(disc.turn)) : '',
         fade: flightToText(disc.fade),
       });
+      setTurnNegative(disc.turn !== null ? disc.turn < 0 : true);
       setSelectedTagIds(new Set(disc.tags.map((t) => t.id)));
     } else {
       setManufacturer('');
       setModel('');
       setCategory(null);
       setColor(null);
-      setFlight({ speed: '', glide: '', turn: '-', fade: '' });
+      setFlight({ speed: '', glide: '', turn: '', fade: '' });
+      setTurnNegative(true);
       setSelectedTagIds(new Set());
     }
     setNewTagName('');
@@ -86,7 +89,8 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
     setModel('');
     setCategory(null);
     setColor(null);
-    setFlight({ speed: '', glide: '', turn: '-', fade: '' });
+    setFlight({ speed: '', glide: '', turn: '', fade: '' });
+    setTurnNegative(true);
     setSelectedTagIds(new Set());
     setNewTagName('');
     setError(null);
@@ -134,6 +138,12 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
     return Number.isFinite(n) ? n : null;
   };
 
+  const parseTurn = (magnitude: string, negative: boolean): number | null => {
+    const n = parseFlight(magnitude);
+    if (n === null) return null;
+    return negative ? -Math.abs(n) : Math.abs(n);
+  };
+
   const handleSubmit = async () => {
     if (!canSubmit || !category || !color) return;
     setSubmitting(true);
@@ -146,7 +156,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
         color,
         speed: parseFlight(flight.speed),
         glide: parseFlight(flight.glide),
-        turn: parseFlight(flight.turn),
+        turn: parseTurn(flight.turn, turnNegative),
         fade: parseFlight(flight.fade),
         tagIds: Array.from(selectedTagIds),
       });
@@ -322,10 +332,12 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
                   <TurnCell
                     key={key}
                     label={label}
-                    value={flight.turn}
-                    onChange={(v) =>
+                    magnitude={flight.turn}
+                    negative={turnNegative}
+                    onChangeMagnitude={(v) =>
                       setFlight((prev) => ({ ...prev, turn: v }))
                     }
+                    onToggleSign={() => setTurnNegative((prev) => !prev)}
                   />
                 ) : (
                   <View key={key} style={styles.flightCell}>
@@ -367,46 +379,39 @@ function Field({
   );
 }
 
+type TurnCellProps = {
+  label: string;
+  magnitude: string;
+  negative: boolean;
+  onChangeMagnitude: (next: string) => void;
+  onToggleSign: () => void;
+};
+
 function TurnCell({
   label,
-  value,
-  onChange,
-}: {
-  label: string;
-  value: string;
-  onChange: (next: string) => void;
-}) {
-  const isNegative = value.startsWith('-');
-  const magnitude = isNegative ? value.slice(1) : value;
-
-  const toggleSign = () => {
-    onChange(isNegative ? magnitude : '-' + magnitude);
-  };
-
-  const handleMagnitudeChange = (text: string) => {
-    onChange((isNegative ? '-' : '') + text);
-  };
-
+  magnitude,
+  negative,
+  onChangeMagnitude,
+  onToggleSign,
+}: TurnCellProps) {
   return (
     <View style={styles.flightCell}>
       <Text style={styles.flightLabel}>{label}</Text>
       <View style={styles.turnInputRow}>
         <Pressable
-          onPress={toggleSign}
-          style={[styles.signBtn, isNegative && styles.signBtnOn]}
-          accessibilityLabel={isNegative ? 'Make positive' : 'Make negative'}
+          onPress={onToggleSign}
+          style={[styles.signBtn, negative && styles.signBtnOn]}
+          accessibilityLabel={negative ? 'Make positive' : 'Make negative'}
           hitSlop={4}
         >
-          <Text
-            style={[styles.signLabel, isNegative && styles.signLabelOn]}
-          >
-            {isNegative ? '−' : '+'}
+          <Text style={[styles.signLabel, negative && styles.signLabelOn]}>
+            {negative ? '−' : '+'}
           </Text>
         </Pressable>
         <TextInput
           style={[styles.input, styles.flightInput, styles.turnMagnitudeInput]}
           value={magnitude}
-          onChangeText={handleMagnitudeChange}
+          onChangeText={onChangeMagnitude}
           keyboardType="decimal-pad"
           placeholder="—"
         />
