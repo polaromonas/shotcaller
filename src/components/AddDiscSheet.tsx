@@ -214,7 +214,6 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
               style={styles.input}
               value={manufacturer}
               onChangeText={setManufacturer}
-              placeholder="Innova"
               autoCapitalize="words"
               returnKeyType="next"
             />
@@ -225,7 +224,6 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
               style={styles.input}
               value={model}
               onChangeText={setModel}
-              placeholder="Destroyer"
               autoCapitalize="words"
               returnKeyType="next"
             />
@@ -510,7 +508,10 @@ const styles = StyleSheet.create({
   newTagBtnDisabled: { opacity: 0.4 },
   newTagBtnLabel: { fontSize: 14, fontWeight: '600', color: UI.text },
   flightRow: { flexDirection: 'row', gap: 8 },
-  flightCell: { flex: 1 },
+  // minWidth: 0 lets flex children shrink below their intrinsic content width
+  // — without it the TextInput's HTML intrinsic size makes the Turn cell
+  // (which has an extra ± button inside) overflow on web.
+  flightCell: { flex: 1, minWidth: 0 },
   flightLabel: {
     fontSize: 11,
     color: UI.textMuted,
