@@ -7,18 +7,44 @@ afterEach(async () => {
 });
 
 describe('SCHEMA_SQL', () => {
-  test('diagnostics: sqlite version + disc DDL', async () => {
-    const db = await getDb();
-    const ver = await db.getFirstAsync<{ v: string }>(
-      'SELECT sqlite_version() AS v'
-    );
-    const sql = await db.getFirstAsync<{ sql: string }>(
-      "SELECT sql FROM sqlite_master WHERE type='table' AND name='disc'"
-    );
+  test('diagnostics: CHECK constraint behavior', async () => {
+    const SQLite = await import('expo-sqlite');
+    const shim = await SQLite.openDatabaseAsync('diagnostic.db');
+    // Direct better-sqlite3 access, bypass shim plumbing.
+    const raw = (shim as unknown as { raw: import('better-sqlite3').Database }).raw;
+    raw.exec("CREATE TABLE t (c TEXT NOT NULL CHECK (c IN ('A','B')))");
+
+    // Path 1: raw better-sqlite3 prepare+run.
+    let rawThrew = false;
+    let rawErr = '';
+    try {
+      raw.prepare("INSERT INTO t VALUES ('NOPE')").run();
+    } catch (e) {
+      rawThrew = true;
+      rawErr = e instanceof Error ? e.message : String(e);
+    }
+
+    // Path 2: shim's runAsync (what the failing tests use).
+    let shimThrew = false;
+    let shimErr = '';
+    try {
+      await shim.runAsync("INSERT INTO t VALUES ('NOPE')");
+    } catch (e) {
+      shimThrew = true;
+      shimErr = e instanceof Error ? e.message : String(e);
+    }
+
+    // Verify what's actually in t.
+    const rows = raw.prepare('SELECT * FROM t').all();
+
     // eslint-disable-next-line no-console
-    console.log('[diagnostic] sqlite version:', ver?.v);
+    console.log('[diag] sqlite_version:', raw.prepare('SELECT sqlite_version() AS v').get());
     // eslint-disable-next-line no-console
-    console.log('[diagnostic] disc DDL:', sql?.sql);
+    console.log('[diag] raw threw:', rawThrew, 'err:', rawErr);
+    // eslint-disable-next-line no-console
+    console.log('[diag] shim threw:', shimThrew, 'err:', shimErr);
+    // eslint-disable-next-line no-console
+    console.log('[diag] rows after attempted inserts:', rows);
   });
 
   test('loads cleanly on a fresh DB', async () => {
