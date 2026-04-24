@@ -28,6 +28,9 @@
     },
     "plugins": [
       "expo-sqlite"
-    ]
+    ],
+    "experiments": {
+      "baseUrl": "/shotcaller"
+    }
   }
 }
