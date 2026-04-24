@@ -108,11 +108,24 @@ describe('SCHEMA_SQL', () => {
       raw.prepare('SELECT COUNT(*) AS n FROM disc').get()
     );
 
-    await expect(
-      db.runAsync(
+    let shimThrew = false;
+    let shimErr = '';
+    try {
+      await db.runAsync(
         "INSERT INTO disc (manufacturer, model, color, category) VALUES ('x', 'y', '#000', 'NOPE')"
-      )
-    ).rejects.toThrow();
+      );
+    } catch (e) {
+      shimThrew = true;
+      shimErr = e instanceof Error ? e.message : String(e);
+    }
+    // eslint-disable-next-line no-console
+    console.log('[diag-check] shim runAsync threw?', shimThrew, 'err:', shimErr);
+    // eslint-disable-next-line no-console
+    console.log(
+      '[diag-check] rows in disc after shim try:',
+      raw.prepare('SELECT COUNT(*) AS n FROM disc').get()
+    );
+    expect(shimThrew).toBe(true);
   });
 
   test('throw.result CHECK rejects a bogus enum', async () => {
