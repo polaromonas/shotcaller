@@ -6,47 +6,30 @@ afterEach(async () => {
   __resetAllDatabases();
 });
 
+// jest 30's expect(promise).rejects.toThrow() silently misses the rejection on
+// some platforms (reproduced consistently on the Linux CI runner, passes on
+// macOS). Use this explicit try/catch instead until upstream is sorted.
+async function expectRejection(
+  promise: Promise<unknown>,
+  contains?: string
+): Promise<void> {
+  let err: Error | null = null;
+  try {
+    await promise;
+  } catch (e) {
+    err = e instanceof Error ? e : new Error(String(e));
+  }
+  if (err === null) {
+    throw new Error('Expected promise to reject, but it resolved');
+  }
+  if (contains !== undefined && !err.message.includes(contains)) {
+    throw new Error(
+      `Expected rejection to include "${contains}", got: ${err.message}`
+    );
+  }
+}
+
 describe('SCHEMA_SQL', () => {
-  test('diagnostics: CHECK constraint behavior', async () => {
-    const SQLite = await import('expo-sqlite');
-    const shim = await SQLite.openDatabaseAsync('diagnostic.db');
-    // Direct better-sqlite3 access, bypass shim plumbing.
-    const raw = (shim as unknown as { raw: import('better-sqlite3').Database }).raw;
-    raw.exec("CREATE TABLE t (c TEXT NOT NULL CHECK (c IN ('A','B')))");
-
-    // Path 1: raw better-sqlite3 prepare+run.
-    let rawThrew = false;
-    let rawErr = '';
-    try {
-      raw.prepare("INSERT INTO t VALUES ('NOPE')").run();
-    } catch (e) {
-      rawThrew = true;
-      rawErr = e instanceof Error ? e.message : String(e);
-    }
-
-    // Path 2: shim's runAsync (what the failing tests use).
-    let shimThrew = false;
-    let shimErr = '';
-    try {
-      await shim.runAsync("INSERT INTO t VALUES ('NOPE')");
-    } catch (e) {
-      shimThrew = true;
-      shimErr = e instanceof Error ? e.message : String(e);
-    }
-
-    // Verify what's actually in t.
-    const rows = raw.prepare('SELECT * FROM t').all();
-
-    // eslint-disable-next-line no-console
-    console.log('[diag] sqlite_version:', raw.prepare('SELECT sqlite_version() AS v').get());
-    // eslint-disable-next-line no-console
-    console.log('[diag] raw threw:', rawThrew, 'err:', rawErr);
-    // eslint-disable-next-line no-console
-    console.log('[diag] shim threw:', shimThrew, 'err:', shimErr);
-    // eslint-disable-next-line no-console
-    console.log('[diag] rows after attempted inserts:', rows);
-  });
-
   test('loads cleanly on a fresh DB', async () => {
     const db = await getDb();
     const tables = await db.getAllAsync<{ name: string }>(
@@ -78,54 +61,12 @@ describe('SCHEMA_SQL', () => {
 
   test('disc.category CHECK rejects a bogus enum', async () => {
     const db = await getDb();
-
-    // Diagnostic: dump disc DDL and try raw prepare+run on the same db.
-    const raw = (db as unknown as { raw: import('better-sqlite3').Database })
-      .raw;
-    const discSql = raw
-      .prepare("SELECT sql FROM sqlite_master WHERE name='disc'")
-      .get();
-    // eslint-disable-next-line no-console
-    console.log('[diag-check] disc DDL on this db:', discSql);
-
-    let rawThrew = false;
-    try {
-      raw
-        .prepare(
-          "INSERT INTO disc (manufacturer, model, color, category) VALUES ('x', 'y', '#000', 'NOPE')"
-        )
-        .run();
-    } catch (e) {
-      rawThrew = true;
-      // eslint-disable-next-line no-console
-      console.log('[diag-check] raw insert threw:', e instanceof Error ? e.message : e);
-    }
-    // eslint-disable-next-line no-console
-    console.log('[diag-check] raw insert threw?', rawThrew);
-    // eslint-disable-next-line no-console
-    console.log(
-      '[diag-check] rows in disc:',
-      raw.prepare('SELECT COUNT(*) AS n FROM disc').get()
-    );
-
-    let shimThrew = false;
-    let shimErr = '';
-    try {
-      await db.runAsync(
+    await expectRejection(
+      db.runAsync(
         "INSERT INTO disc (manufacturer, model, color, category) VALUES ('x', 'y', '#000', 'NOPE')"
-      );
-    } catch (e) {
-      shimThrew = true;
-      shimErr = e instanceof Error ? e.message : String(e);
-    }
-    // eslint-disable-next-line no-console
-    console.log('[diag-check] shim runAsync threw?', shimThrew, 'err:', shimErr);
-    // eslint-disable-next-line no-console
-    console.log(
-      '[diag-check] rows in disc after shim try:',
-      raw.prepare('SELECT COUNT(*) AS n FROM disc').get()
+      ),
+      'CHECK constraint failed'
     );
-    expect(shimThrew).toBe(true);
   });
 
   test('throw.result CHECK rejects a bogus enum', async () => {
@@ -145,12 +86,13 @@ describe('SCHEMA_SQL', () => {
     await db.runAsync(
       "INSERT INTO practice_session (layout_id, session_date, mode) VALUES (1, '2026-04-24', 'Practice')"
     );
-    await expect(
+    await expectRejection(
       db.runAsync(
         `INSERT INTO throw (session_id, hole_id, disc_id, throw_type, shot_shape, result)
          VALUES (1, 1, 1, 'Backhand', 'Flat', 'Nowhere')`
-      )
-    ).rejects.toThrow();
+      ),
+      'CHECK constraint failed'
+    );
   });
 
   test('migration drops a pre-session_id game_plan_shot table', async () => {
@@ -214,10 +156,11 @@ describe('SCHEMA_SQL', () => {
     await db.runAsync(
       "INSERT INTO layout (course_id, name) VALUES (1, 'Main')"
     );
-    await expect(
+    await expectRejection(
       db.runAsync(
         "INSERT INTO practice_session (layout_id, session_date, mode) VALUES (1, '2026-04-24', 'Casual')"
-      )
-    ).rejects.toThrow();
+      ),
+      'CHECK constraint failed'
+    );
   });
 });
