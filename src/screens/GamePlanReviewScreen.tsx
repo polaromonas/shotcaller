@@ -32,6 +32,12 @@ import {
   type ThrowType,
 } from '../db/types';
 import { CONFIDENCE, MODE, UI } from '../theme/colors';
+import {
+  downloadTextFile,
+  gamePlanFilename,
+  gamePlanToText,
+  isExportSupported,
+} from '../util/export';
 import type { RootStackParamList } from '../navigation/types';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'GamePlanReview'>;
@@ -204,6 +210,26 @@ export function GamePlanReviewScreen() {
     }
   };
 
+  const savedHoleCount = useMemo(
+    () => (ctx ? ctx.holes.filter((h) => h.savedPlan !== null).length : 0),
+    [ctx]
+  );
+
+  const handleExport = () => {
+    if (!ctx || !discs) return;
+    const discsById = new Map(
+      discs.map((d) => [d.id, { manufacturer: d.manufacturer, model: d.model, category: d.category }])
+    );
+    try {
+      downloadTextFile(gamePlanFilename(ctx), gamePlanToText(ctx, discsById));
+    } catch (e) {
+      notify({
+        title: 'Export failed',
+        message: e instanceof Error ? e.message : String(e),
+      });
+    }
+  };
+
   const handleLockIn = async () => {
     if (!ctx) return;
     if (incompleteHoles.length > 0) {
@@ -282,6 +308,16 @@ export function GamePlanReviewScreen() {
             {ctx.courseName} · {ctx.layoutName}
           </Text>
         </View>
+        {isExportSupported && savedHoleCount > 0 && (
+          <Pressable
+            onPress={handleExport}
+            hitSlop={10}
+            style={styles.exportBtn}
+            accessibilityLabel="Export game plan as text file"
+          >
+            <Text style={styles.exportLabel}>Export</Text>
+          </Pressable>
+        )}
       </View>
 
       <View style={styles.holeNav}>
@@ -672,6 +708,15 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   headerSubtitle: { fontSize: 13, color: UI.textMuted },
+  exportBtn: {
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 10,
+    backgroundColor: UI.surface,
+    borderWidth: 1,
+    borderColor: UI.border,
+  },
+  exportLabel: { fontSize: 13, fontWeight: '600', color: MODE.gamePlan },
 
   holeNav: {
     flexDirection: 'row',
