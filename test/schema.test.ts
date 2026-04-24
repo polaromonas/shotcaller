@@ -7,6 +7,20 @@ afterEach(async () => {
 });
 
 describe('SCHEMA_SQL', () => {
+  test('diagnostics: sqlite version + disc DDL', async () => {
+    const db = await getDb();
+    const ver = await db.getFirstAsync<{ v: string }>(
+      'SELECT sqlite_version() AS v'
+    );
+    const sql = await db.getFirstAsync<{ sql: string }>(
+      "SELECT sql FROM sqlite_master WHERE type='table' AND name='disc'"
+    );
+    // eslint-disable-next-line no-console
+    console.log('[diagnostic] sqlite version:', ver?.v);
+    // eslint-disable-next-line no-console
+    console.log('[diagnostic] disc DDL:', sql?.sql);
+  });
+
   test('loads cleanly on a fresh DB', async () => {
     const db = await getDb();
     const tables = await db.getAllAsync<{ name: string }>(
