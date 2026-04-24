@@ -7,14 +7,15 @@ import {
   Text,
   View,
 } from 'react-native';
-import { confirmAction } from '../util/confirm';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { SwipeableMethods } from 'react-native-gesture-handler/ReanimatedSwipeable';
 import { AddDiscSheet } from '../components/AddDiscSheet';
 import { DiscCard } from '../components/DiscCard';
 import {
+  countDiscDependents,
   createDisc,
   deleteDisc,
+  deleteDiscCascade,
   listDiscs,
   setInBag,
   updateDisc,
@@ -22,6 +23,7 @@ import {
   type NewDiscInput,
 } from '../db/discs';
 import { UI } from '../theme/colors';
+import { confirmAction } from '../util/confirm';
 
 export function MyDiscsScreen() {
   const [discs, setDiscs] = useState<DiscWithTags[] | null>(null);
@@ -85,7 +87,31 @@ export function MyDiscsScreen() {
   );
 
   const handleDelete = useCallback(
-    (disc: DiscWithTags) => {
+    async (disc: DiscWithTags) => {
+      const deps = await countDiscDependents(disc.id);
+      if (deps.throws > 0 || deps.planShots > 0) {
+        const parts: string[] = [];
+        if (deps.throws > 0) {
+          parts.push(`${deps.throws} ${deps.throws === 1 ? 'throw' : 'throws'}`);
+        }
+        if (deps.planShots > 0) {
+          parts.push(
+            `${deps.planShots} game plan ${deps.planShots === 1 ? 'shot' : 'shots'}`
+          );
+        }
+        confirmAction({
+          title: `Delete ${disc.model}?`,
+          message: `${parts.join(' and ')} reference this disc and will be deleted with it. This cannot be undone.`,
+          confirmLabel: 'Delete anyway',
+          destructive: true,
+          onConfirm: async () => {
+            await deleteDiscCascade(disc.id);
+            openRow.current = null;
+            await refresh();
+          },
+        });
+        return;
+      }
       confirmAction({
         title: `Delete ${disc.model}?`,
         message: `Remove ${disc.manufacturer} ${disc.model} from your collection. This cannot be undone.`,

@@ -17,6 +17,7 @@ import {
   type CourseWithLayouts,
   type Layout,
 } from '../db/courses';
+import { listDiscs } from '../db/discs';
 import {
   createSession,
   findActiveSession,
@@ -31,6 +32,7 @@ type Nav = NativeStackNavigationProp<RootStackParamList, 'PracticeStart'>;
 export function PracticeStartScreen() {
   const navigation = useNavigation<Nav>();
   const [courses, setCourses] = useState<CourseWithLayouts[] | null>(null);
+  const [discCount, setDiscCount] = useState<number | null>(null);
   const [selectedLayoutId, setSelectedLayoutId] = useState<number | null>(null);
   const [sessionDate] = useState<string>(todayIso());
   const [notes, setNotes] = useState('');
@@ -41,15 +43,17 @@ export function PracticeStartScreen() {
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
-    const [rows, active] = await Promise.all([
+    const [rows, active, discs] = await Promise.all([
       listCoursesWithLayouts(),
       listActiveSessionsByLayout({
         sessionDate: todayIso(),
         mode: 'Practice',
       }),
+      listDiscs(),
     ]);
     setCourses(rows);
     setActiveByLayout(active);
+    setDiscCount(discs.length);
   }, []);
 
   useEffect(() => {
@@ -84,7 +88,7 @@ export function PracticeStartScreen() {
     }
   };
 
-  if (courses === null) {
+  if (courses === null || discCount === null) {
     return (
       <View style={styles.center}>
         <ActivityIndicator />
@@ -93,6 +97,8 @@ export function PracticeStartScreen() {
   }
 
   const layoutsExist = courses.some((c) => c.layouts.length > 0);
+  const discsExist = discCount > 0;
+  const canStart = layoutsExist && discsExist && selectedLayoutId !== null;
   const isResuming =
     selectedLayoutId !== null && activeByLayout.has(selectedLayoutId);
 
@@ -102,6 +108,15 @@ export function PracticeStartScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView contentContainerStyle={styles.content}>
+        {!discsExist && (
+          <View style={styles.empty}>
+            <Text style={styles.emptyBody}>
+              Add at least one disc in the My discs tab before starting a
+              practice round.
+            </Text>
+          </View>
+        )}
+
         <View style={styles.dateRow}>
           <Text style={styles.fieldLabel}>Date</Text>
           <Text style={styles.dateValue}>{sessionDate}</Text>
@@ -155,9 +170,9 @@ export function PracticeStartScreen() {
         <Pressable
           style={[
             styles.startBtn,
-            (selectedLayoutId === null || submitting) && styles.startBtnDisabled,
+            (!canStart || submitting) && styles.startBtnDisabled,
           ]}
-          disabled={selectedLayoutId === null || submitting}
+          disabled={!canStart || submitting}
           onPress={handleStart}
         >
           <Text style={styles.startBtnLabel}>
