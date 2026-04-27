@@ -50,6 +50,12 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
     fade: '',
   });
   const [turnNegative, setTurnNegative] = useState(true);
+  // Bumped whenever flight values are programmatically replaced (catalog pick
+  // or edit-mode load). Used as a key on the flight inputs so they remount
+  // and pick up the new value — react-native-web's controlled <input> doesn't
+  // always sync the DOM value attribute when the prop changes from outside
+  // a user-typed event.
+  const [flightGen, setFlightGen] = useState(0);
 
   const [tags, setTags] = useState<Tag[]>([]);
   const [selectedTagIds, setSelectedTagIds] = useState<Set<number>>(new Set());
@@ -88,6 +94,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
       setSelectedTagIds(new Set());
       setShowSuggestions(true);
     }
+    setFlightGen((g) => g + 1);
     setNewTagName('');
     setError(null);
   }, [visible, disc]);
@@ -178,6 +185,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
       fade: flightToText(d.fade),
     });
     setTurnNegative(d.turn < 0);
+    setFlightGen((g) => g + 1);
     setShowSuggestions(false);
   };
 
@@ -247,26 +255,6 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
           contentContainerStyle={styles.content}
           keyboardShouldPersistTaps="handled"
         >
-          <Field label="Manufacturer">
-            <TextInput
-              style={styles.input}
-              value={manufacturer}
-              onChangeText={setManufacturer}
-              autoCapitalize="words"
-              returnKeyType="next"
-            />
-          </Field>
-
-          <Field label="Plastic (optional)">
-            <TextInput
-              style={styles.input}
-              value={plastic}
-              onChangeText={setPlastic}
-              autoCapitalize="words"
-              returnKeyType="next"
-            />
-          </Field>
-
           <Field label="Model">
             <TextInput
               style={styles.input}
@@ -301,6 +289,26 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
                 ))}
               </View>
             )}
+          </Field>
+
+          <Field label="Manufacturer">
+            <TextInput
+              style={styles.input}
+              value={manufacturer}
+              onChangeText={setManufacturer}
+              autoCapitalize="words"
+              returnKeyType="next"
+            />
+          </Field>
+
+          <Field label="Plastic">
+            <TextInput
+              style={styles.input}
+              value={plastic}
+              onChangeText={setPlastic}
+              autoCapitalize="words"
+              returnKeyType="next"
+            />
           </Field>
 
           <Field label="Category">
@@ -402,7 +410,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
               {FLIGHT_FIELDS.map(({ key, label }) =>
                 key === 'turn' ? (
                   <TurnCell
-                    key={key}
+                    key={`${key}-${flightGen}`}
                     label={label}
                     magnitude={flight.turn}
                     negative={turnNegative}
@@ -412,7 +420,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
                     onToggleSign={() => setTurnNegative((prev) => !prev)}
                   />
                 ) : (
-                  <View key={key} style={styles.flightCell}>
+                  <View key={`${key}-${flightGen}`} style={styles.flightCell}>
                     <Text style={styles.flightLabel}>{label}</Text>
                     <TextInput
                       style={[styles.input, styles.flightInput]}
@@ -614,10 +622,11 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     textAlign: 'center',
   },
-  // width: 0 + flex: 1 forces equal sizing on react-native-web; without it, the
-  // <input> reports an HTML-intrinsic min-content width that overflows its
-  // flex share.
-  flightInput: { textAlign: 'center', flex: 1, width: 0 },
+  // flex: 1 + minWidth: 0 lets the input shrink below its HTML-intrinsic
+  // min-content width on react-native-web (the <input> would otherwise reserve
+  // ~20 chars and overflow its flex share, especially in the Turn cell which
+  // also holds a ± button).
+  flightInput: { textAlign: 'center', flex: 1, minWidth: 0 },
   turnInputRow: {
     flexDirection: 'row',
     alignItems: 'stretch',
