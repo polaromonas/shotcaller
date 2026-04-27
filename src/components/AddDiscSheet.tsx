@@ -405,7 +405,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
             </View>
           </Field>
 
-          <Field label="Flight numbers (optional)">
+          <Field label="Flight numbers">
             <View style={styles.flightRow}>
               {FLIGHT_FIELDS.map(({ key, label }) =>
                 key === 'turn' ? (

@@ -89,7 +89,6 @@ export function AddCourseSheet({ visible, onClose, onSubmit }: Props) {
               style={styles.input}
               value={name}
               onChangeText={setName}
-              placeholder="Hawk Run DGC"
               autoCapitalize="words"
               returnKeyType="next"
             />
@@ -100,7 +99,6 @@ export function AddCourseSheet({ visible, onClose, onSubmit }: Props) {
               style={styles.input}
               value={location}
               onChangeText={setLocation}
-              placeholder="Columbia, MO"
               autoCapitalize="words"
               returnKeyType="done"
               onSubmitEditing={handleSubmit}
