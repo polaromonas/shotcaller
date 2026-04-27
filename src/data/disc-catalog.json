@@ -1,0 +1,10478 @@
+[
+  {
+    "model": "Money Putter",
+    "manufacturer": "ABC Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Baobab",
+    "manufacturer": "Above Ground Level",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 0,
+    "turn": 1,
+    "fade": 3
+  },
+  {
+    "model": "Beech",
+    "manufacturer": "Above Ground Level",
+    "category": "MID",
+    "speed": 5,
+    "glide": 2,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Cedar",
+    "manufacturer": "Above Ground Level",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Douglas Fir",
+    "manufacturer": "Above Ground Level",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 3,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Elm",
+    "manufacturer": "Above Ground Level",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Koa",
+    "manufacturer": "Above Ground Level",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Locust",
+    "manufacturer": "Above Ground Level",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Madrone",
+    "manufacturer": "Above Ground Level",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Magnolia",
+    "manufacturer": "Above Ground Level",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Manzanita",
+    "manufacturer": "Above Ground Level",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Maple",
+    "manufacturer": "Above Ground Level",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 2,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Ponderosa",
+    "manufacturer": "Above Ground Level",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 4,
+    "turn": -2,
+    "fade": 0
+  },
+  {
+    "model": "Redwood",
+    "manufacturer": "Above Ground Level",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Sequoia",
+    "manufacturer": "Above Ground Level",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Spruce",
+    "manufacturer": "Above Ground Level",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Sycamore",
+    "manufacturer": "Above Ground Level",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Dragonfly",
+    "manufacturer": "AquaFlight",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Osprey",
+    "manufacturer": "AquaFlight",
+    "category": "DD",
+    "speed": 12,
+    "glide": 4,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Peace Frog",
+    "manufacturer": "AquaFlight",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Pelican",
+    "manufacturer": "AquaFlight",
+    "category": "FWD",
+    "speed": 6,
+    "glide": 5,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Swift",
+    "manufacturer": "AquaFlight",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Balance",
+    "manufacturer": "Axiom Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Bokeh",
+    "manufacturer": "Axiom Discs",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 6,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Crave",
+    "manufacturer": "Axiom Discs",
+    "category": "FWD",
+    "speed": 6.5,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Defy",
+    "manufacturer": "Axiom Discs",
+    "category": "DD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Delirium",
+    "manufacturer": "Axiom Discs",
+    "category": "DD",
+    "speed": 14.5,
+    "glide": 5,
+    "turn": -0.5,
+    "fade": 3
+  },
+  {
+    "model": "Envy",
+    "manufacturer": "Axiom Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Excite",
+    "manufacturer": "Axiom Discs",
+    "category": "DD",
+    "speed": 14.5,
+    "glide": 5.5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Fireball",
+    "manufacturer": "Axiom Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 3.5,
+    "turn": 0,
+    "fade": 3.5
+  },
+  {
+    "model": "Hex",
+    "manufacturer": "Axiom Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Insanity",
+    "manufacturer": "Axiom Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1.5
+  },
+  {
+    "model": "Mayhem",
+    "manufacturer": "Axiom Discs",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -1.5,
+    "fade": 2
+  },
+  {
+    "model": "Panic",
+    "manufacturer": "Axiom Discs",
+    "category": "DD",
+    "speed": 13,
+    "glide": 4,
+    "turn": -0.5,
+    "fade": 3
+  },
+  {
+    "model": "Paradox",
+    "manufacturer": "Axiom Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": -4,
+    "fade": 0
+  },
+  {
+    "model": "Pitch",
+    "manufacturer": "Axiom Discs",
+    "category": "P&A",
+    "speed": 1,
+    "glide": 7,
+    "turn": -0.5,
+    "fade": 0
+  },
+  {
+    "model": "Pixel",
+    "manufacturer": "Axiom Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 4,
+    "turn": 0,
+    "fade": 0.5
+  },
+  {
+    "model": "Proxy",
+    "manufacturer": "Axiom Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": -1,
+    "fade": 0.5
+  },
+  {
+    "model": "Pyro",
+    "manufacturer": "Axiom Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2.5
+  },
+  {
+    "model": "Rhythm",
+    "manufacturer": "Axiom Discs",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Tantrum",
+    "manufacturer": "Axiom Discs",
+    "category": "DD",
+    "speed": 14.5,
+    "glide": 5,
+    "turn": -1.5,
+    "fade": 3
+  },
+  {
+    "model": "Tempo",
+    "manufacturer": "Axiom Discs",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2.5
+  },
+  {
+    "model": "Tenacity",
+    "manufacturer": "Axiom Discs",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -2.5,
+    "fade": 2
+  },
+  {
+    "model": "Thrill",
+    "manufacturer": "Axiom Discs",
+    "category": "DD",
+    "speed": 11,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3.5
+  },
+  {
+    "model": "Time-Lapse",
+    "manufacturer": "Axiom Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Time-Lapse (Retooled)",
+    "manufacturer": "Axiom Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Trance",
+    "manufacturer": "Axiom Discs",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Uplink",
+    "manufacturer": "Axiom Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -3,
+    "fade": 0.5
+  },
+  {
+    "model": "Vanish",
+    "manufacturer": "Axiom Discs",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -3,
+    "fade": 2
+  },
+  {
+    "model": "Virus",
+    "manufacturer": "Axiom Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -3.5,
+    "fade": 1
+  },
+  {
+    "model": "Wrath",
+    "manufacturer": "Axiom Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4.5,
+    "turn": -0.5,
+    "fade": 2
+  },
+  {
+    "model": "Marvel",
+    "manufacturer": "Birdie",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Reach",
+    "manufacturer": "Birdie",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Rise",
+    "manufacturer": "Birdie",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Weapon",
+    "manufacturer": "Birdie",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2.5
+  },
+  {
+    "model": "Berry",
+    "manufacturer": "Clash Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Butter",
+    "manufacturer": "Clash Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Candy",
+    "manufacturer": "Clash Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Cherry",
+    "manufacturer": "Clash Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Cinnamon",
+    "manufacturer": "Clash Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -1.5,
+    "fade": 2
+  },
+  {
+    "model": "Cookie",
+    "manufacturer": "Clash Discs",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Fudge",
+    "manufacturer": "Clash Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Ginger",
+    "manufacturer": "Clash Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Guava",
+    "manufacturer": "Clash Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Lotus",
+    "manufacturer": "Clash Discs",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Mango",
+    "manufacturer": "Clash Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Millet",
+    "manufacturer": "Clash Discs",
+    "category": "DD",
+    "speed": 7,
+    "glide": 6,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Mint",
+    "manufacturer": "Clash Discs",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Peach",
+    "manufacturer": "Clash Discs",
+    "category": "MID",
+    "speed": 4,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Pepper",
+    "manufacturer": "Clash Discs",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Peppermint",
+    "manufacturer": "Clash Discs",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 2,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Popcorn",
+    "manufacturer": "Clash Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Sage",
+    "manufacturer": "Clash Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 6,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Salt",
+    "manufacturer": "Clash Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Soda",
+    "manufacturer": "Clash Discs",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Spice",
+    "manufacturer": "Clash Discs",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 4,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Vanilla",
+    "manufacturer": "Clash Discs",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 6,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Wild Honey",
+    "manufacturer": "Clash Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Apogee",
+    "manufacturer": "Climo Disc Golf",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Belleair",
+    "manufacturer": "Climo Disc Golf",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Champ",
+    "manufacturer": "Climo Disc Golf",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "Cliff",
+    "manufacturer": "Climo Disc Golf",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Skyway",
+    "manufacturer": "Climo Disc Golf",
+    "category": "DD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Streak",
+    "manufacturer": "Climo Disc Golf",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Credo",
+    "manufacturer": "Crosslap",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 2,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Lucky",
+    "manufacturer": "Crosslap",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Openwater",
+    "manufacturer": "Crosslap",
+    "category": "DD",
+    "speed": 12,
+    "glide": 4,
+    "turn": -1.5,
+    "fade": 2
+  },
+  {
+    "model": "Shadowplay",
+    "manufacturer": "Crosslap",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": -2,
+    "fade": 0.5
+  },
+  {
+    "model": "Vigil",
+    "manufacturer": "Crosslap",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 6,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "(Great Horned) Owl",
+    "manufacturer": "Daredevil Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Albatross",
+    "manufacturer": "Daredevil Discs",
+    "category": "DD",
+    "speed": 14,
+    "glide": 6,
+    "turn": -2,
+    "fade": 3
+  },
+  {
+    "model": "Beaver",
+    "manufacturer": "Daredevil Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Big Horn",
+    "manufacturer": "Daredevil Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "BigFoot",
+    "manufacturer": "Daredevil Discs",
+    "category": "DD",
+    "speed": 13,
+    "glide": 6,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Buffalo",
+    "manufacturer": "Daredevil Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": -1,
+    "fade": 5
+  },
+  {
+    "model": "Caribou",
+    "manufacturer": "Daredevil Discs",
+    "category": "MID",
+    "speed": 4,
+    "glide": 5,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Grizzly",
+    "manufacturer": "Daredevil Discs",
+    "category": "MID",
+    "speed": 4,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Hellbender",
+    "manufacturer": "Daredevil Discs",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Hellbender (Razorback)",
+    "manufacturer": "Daredevil Discs",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Mammoth",
+    "manufacturer": "Daredevil Discs",
+    "category": "DD",
+    "speed": 9,
+    "glide": 4,
+    "turn": -1,
+    "fade": 5
+  },
+  {
+    "model": "Merlin",
+    "manufacturer": "Daredevil Discs",
+    "category": "DD",
+    "speed": 14,
+    "glide": 5,
+    "turn": -1,
+    "fade": 4
+  },
+  {
+    "model": "Moose",
+    "manufacturer": "Daredevil Discs",
+    "category": "MID",
+    "speed": 4,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Ogopogo",
+    "manufacturer": "Daredevil Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": -2,
+    "fade": 5
+  },
+  {
+    "model": "Polar Bear",
+    "manufacturer": "Daredevil Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Sabertooth",
+    "manufacturer": "Daredevil Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": 0,
+    "fade": 5
+  },
+  {
+    "model": "Sasquatch",
+    "manufacturer": "Daredevil Discs",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -5,
+    "fade": 1
+  },
+  {
+    "model": "Swift Fox",
+    "manufacturer": "Daredevil Discs",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Timberwolf",
+    "manufacturer": "Daredevil Discs",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Walrus",
+    "manufacturer": "Daredevil Discs",
+    "category": "MID",
+    "speed": 4,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Wolverine",
+    "manufacturer": "Daredevil Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Woodchuck",
+    "manufacturer": "Daredevil Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 2,
+    "turn": -1,
+    "fade": 0
+  },
+  {
+    "model": "Yeti",
+    "manufacturer": "Daredevil Discs",
+    "category": "DD",
+    "speed": 13,
+    "glide": 6,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Aftershock",
+    "manufacturer": "DGA",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Avalanche",
+    "manufacturer": "DGA",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 3,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Banzai",
+    "manufacturer": "DGA",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Blast",
+    "manufacturer": "DGA",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 2,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Blowfly",
+    "manufacturer": "DGA",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 2,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Breaker",
+    "manufacturer": "DGA",
+    "category": "MID",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Gumbputt",
+    "manufacturer": "DGA",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 2,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Hellfire",
+    "manufacturer": "DGA",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 3,
+    "turn": 0,
+    "fade": 5
+  },
+  {
+    "model": "Hurricane",
+    "manufacturer": "DGA",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Hypercane",
+    "manufacturer": "DGA",
+    "category": "DD",
+    "speed": 13,
+    "glide": 4,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Pipeline",
+    "manufacturer": "DGA",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Quake",
+    "manufacturer": "DGA",
+    "category": "MID",
+    "speed": 5,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Reef",
+    "manufacturer": "DGA",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 2,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Rift",
+    "manufacturer": "DGA",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": -1,
+    "fade": 1.5
+  },
+  {
+    "model": "Riptide",
+    "manufacturer": "DGA",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Rogue",
+    "manufacturer": "DGA",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 4,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Sail",
+    "manufacturer": "DGA",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -5,
+    "fade": 1
+  },
+  {
+    "model": "Shockwave",
+    "manufacturer": "DGA",
+    "category": "MID",
+    "speed": 4,
+    "glide": 2,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Sonar",
+    "manufacturer": "DGA",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Squall",
+    "manufacturer": "DGA",
+    "category": "MID",
+    "speed": 6,
+    "glide": 4,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Steady",
+    "manufacturer": "DGA",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Steady BL",
+    "manufacturer": "DGA",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Surf",
+    "manufacturer": "DGA",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 4,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Tempest",
+    "manufacturer": "DGA",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -3,
+    "fade": 2
+  },
+  {
+    "model": "Torrent",
+    "manufacturer": "DGA",
+    "category": "DD",
+    "speed": 14,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Tremor",
+    "manufacturer": "DGA",
+    "category": "MID",
+    "speed": 6,
+    "glide": 5,
+    "turn": -4,
+    "fade": 1
+  },
+  {
+    "model": "Tsunami",
+    "manufacturer": "DGA",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 3,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Typhoon",
+    "manufacturer": "DGA",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Undertow",
+    "manufacturer": "DGA",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 4,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Vortex",
+    "manufacturer": "DGA",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 6,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Allosaurus",
+    "manufacturer": "Dino Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Brachiosaurus",
+    "manufacturer": "Dino Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -4.5,
+    "fade": 1
+  },
+  {
+    "model": "Diplodocus",
+    "manufacturer": "Dino Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": -2
+  },
+  {
+    "model": "Pterodactyl",
+    "manufacturer": "Dino Discs",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Spinosaurus",
+    "manufacturer": "Dino Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Stegosaurus",
+    "manufacturer": "Dino Discs",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 5,
+    "turn": -4,
+    "fade": 2
+  },
+  {
+    "model": "Triceratops",
+    "manufacturer": "Dino Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Tyrannosaurus Rex",
+    "manufacturer": "Dino Discs",
+    "category": "DD",
+    "speed": 14,
+    "glide": 5,
+    "turn": -3,
+    "fade": 2
+  },
+  {
+    "model": "<- Tilt",
+    "manufacturer": "Discmania",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 1,
+    "turn": 1,
+    "fade": 6
+  },
+  {
+    "model": "Astronaut",
+    "manufacturer": "Discmania",
+    "category": "DD",
+    "speed": 12,
+    "glide": 6,
+    "turn": -4,
+    "fade": 1
+  },
+  {
+    "model": "CD (OOP)",
+    "manufacturer": "Discmania",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "CD1",
+    "manufacturer": "Discmania",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "CD3 (OOP)",
+    "manufacturer": "Discmania",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Cloudbreaker",
+    "manufacturer": "Discmania",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "DD",
+    "manufacturer": "Discmania",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 6,
+    "turn": -3,
+    "fade": 2
+  },
+  {
+    "model": "DD1",
+    "manufacturer": "Discmania",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "DD2",
+    "manufacturer": "Discmania",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "DD2 (OOP)",
+    "manufacturer": "Discmania",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "DD3",
+    "manufacturer": "Discmania",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "dd4",
+    "manufacturer": "Discmania",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "DDx (OOP)",
+    "manufacturer": "Discmania",
+    "category": "DD",
+    "speed": 12,
+    "glide": 6,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Drop",
+    "manufacturer": "Discmania",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Enigma",
+    "manufacturer": "Discmania",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Essence",
+    "manufacturer": "Discmania",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 6,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "FD",
+    "manufacturer": "Discmania",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 6,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "FD1",
+    "manufacturer": "Discmania",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "FD2 (OOP)",
+    "manufacturer": "Discmania",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "FD3",
+    "manufacturer": "Discmania",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Founder",
+    "manufacturer": "Discmania",
+    "category": "MID",
+    "speed": 5,
+    "glide": 6,
+    "turn": -4,
+    "fade": 1
+  },
+  {
+    "model": "Function",
+    "manufacturer": "Discmania",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 6,
+    "turn": -4,
+    "fade": 1
+  },
+  {
+    "model": "Genius",
+    "manufacturer": "Discmania",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -4,
+    "fade": 1
+  },
+  {
+    "model": "Glacier",
+    "manufacturer": "Discmania",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Instinct",
+    "manufacturer": "Discmania",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Link",
+    "manufacturer": "Discmania",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Logic",
+    "manufacturer": "Discmania",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Maestro",
+    "manufacturer": "Discmania",
+    "category": "MID",
+    "speed": 4,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Magician",
+    "manufacturer": "Discmania",
+    "category": "FWD",
+    "speed": 6,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Majesty",
+    "manufacturer": "Discmania",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "MD",
+    "manufacturer": "Discmania",
+    "category": "MID",
+    "speed": 4,
+    "glide": 5,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "MD1",
+    "manufacturer": "Discmania",
+    "category": "MID",
+    "speed": 5,
+    "glide": 6,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "MD2 (OOP)",
+    "manufacturer": "Discmania",
+    "category": "MID",
+    "speed": 4,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "MD3",
+    "manufacturer": "Discmania",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "MD3X",
+    "manufacturer": "Discmania",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "MD4",
+    "manufacturer": "Discmania",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "MD5",
+    "manufacturer": "Discmania",
+    "category": "MID",
+    "speed": 5,
+    "glide": 3,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Mentor",
+    "manufacturer": "Discmania",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Mermaid",
+    "manufacturer": "Discmania",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 4,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Method",
+    "manufacturer": "Discmania",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Mutant",
+    "manufacturer": "Discmania",
+    "category": "MID",
+    "speed": 5,
+    "glide": 3,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Notion",
+    "manufacturer": "Discmania",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": -1,
+    "fade": 0
+  },
+  {
+    "model": "Origin",
+    "manufacturer": "Discmania",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "P1",
+    "manufacturer": "Discmania",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "P1X",
+    "manufacturer": "Discmania",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "P2",
+    "manufacturer": "Discmania",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "P2X",
+    "manufacturer": "Discmania",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "P3 (OOP)",
+    "manufacturer": "Discmania",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 2,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "P3X",
+    "manufacturer": "Discmania",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 2,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "P4",
+    "manufacturer": "Discmania",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 2,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Paradigm",
+    "manufacturer": "Discmania",
+    "category": "DD",
+    "speed": 12,
+    "glide": 6,
+    "turn": -1.5,
+    "fade": 2
+  },
+  {
+    "model": "PD",
+    "manufacturer": "Discmania",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "PD2",
+    "manufacturer": "Discmania",
+    "category": "DD",
+    "speed": 12,
+    "glide": 4,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "PD3 (OOP)",
+    "manufacturer": "Discmania",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 3,
+    "turn": 0,
+    "fade": 5
+  },
+  {
+    "model": "PDx (OOP)",
+    "manufacturer": "Discmania",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Premier FD",
+    "manufacturer": "Discmania",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 7,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Rainmaker",
+    "manufacturer": "Discmania",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 0.5
+  },
+  {
+    "model": "Rockstar",
+    "manufacturer": "Discmania",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Sensei",
+    "manufacturer": "Discmania",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Shogun",
+    "manufacturer": "Discmania",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Splice",
+    "manufacturer": "Discmania",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 3,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Spore",
+    "manufacturer": "Discmania",
+    "category": "P&A",
+    "speed": 1,
+    "glide": 7,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Tactic",
+    "manufacturer": "Discmania",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 2,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Tailor",
+    "manufacturer": "Discmania",
+    "category": "MID",
+    "speed": 4,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "TD",
+    "manufacturer": "Discmania",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "TDx (OOP)",
+    "manufacturer": "Discmania",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Vanguard",
+    "manufacturer": "Discmania",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Anax",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 6,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "APX",
+    "manufacturer": "Discraft",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 2,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Archer",
+    "manufacturer": "Discraft",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": -4,
+    "fade": 1
+  },
+  {
+    "model": "Ares",
+    "manufacturer": "Discraft",
+    "category": "DD",
+    "speed": 12,
+    "glide": 6,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Athena",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Avenger",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Avenger SS",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Banger GT",
+    "manufacturer": "Discraft",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Buzzz",
+    "manufacturer": "Discraft",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Buzzz GT",
+    "manufacturer": "Discraft",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Buzzz OS",
+    "manufacturer": "Discraft",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Buzzz SS",
+    "manufacturer": "Discraft",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Captain's Raptor",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 3,
+    "turn": 1,
+    "fade": 4
+  },
+  {
+    "model": "Captain's Thrasher",
+    "manufacturer": "Discraft",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Challenger",
+    "manufacturer": "Discraft",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Challenger OS",
+    "manufacturer": "Discraft",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Challenger SS",
+    "manufacturer": "Discraft",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Cicada",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 6,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Cigarra",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 6,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Comet",
+    "manufacturer": "Discraft",
+    "category": "MID",
+    "speed": 4,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Crank",
+    "manufacturer": "Discraft",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Crank SS",
+    "manufacturer": "Discraft",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -3,
+    "fade": 2
+  },
+  {
+    "model": "Crush",
+    "manufacturer": "Discraft",
+    "category": "DD",
+    "speed": 11,
+    "glide": 5,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Cyclone",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 4,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Drive",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Drone",
+    "manufacturer": "Discraft",
+    "category": "MID",
+    "speed": 5,
+    "glide": 3,
+    "turn": 1,
+    "fade": 4
+  },
+  {
+    "model": "Fierce",
+    "manufacturer": "Discraft",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 4,
+    "turn": -2,
+    "fade": 0
+  },
+  {
+    "model": "Flash",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": -2,
+    "fade": 3
+  },
+  {
+    "model": "Flick",
+    "manufacturer": "Discraft",
+    "category": "DD",
+    "speed": 12,
+    "glide": 3,
+    "turn": 1,
+    "fade": 5
+  },
+  {
+    "model": "Focus",
+    "manufacturer": "Discraft",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 2,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Force",
+    "manufacturer": "Discraft",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Fossil",
+    "manufacturer": "Discraft",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 1,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Glide",
+    "manufacturer": "Discraft",
+    "category": "MID",
+    "speed": 6,
+    "glide": 5,
+    "turn": -3,
+    "fade": 2
+  },
+  {
+    "model": "Hades",
+    "manufacturer": "Discraft",
+    "category": "DD",
+    "speed": 12,
+    "glide": 6,
+    "turn": -3,
+    "fade": 2
+  },
+  {
+    "model": "Hallux",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Hawk",
+    "manufacturer": "Discraft",
+    "category": "MID",
+    "speed": 4,
+    "glide": 3,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Heat",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 6,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Hornet",
+    "manufacturer": "Discraft",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Impact",
+    "manufacturer": "Discraft",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Joy",
+    "manufacturer": "Discraft",
+    "category": "MID",
+    "speed": 4,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Kratos",
+    "manufacturer": "Discraft",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Luna",
+    "manufacturer": "Discraft",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Machete",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 4,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Magnet",
+    "manufacturer": "Discraft",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Malita",
+    "manufacturer": "Discraft",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Malta",
+    "manufacturer": "Discraft",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 1,
+    "fade": 3
+  },
+  {
+    "model": "Mantis",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 4,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Meteor",
+    "manufacturer": "Discraft",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Nebula",
+    "manufacturer": "Discraft",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": -0.5,
+    "fade": 2
+  },
+  {
+    "model": "Nuke",
+    "manufacturer": "Discraft",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Nuke OS",
+    "manufacturer": "Discraft",
+    "category": "DD",
+    "speed": 13,
+    "glide": 4,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Nuke SS",
+    "manufacturer": "Discraft",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -3,
+    "fade": 3
+  },
+  {
+    "model": "Passion",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Predator",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": 1,
+    "fade": 4
+  },
+  {
+    "model": "Pulse",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Punisher",
+    "manufacturer": "Discraft",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Putt'r",
+    "manufacturer": "Discraft",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 2,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Raptor",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Rattler",
+    "manufacturer": "Discraft",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 2,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Reaper",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 3,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Ringer",
+    "manufacturer": "Discraft",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Ringer GT",
+    "manufacturer": "Discraft",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Roach",
+    "manufacturer": "Discraft",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Roost",
+    "manufacturer": "Discraft",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Scorch",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 6,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Sled",
+    "manufacturer": "Discraft",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 2,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Sol",
+    "manufacturer": "Discraft",
+    "category": "MID",
+    "speed": 4,
+    "glide": 5,
+    "turn": -3,
+    "fade": 0
+  },
+  {
+    "model": "Stalker",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Sting",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Stratus",
+    "manufacturer": "Discraft",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": -4,
+    "fade": 1
+  },
+  {
+    "model": "Surge",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Surge SS",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Swarm",
+    "manufacturer": "Discraft",
+    "category": "MID",
+    "speed": 5,
+    "glide": 3,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Talon",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 3,
+    "turn": 1,
+    "fade": 3
+  },
+  {
+    "model": "Thrasher",
+    "manufacturer": "Discraft",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -3,
+    "fade": 2
+  },
+  {
+    "model": "Undertaker",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Venom (Old Version - OOP)",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 4,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Venom (Retooled)",
+    "manufacturer": "Discraft",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Vulture",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Wasp",
+    "manufacturer": "Discraft",
+    "category": "MID",
+    "speed": 5,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Wildcat",
+    "manufacturer": "Discraft",
+    "category": "DD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -2,
+    "fade": 3
+  },
+  {
+    "model": "XL",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 4,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Xpress",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "XS",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Xtreme",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 6,
+    "glide": 3,
+    "turn": 1,
+    "fade": 4
+  },
+  {
+    "model": "Zeppelin",
+    "manufacturer": "Discraft",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 5,
+    "turn": -1,
+    "fade": 0
+  },
+  {
+    "model": "Zeus",
+    "manufacturer": "Discraft",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Zombee",
+    "manufacturer": "Discraft",
+    "category": "FWD",
+    "speed": 6,
+    "glide": 4,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Zone",
+    "manufacturer": "Discraft",
+    "category": "MID",
+    "speed": 4,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Zone GT (Banger Top)",
+    "manufacturer": "Discraft",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Zone OS",
+    "manufacturer": "Discraft",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 2,
+    "turn": 1,
+    "fade": 5
+  },
+  {
+    "model": "Zone SS",
+    "manufacturer": "Discraft",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 4,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "DD-13 Starling",
+    "manufacturer": "Disctroyer",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "FD-8 Stork",
+    "manufacturer": "Disctroyer",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "MR-5 Skylark",
+    "manufacturer": "Disctroyer",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Nightjar",
+    "manufacturer": "Disctroyer",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": -0.5,
+    "fade": 2.5
+  },
+  {
+    "model": "PA-3 Sparrow",
+    "manufacturer": "Disctroyer",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Alpas",
+    "manufacturer": "Divergent",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Wyrm",
+    "manufacturer": "Divergent",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 2,
+    "turn": 0,
+    "fade": 5
+  },
+  {
+    "model": "Area 51",
+    "manufacturer": "Doomsday Discs",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2.5
+  },
+  {
+    "model": "Blackout",
+    "manufacturer": "Doomsday Discs",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Bleak",
+    "manufacturer": "Doomsday Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 4,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Cataclysm",
+    "manufacturer": "Doomsday Discs",
+    "category": "DD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Chemtrail",
+    "manufacturer": "Doomsday Discs",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 6,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Crisis",
+    "manufacturer": "Doomsday Discs",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 2,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Cyber Putter",
+    "manufacturer": "Doomsday Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Depth Charge",
+    "manufacturer": "Doomsday Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 2,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Desolation",
+    "manufacturer": "Doomsday Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Despair",
+    "manufacturer": "Doomsday Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Famine",
+    "manufacturer": "Doomsday Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Flat Earth",
+    "manufacturer": "Doomsday Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Ice Age",
+    "manufacturer": "Doomsday Discs",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Land Mine",
+    "manufacturer": "Doomsday Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 2,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Monstrosity",
+    "manufacturer": "Doomsday Discs",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -3,
+    "fade": 2
+  },
+  {
+    "model": "Oblivion",
+    "manufacturer": "Doomsday Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 4,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Pestilence",
+    "manufacturer": "Doomsday Discs",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -4,
+    "fade": 1
+  },
+  {
+    "model": "Plague",
+    "manufacturer": "Doomsday Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2.5
+  },
+  {
+    "model": "Psyop",
+    "manufacturer": "Doomsday Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": -2,
+    "fade": 3
+  },
+  {
+    "model": "Rot",
+    "manufacturer": "Doomsday Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Scavenger",
+    "manufacturer": "Doomsday Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Solar Death Ray",
+    "manufacturer": "Doomsday Discs",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Agent",
+    "manufacturer": "Dynamic Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Bounty",
+    "manufacturer": "Dynamic Discs",
+    "category": "MID",
+    "speed": 4,
+    "glide": 5,
+    "turn": -1.5,
+    "fade": 0.5
+  },
+  {
+    "model": "Breakout",
+    "manufacturer": "Dynamic Discs",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1.5
+  },
+  {
+    "model": "Captain",
+    "manufacturer": "Dynamic Discs",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Contender",
+    "manufacturer": "Dynamic Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 6,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Convict",
+    "manufacturer": "Dynamic Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": -0.5,
+    "fade": 3
+  },
+  {
+    "model": "Criminal",
+    "manufacturer": "Dynamic Discs",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 3,
+    "turn": 1,
+    "fade": 4
+  },
+  {
+    "model": "Culprit",
+    "manufacturer": "Dynamic Discs",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 2,
+    "turn": 0,
+    "fade": 3.5
+  },
+  {
+    "model": "Defender",
+    "manufacturer": "Dynamic Discs",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Deputy",
+    "manufacturer": "Dynamic Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 4,
+    "turn": -1.5,
+    "fade": 0
+  },
+  {
+    "model": "EMAC Judge",
+    "manufacturer": "Dynamic Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Enforcer",
+    "manufacturer": "Dynamic Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 4,
+    "turn": 0.5,
+    "fade": 4
+  },
+  {
+    "model": "Escape",
+    "manufacturer": "Dynamic Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Evader",
+    "manufacturer": "Dynamic Discs",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2.5
+  },
+  {
+    "model": "Evidence",
+    "manufacturer": "Dynamic Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -1,
+    "fade": 0
+  },
+  {
+    "model": "Felon",
+    "manufacturer": "Dynamic Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 3,
+    "turn": 0.5,
+    "fade": 4
+  },
+  {
+    "model": "Fugitive",
+    "manufacturer": "Dynamic Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -0.5,
+    "fade": 1.5
+  },
+  {
+    "model": "Fugitive (Supreme)",
+    "manufacturer": "Dynamic Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 3,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "General",
+    "manufacturer": "Dynamic Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 4,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Getaway",
+    "manufacturer": "Dynamic Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -0.5,
+    "fade": 3
+  },
+  {
+    "model": "Guard",
+    "manufacturer": "Dynamic Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 5,
+    "turn": 0,
+    "fade": 0.5
+  },
+  {
+    "model": "Heist",
+    "manufacturer": "Dynamic Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1.5,
+    "fade": 2
+  },
+  {
+    "model": "Judge",
+    "manufacturer": "Dynamic Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Jury",
+    "manufacturer": "Dynamic Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Justice",
+    "manufacturer": "Dynamic Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 1,
+    "turn": 0.5,
+    "fade": 4
+  },
+  {
+    "model": "Marshal",
+    "manufacturer": "Dynamic Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Maverick",
+    "manufacturer": "Dynamic Discs",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 4,
+    "turn": -1.5,
+    "fade": 2
+  },
+  {
+    "model": "Motive",
+    "manufacturer": "Dynamic Discs",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 6,
+    "turn": -3,
+    "fade": 2
+  },
+  {
+    "model": "Patrol",
+    "manufacturer": "Dynamic Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Raider",
+    "manufacturer": "Dynamic Discs",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -0.5,
+    "fade": 3
+  },
+  {
+    "model": "Renegade",
+    "manufacturer": "Dynamic Discs",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -1.5,
+    "fade": 2.5
+  },
+  {
+    "model": "Sergeant",
+    "manufacturer": "Dynamic Discs",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2.5
+  },
+  {
+    "model": "Sheriff",
+    "manufacturer": "Dynamic Discs",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Slammer",
+    "manufacturer": "Dynamic Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 2,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Sockibomb Felon",
+    "manufacturer": "Dynamic Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": 0.5,
+    "fade": 4
+  },
+  {
+    "model": "Sockibomb Slammer",
+    "manufacturer": "Dynamic Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 1,
+    "turn": 0.5,
+    "fade": 4
+  },
+  {
+    "model": "Supreme EMac Truth",
+    "manufacturer": "Dynamic Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Supreme Trespass",
+    "manufacturer": "Dynamic Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -0.5,
+    "fade": 3
+  },
+  {
+    "model": "Suspect",
+    "manufacturer": "Dynamic Discs",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Thief",
+    "manufacturer": "Dynamic Discs",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": -1.5,
+    "fade": 2
+  },
+  {
+    "model": "Treason",
+    "manufacturer": "Dynamic Discs",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Trespass",
+    "manufacturer": "Dynamic Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -0.5,
+    "fade": 3
+  },
+  {
+    "model": "Truth",
+    "manufacturer": "Dynamic Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Truth, EMAC",
+    "manufacturer": "Dynamic Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Vandal",
+    "manufacturer": "Dynamic Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -1.5,
+    "fade": 2
+  },
+  {
+    "model": "Verdict",
+    "manufacturer": "Dynamic Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3.5
+  },
+  {
+    "model": "Warant",
+    "manufacturer": "Dynamic Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -2,
+    "fade": 0
+  },
+  {
+    "model": "Warden",
+    "manufacturer": "Dynamic Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 4,
+    "turn": 0,
+    "fade": 0.5
+  },
+  {
+    "model": "Witness",
+    "manufacturer": "Dynamic Discs",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 6,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Arowana",
+    "manufacturer": "Elevation Disc Golf",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Binx, ecoFlex",
+    "manufacturer": "Elevation Disc Golf",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 6,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Binx, Newcomer",
+    "manufacturer": "Elevation Disc Golf",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Capybara",
+    "manufacturer": "Elevation Disc Golf",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Gecko",
+    "manufacturer": "Elevation Disc Golf",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3.5
+  },
+  {
+    "model": "Interceptor",
+    "manufacturer": "Elevation Disc Golf",
+    "category": "MID",
+    "speed": 5,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Koi",
+    "manufacturer": "Elevation Disc Golf",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 4,
+    "turn": -2,
+    "fade": 0
+  },
+  {
+    "model": "Nimbus",
+    "manufacturer": "Elevation Disc Golf",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 1.5
+  },
+  {
+    "model": "OG Binx",
+    "manufacturer": "Elevation Disc Golf",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Psychic",
+    "manufacturer": "Elevation Disc Golf",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Screech",
+    "manufacturer": "Elevation Disc Golf",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 2,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Agera",
+    "manufacturer": "EV-7",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Mobius",
+    "manufacturer": "EV-7",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 4,
+    "turn": -1,
+    "fade": 0
+  },
+  {
+    "model": "Ouroboros",
+    "manufacturer": "EV-7",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Penrose",
+    "manufacturer": "EV-7",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Phi",
+    "manufacturer": "EV-7",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Telos",
+    "manufacturer": "EV-7",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1.5
+  },
+  {
+    "model": "Yang",
+    "manufacturer": "EV-7",
+    "category": "P&A",
+    "speed": 1,
+    "glide": 2,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Yin",
+    "manufacturer": "EV-7",
+    "category": "P&A",
+    "speed": 1,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Chicane",
+    "manufacturer": "Finish Line",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Daytona",
+    "manufacturer": "Finish Line",
+    "category": "DD",
+    "speed": 12,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Era",
+    "manufacturer": "Finish Line",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1.5
+  },
+  {
+    "model": "Interval",
+    "manufacturer": "Finish Line",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Pace",
+    "manufacturer": "Finish Line",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1.5
+  },
+  {
+    "model": "Rally",
+    "manufacturer": "Finish Line",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Sector",
+    "manufacturer": "Finish Line",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Supra",
+    "manufacturer": "Finish Line",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Torque",
+    "manufacturer": "Finish Line",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2.5
+  },
+  {
+    "model": "Air Strike",
+    "manufacturer": "Gateway",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Amphibian",
+    "manufacturer": "Gateway",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 6,
+    "turn": -4,
+    "fade": 2
+  },
+  {
+    "model": "Apache (OOP)",
+    "manufacturer": "Gateway",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Apache (retooled)",
+    "manufacturer": "Gateway",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 6,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Apex",
+    "manufacturer": "Gateway",
+    "category": "DD",
+    "speed": 12,
+    "glide": 6,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Assassin",
+    "manufacturer": "Gateway",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 6,
+    "turn": -1.5,
+    "fade": 1
+  },
+  {
+    "model": "Aura",
+    "manufacturer": "Gateway",
+    "category": "DD",
+    "speed": 12,
+    "glide": 6,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Black Zombie Chainsaw",
+    "manufacturer": "Gateway",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 5,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Blade",
+    "manufacturer": "Gateway",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Blaze",
+    "manufacturer": "Gateway",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Chief",
+    "manufacturer": "Gateway",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Chief OS",
+    "manufacturer": "Gateway",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Demon",
+    "manufacturer": "Gateway",
+    "category": "MID",
+    "speed": 6,
+    "glide": 3,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Devil Hawk",
+    "manufacturer": "Gateway",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Diablo",
+    "manufacturer": "Gateway",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Element",
+    "manufacturer": "Gateway",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Ether",
+    "manufacturer": "Gateway",
+    "category": "DD",
+    "speed": 12,
+    "glide": 6,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "G-One",
+    "manufacturer": "Gateway",
+    "category": "DD",
+    "speed": 12,
+    "glide": 6,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Houdini",
+    "manufacturer": "Gateway",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Hybrid",
+    "manufacturer": "Gateway",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Illusion",
+    "manufacturer": "Gateway",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -0.5,
+    "fade": 2.5
+  },
+  {
+    "model": "Journey",
+    "manufacturer": "Gateway",
+    "category": "DD",
+    "speed": 11.5,
+    "glide": 6,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Magic",
+    "manufacturer": "Gateway",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": -1,
+    "fade": 0
+  },
+  {
+    "model": "Morningstar",
+    "manufacturer": "Gateway",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Mystic",
+    "manufacturer": "Gateway",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -3,
+    "fade": 0
+  },
+  {
+    "model": "Ninja",
+    "manufacturer": "Gateway",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 6,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Odyssey",
+    "manufacturer": "Gateway",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Prophecy",
+    "manufacturer": "Gateway",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Realm",
+    "manufacturer": "Gateway",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Sabre",
+    "manufacturer": "Gateway",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Samurai",
+    "manufacturer": "Gateway",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1.5,
+    "fade": 2
+  },
+  {
+    "model": "Scale",
+    "manufacturer": "Gateway",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 1,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Serpent",
+    "manufacturer": "Gateway",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 2,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "Shaman",
+    "manufacturer": "Gateway",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Slayer",
+    "manufacturer": "Gateway",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Spear",
+    "manufacturer": "Gateway",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 6,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Speed Demon",
+    "manufacturer": "Gateway",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -0.5,
+    "fade": 3
+  },
+  {
+    "model": "Spell",
+    "manufacturer": "Gateway",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Spirit",
+    "manufacturer": "Gateway",
+    "category": "DD",
+    "speed": 12,
+    "glide": 4,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Voodoo",
+    "manufacturer": "Gateway",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "Wand",
+    "manufacturer": "Gateway",
+    "category": "P&A",
+    "speed": 1,
+    "glide": 7,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "War Spear",
+    "manufacturer": "Gateway",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Warlock",
+    "manufacturer": "Gateway",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Warrior (Gateway)",
+    "manufacturer": "Gateway",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Wizard",
+    "manufacturer": "Gateway",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Flip",
+    "manufacturer": "Hooligan Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 6,
+    "turn": -4,
+    "fade": 1
+  },
+  {
+    "model": "Thread",
+    "manufacturer": "Hooligan Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Vibe",
+    "manufacturer": "Hooligan Discs",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Alpaca",
+    "manufacturer": "Infinite Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Anubis",
+    "manufacturer": "Infinite Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "Artifact",
+    "manufacturer": "Infinite Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": -1,
+    "fade": 0
+  },
+  {
+    "model": "Aztec",
+    "manufacturer": "Infinite Discs",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Centurion",
+    "manufacturer": "Infinite Discs",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1.5
+  },
+  {
+    "model": "Chariot",
+    "manufacturer": "Infinite Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Cohort",
+    "manufacturer": "Infinite Discs",
+    "category": "P&A",
+    "speed": 3.5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Conqueror",
+    "manufacturer": "Infinite Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 4,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Czar",
+    "manufacturer": "Infinite Discs",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Dynasty",
+    "manufacturer": "Infinite Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Emperor",
+    "manufacturer": "Infinite Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2.5
+  },
+  {
+    "model": "Exodus",
+    "manufacturer": "Infinite Discs",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -0.5,
+    "fade": 2
+  },
+  {
+    "model": "Galleon",
+    "manufacturer": "Infinite Discs",
+    "category": "FWD",
+    "speed": 6,
+    "glide": 3,
+    "turn": 0,
+    "fade": 5
+  },
+  {
+    "model": "Glyph",
+    "manufacturer": "Infinite Discs",
+    "category": "P&A",
+    "speed": 1,
+    "glide": 5,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Inca",
+    "manufacturer": "Infinite Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Khonsu",
+    "manufacturer": "Infinite Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -3,
+    "fade": 0
+  },
+  {
+    "model": "Kon Tiki",
+    "manufacturer": "Infinite Discs",
+    "category": "MID",
+    "speed": 4,
+    "glide": 5,
+    "turn": -3,
+    "fade": 0
+  },
+  {
+    "model": "Maya",
+    "manufacturer": "Infinite Discs",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Myth",
+    "manufacturer": "Infinite Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Pharaoh",
+    "manufacturer": "Infinite Discs",
+    "category": "DD",
+    "speed": 13,
+    "glide": 6,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "RA",
+    "manufacturer": "Infinite Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2.5
+  },
+  {
+    "model": "Raze",
+    "manufacturer": "Infinite Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 2,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Roman",
+    "manufacturer": "Infinite Discs",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Ruin",
+    "manufacturer": "Infinite Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Scarab",
+    "manufacturer": "Infinite Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Scepter",
+    "manufacturer": "Infinite Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Slab",
+    "manufacturer": "Infinite Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 3,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Sphinx",
+    "manufacturer": "Infinite Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 6,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Sultan",
+    "manufacturer": "Infinite Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Tomb",
+    "manufacturer": "Infinite Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Aero",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 3,
+    "glide": 6,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "Alien",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 4,
+    "glide": 2,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Animal",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 1,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Ape",
+    "manufacturer": "Innova",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Arachnid",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 5,
+    "glide": 6,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Archangel",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 6,
+    "turn": -4,
+    "fade": 1
+  },
+  {
+    "model": "Archon",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Atlas",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Avatar",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Aviar Classic",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "Aviar Driver",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Aviar P&A",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Aviar3",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 2,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "AviarX3",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 2,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Banshee",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Beast",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Birdie",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 1,
+    "glide": 2,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "Boss",
+    "manufacturer": "Innova",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Bullfrog",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 1,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Caiman",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 5.5,
+    "glide": 2,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Charger",
+    "manufacturer": "Innova",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Cheetah",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 6,
+    "glide": 4,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Classic Roc",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Cobra",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 4,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Colossus",
+    "manufacturer": "Innova",
+    "category": "DD",
+    "speed": 14,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Colt",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 4,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Condor",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 3,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Corvette",
+    "manufacturer": "Innova",
+    "category": "DD",
+    "speed": 14,
+    "glide": 6,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Coyote",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 4,
+    "glide": 5,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Cro",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 5,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Croc",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 5.5,
+    "glide": 2,
+    "turn": 0,
+    "fade": 5
+  },
+  {
+    "model": "Daedalus",
+    "manufacturer": "Innova",
+    "category": "DD",
+    "speed": 13,
+    "glide": 6,
+    "turn": -3,
+    "fade": 2
+  },
+  {
+    "model": "Dart",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 4,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "Destroyer",
+    "manufacturer": "Innova",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Dominator (OOP)",
+    "manufacturer": "Innova",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Dragon",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Eagle",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 4,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Fairway Disc",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 6,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Firebird",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 3,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Firefly",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Firestorm",
+    "manufacturer": "Innova",
+    "category": "DD",
+    "speed": 14,
+    "glide": 4,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "FL",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Fox",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 5,
+    "glide": 6,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Gator",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 5,
+    "glide": 2,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Gator3",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 5,
+    "glide": 2,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Gazelle",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 6,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Gorgon",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 6,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Gorgon (GStar)",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 6,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Groove",
+    "manufacturer": "Innova",
+    "category": "DD",
+    "speed": 13,
+    "glide": 6,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Hawg",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 1,
+    "turn": 0,
+    "fade": 3.5
+  },
+  {
+    "model": "Hawkeye",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Hydra",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Invader",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 2,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Invictus",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "IT",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 6,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Jay",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "JK Pro Aviar-X",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Juggernaut",
+    "manufacturer": "Innova",
+    "category": "DD",
+    "speed": 12,
+    "glide": 4,
+    "turn": 1,
+    "fade": 4
+  },
+  {
+    "model": "Katana",
+    "manufacturer": "Innova",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -3,
+    "fade": 3
+  },
+  {
+    "model": "KC Pro Aviar",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Khan",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 2,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Krait",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Leopard",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 6,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Leopard3",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Lion",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Lynx",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 6,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Mako",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 4,
+    "glide": 5,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "Mako3",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "Mamba",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 6,
+    "turn": -5,
+    "fade": 1
+  },
+  {
+    "model": "Manta",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Max (OOP)",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 3,
+    "turn": 0,
+    "fade": 5
+  },
+  {
+    "model": "Mid-Disc3",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Mirage",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 4,
+    "turn": -3,
+    "fade": 0
+  },
+  {
+    "model": "Monarch",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": -4,
+    "fade": 1
+  },
+  {
+    "model": "Mystere",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 6,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Nova",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "Orc",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 4,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Panther",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Pegasus",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 4,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Pig",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 1,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Polecat",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 1,
+    "glide": 3,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "Power Disc (Phantom Sword)",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Power Disc2",
+    "manufacturer": "Innova",
+    "category": "DD",
+    "speed": 12,
+    "glide": 4,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Python",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 3,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Racer",
+    "manufacturer": "Innova",
+    "category": "DD",
+    "speed": 12,
+    "glide": 6,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Ram",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 6,
+    "glide": 4,
+    "turn": 1,
+    "fade": 4
+  },
+  {
+    "model": "Rat",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 2,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Rhyno",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 1,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Roadrunner",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -4,
+    "fade": 1
+  },
+  {
+    "model": "Roc",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 4,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Roc X3",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3.5
+  },
+  {
+    "model": "Roc3",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Rollo",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 5,
+    "glide": 6,
+    "turn": -4,
+    "fade": 1
+  },
+  {
+    "model": "Savant",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Shark",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 4,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Shark3",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Shryke",
+    "manufacturer": "Innova",
+    "category": "DD",
+    "speed": 13,
+    "glide": 6,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Sidewinder",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Skeeter",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Sonic",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 1,
+    "glide": 2,
+    "turn": -4,
+    "fade": 0
+  },
+  {
+    "model": "Starfire",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Starfire L",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Stingray",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 4,
+    "glide": 5,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Stud",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Teebird",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Teebird3",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Teedevil",
+    "manufacturer": "Innova",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "TeeRex",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 4,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Tern",
+    "manufacturer": "Innova",
+    "category": "DD",
+    "speed": 12,
+    "glide": 6,
+    "turn": -3,
+    "fade": 2
+  },
+  {
+    "model": "Thunderbird",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "TL",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "TL3",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 4,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Toro",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 2,
+    "turn": 1,
+    "fade": 3
+  },
+  {
+    "model": "Valkyrie",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Viking",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Viper",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 6,
+    "glide": 4,
+    "turn": 1,
+    "fade": 5
+  },
+  {
+    "model": "VRoc",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 4,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Vulcan",
+    "manufacturer": "Innova",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -4,
+    "fade": 2
+  },
+  {
+    "model": "Wahoo",
+    "manufacturer": "Innova",
+    "category": "DD",
+    "speed": 12,
+    "glide": 6,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Wedge",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 3.5,
+    "glide": 3,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Whale",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Whippet",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 6,
+    "glide": 3,
+    "turn": 1,
+    "fade": 5
+  },
+  {
+    "model": "Wolf",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 4,
+    "glide": 3,
+    "turn": -4,
+    "fade": 1
+  },
+  {
+    "model": "Wombat3",
+    "manufacturer": "Innova",
+    "category": "MID",
+    "speed": 5,
+    "glide": 6,
+    "turn": -1,
+    "fade": 0
+  },
+  {
+    "model": "Wraith",
+    "manufacturer": "Innova",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "XCaliber",
+    "manufacturer": "Innova",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "XD",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 4,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Xero",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "Yeti Pro Aviar",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Zephyr",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "Dream Weaver",
+    "manufacturer": "Jester Disc Golf",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1.5
+  },
+  {
+    "model": "Love",
+    "manufacturer": "Jester Disc Golf",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Peace Train",
+    "manufacturer": "Jester Disc Golf",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Wild Thing",
+    "manufacturer": "Jester Disc Golf",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2.5
+  },
+  {
+    "model": "Alva",
+    "manufacturer": "Kastaplast",
+    "category": "DD",
+    "speed": 11,
+    "glide": 6,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Berg",
+    "manufacturer": "Kastaplast",
+    "category": "P&A",
+    "speed": 1,
+    "glide": 1,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Berg X",
+    "manufacturer": "Kastaplast",
+    "category": "P&A",
+    "speed": 1,
+    "glide": 1,
+    "turn": 1,
+    "fade": 2
+  },
+  {
+    "model": "Falk",
+    "manufacturer": "Kastaplast",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 6,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Gote",
+    "manufacturer": "Kastaplast",
+    "category": "MID",
+    "speed": 4,
+    "glide": 5,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Grym (OOP)",
+    "manufacturer": "Kastaplast",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Grym X (OOP)",
+    "manufacturer": "Kastaplast",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Guld",
+    "manufacturer": "Kastaplast",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -0.5,
+    "fade": 3
+  },
+  {
+    "model": "Idog",
+    "manufacturer": "Kastaplast",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -0.5,
+    "fade": 2
+  },
+  {
+    "model": "Impa",
+    "manufacturer": "Kastaplast",
+    "category": "DD",
+    "speed": 11,
+    "glide": 6,
+    "turn": -4,
+    "fade": 1
+  },
+  {
+    "model": "Jarn",
+    "manufacturer": "Kastaplast",
+    "category": "P&A",
+    "speed": 4.5,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Kaxe (Old - OOP)",
+    "manufacturer": "Kastaplast",
+    "category": "MID",
+    "speed": 6,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Kaxe (Retooled)",
+    "manufacturer": "Kastaplast",
+    "category": "MID",
+    "speed": 6,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Kaxe Z (OOP)",
+    "manufacturer": "Kastaplast",
+    "category": "MID",
+    "speed": 6,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Krut",
+    "manufacturer": "Kastaplast",
+    "category": "DD",
+    "speed": 12,
+    "glide": 4,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Lots",
+    "manufacturer": "Kastaplast",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Malm",
+    "manufacturer": "Kastaplast",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2.5
+  },
+  {
+    "model": "Nord",
+    "manufacturer": "Kastaplast",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Rask",
+    "manufacturer": "Kastaplast",
+    "category": "DD",
+    "speed": 14,
+    "glide": 3,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Reko",
+    "manufacturer": "Kastaplast",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Reko X",
+    "manufacturer": "Kastaplast",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Stal",
+    "manufacturer": "Kastaplast",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Stig",
+    "manufacturer": "Kastaplast",
+    "category": "MID",
+    "speed": 6,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Svea",
+    "manufacturer": "Kastaplast",
+    "category": "MID",
+    "speed": 5,
+    "glide": 6,
+    "turn": -1,
+    "fade": 0
+  },
+  {
+    "model": "Tuff",
+    "manufacturer": "Kastaplast",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Vass",
+    "manufacturer": "Kastaplast",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1.5,
+    "fade": 2
+  },
+  {
+    "model": "Anchor",
+    "manufacturer": "Latitude 64",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Ballista",
+    "manufacturer": "Latitude 64",
+    "category": "DD",
+    "speed": 14,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Ballista Pro",
+    "manufacturer": "Latitude 64",
+    "category": "DD",
+    "speed": 14,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Beetle",
+    "manufacturer": "Latitude 64",
+    "category": "P&A",
+    "speed": 1,
+    "glide": 7,
+    "turn": -1,
+    "fade": 0
+  },
+  {
+    "model": "Bolt",
+    "manufacturer": "Latitude 64",
+    "category": "DD",
+    "speed": 13,
+    "glide": 6,
+    "turn": -2,
+    "fade": 3
+  },
+  {
+    "model": "Brave",
+    "manufacturer": "Latitude 64",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 6,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Claymore",
+    "manufacturer": "Latitude 64",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Compass",
+    "manufacturer": "Latitude 64",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Core",
+    "manufacturer": "Latitude 64",
+    "category": "MID",
+    "speed": 6,
+    "glide": 5,
+    "turn": -0.5,
+    "fade": 1
+  },
+  {
+    "model": "Culverin",
+    "manufacturer": "Latitude 64",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -0.5,
+    "fade": 3
+  },
+  {
+    "model": "Cutlass",
+    "manufacturer": "Latitude 64",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3.5
+  },
+  {
+    "model": "Dagger",
+    "manufacturer": "Latitude 64",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 5,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Diamond",
+    "manufacturer": "Latitude 64",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 6,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Explorer",
+    "manufacturer": "Latitude 64",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Faith",
+    "manufacturer": "Latitude 64",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Fire",
+    "manufacturer": "Latitude 64",
+    "category": "MID",
+    "speed": 5,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Flow",
+    "manufacturer": "Latitude 64",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 6,
+    "turn": -0.5,
+    "fade": 2
+  },
+  {
+    "model": "Fury",
+    "manufacturer": "Latitude 64",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 6,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Fuse",
+    "manufacturer": "Latitude 64",
+    "category": "MID",
+    "speed": 5,
+    "glide": 6,
+    "turn": -1,
+    "fade": 0
+  },
+  {
+    "model": "Gladiator",
+    "manufacturer": "Latitude 64",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3.5
+  },
+  {
+    "model": "Glory",
+    "manufacturer": "Latitude 64",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Grace",
+    "manufacturer": "Latitude 64",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 6,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Halo",
+    "manufacturer": "Latitude 64",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -0.5,
+    "fade": 3
+  },
+  {
+    "model": "Havoc",
+    "manufacturer": "Latitude 64",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Honor",
+    "manufacturer": "Latitude 64",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2.5
+  },
+  {
+    "model": "Hope",
+    "manufacturer": "Latitude 64",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Jade",
+    "manufacturer": "Latitude 64",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 6,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Keystone",
+    "manufacturer": "Latitude 64",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Knight",
+    "manufacturer": "Latitude 64",
+    "category": "DD",
+    "speed": 14,
+    "glide": 4,
+    "turn": -1.5,
+    "fade": 3
+  },
+  {
+    "model": "Mace",
+    "manufacturer": "Latitude 64",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Maul",
+    "manufacturer": "Latitude 64",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 7,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Mercy",
+    "manufacturer": "Latitude 64",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Missilen (OOP)",
+    "manufacturer": "Latitude 64",
+    "category": "DD",
+    "speed": 14,
+    "glide": 3,
+    "turn": 0.5,
+    "fade": 4.5
+  },
+  {
+    "model": "Musket",
+    "manufacturer": "Latitude 64",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": -0.5,
+    "fade": 2
+  },
+  {
+    "model": "Peak",
+    "manufacturer": "Latitude 64",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Pearl",
+    "manufacturer": "Latitude 64",
+    "category": "MID",
+    "speed": 4,
+    "glide": 6,
+    "turn": -4,
+    "fade": 0
+  },
+  {
+    "model": "Pioneer",
+    "manufacturer": "Latitude 64",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 3,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Pirate",
+    "manufacturer": "Latitude 64",
+    "category": "MID",
+    "speed": 5,
+    "glide": 6,
+    "turn": -2,
+    "fade": 0
+  },
+  {
+    "model": "Pure",
+    "manufacturer": "Latitude 64",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Raketen (OOP)",
+    "manufacturer": "Latitude 64",
+    "category": "DD",
+    "speed": 15,
+    "glide": 4,
+    "turn": -2,
+    "fade": 3
+  },
+  {
+    "model": "Rive",
+    "manufacturer": "Latitude 64",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3.5
+  },
+  {
+    "model": "River",
+    "manufacturer": "Latitude 64",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 7,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "River Pro (OOP)",
+    "manufacturer": "Latitude 64",
+    "category": "FWD",
+    "speed": 6,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Ruby",
+    "manufacturer": "Latitude 64",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 5,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Saint",
+    "manufacturer": "Latitude 64",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 7,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Saint Pro",
+    "manufacturer": "Latitude 64",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": -0.5,
+    "fade": 2
+  },
+  {
+    "model": "Sapphire",
+    "manufacturer": "Latitude 64",
+    "category": "DD",
+    "speed": 10,
+    "glide": 6,
+    "turn": -2,
+    "fade": 1.5
+  },
+  {
+    "model": "Savior",
+    "manufacturer": "Latitude 64",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Sinus",
+    "manufacturer": "Latitude 64",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 2,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Spark",
+    "manufacturer": "Latitude 64",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 4,
+    "turn": -0.5,
+    "fade": 3
+  },
+  {
+    "model": "Stiletto",
+    "manufacturer": "Latitude 64",
+    "category": "DD",
+    "speed": 13,
+    "glide": 3,
+    "turn": 0.5,
+    "fade": 5
+  },
+  {
+    "model": "Striker",
+    "manufacturer": "Latitude 64",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Strive",
+    "manufacturer": "Latitude 64",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Trident",
+    "manufacturer": "Latitude 64",
+    "category": "FWD",
+    "speed": 6,
+    "glide": 4,
+    "turn": -0.5,
+    "fade": 3
+  },
+  {
+    "model": "Trust",
+    "manufacturer": "Latitude 64",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "XXX",
+    "manufacturer": "Latitude 64",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 3,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Aftermath",
+    "manufacturer": "Legacy",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -2,
+    "fade": 3
+  },
+  {
+    "model": "Badger",
+    "manufacturer": "Legacy",
+    "category": "MID",
+    "speed": 6,
+    "glide": 3,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Bandit",
+    "manufacturer": "Legacy",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Cannon",
+    "manufacturer": "Legacy",
+    "category": "DD",
+    "speed": 14,
+    "glide": 5,
+    "turn": -3,
+    "fade": 3
+  },
+  {
+    "model": "Clozer",
+    "manufacturer": "Legacy",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Clutch",
+    "manufacturer": "Legacy",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Enemy",
+    "manufacturer": "Legacy",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 3,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Fighter",
+    "manufacturer": "Legacy",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 3,
+    "turn": 0,
+    "fade": 5
+  },
+  {
+    "model": "Gauge",
+    "manufacturer": "Legacy",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Ghost",
+    "manufacturer": "Legacy",
+    "category": "MID",
+    "speed": 4,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Hunter",
+    "manufacturer": "Legacy",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3.5,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "Mongoose",
+    "manufacturer": "Legacy",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Nemesis",
+    "manufacturer": "Legacy",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 6,
+    "turn": -4,
+    "fade": 2
+  },
+  {
+    "model": "Outlaw",
+    "manufacturer": "Legacy",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Patriot",
+    "manufacturer": "Legacy",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Phenom",
+    "manufacturer": "Legacy",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Prowler",
+    "manufacturer": "Legacy",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 2,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Pursuit",
+    "manufacturer": "Legacy",
+    "category": "MID",
+    "speed": 5,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Rampage",
+    "manufacturer": "Legacy",
+    "category": "DD",
+    "speed": 14,
+    "glide": 5,
+    "turn": -1,
+    "fade": 4
+  },
+  {
+    "model": "Rebel",
+    "manufacturer": "Legacy",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Recluse",
+    "manufacturer": "Legacy",
+    "category": "MID",
+    "speed": 5,
+    "glide": 3,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Recon",
+    "manufacturer": "Legacy",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Rival",
+    "manufacturer": "Legacy",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Sumo",
+    "manufacturer": "Legacy",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 2,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Valor",
+    "manufacturer": "Legacy",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Vengeance",
+    "manufacturer": "Legacy",
+    "category": "DD",
+    "speed": 10,
+    "glide": 6,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "#1 Driver",
+    "manufacturer": "Lightning",
+    "category": "FWD",
+    "speed": 6,
+    "glide": 4,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "#1 Flyer",
+    "manufacturer": "Lightning",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "#1 Helix",
+    "manufacturer": "Lightning",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 4,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "#1 Hookshot",
+    "manufacturer": "Lightning",
+    "category": "FWD",
+    "speed": 6,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "#1 Hyzer",
+    "manufacturer": "Lightning",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 3,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Bohrium",
+    "manufacturer": "Løft Discs",
+    "category": "DD",
+    "speed": 14,
+    "glide": 6,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Hydrogen",
+    "manufacturer": "Løft Discs",
+    "category": "P&A",
+    "speed": 1,
+    "glide": 2,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "Neon",
+    "manufacturer": "Løft Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 1,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Silicon",
+    "manufacturer": "Løft Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Titanium",
+    "manufacturer": "Løft Discs",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Xenon",
+    "manufacturer": "Løft Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 3,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Armadillo",
+    "manufacturer": "Lone Star Discs",
+    "category": "P&A",
+    "speed": 1,
+    "glide": 2,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Artemis",
+    "manufacturer": "Lone Star Discs",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Bash",
+    "manufacturer": "Lone Star Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Bayonet",
+    "manufacturer": "Lone Star Discs",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "BB6",
+    "manufacturer": "Lone Star Discs",
+    "category": "MID",
+    "speed": 4,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Bearkat",
+    "manufacturer": "Lone Star Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Benny",
+    "manufacturer": "Lone Star Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Bluebonnet",
+    "manufacturer": "Lone Star Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Bowie",
+    "manufacturer": "Lone Star Discs",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Brazos",
+    "manufacturer": "Lone Star Discs",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Bull Snake",
+    "manufacturer": "Lone Star Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 2,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Cactus",
+    "manufacturer": "Lone Star Discs",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Chuck",
+    "manufacturer": "Lone Star Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Chupacabra",
+    "manufacturer": "Lone Star Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 3,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Copperhead",
+    "manufacturer": "Lone Star Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Crockett",
+    "manufacturer": "Lone Star Discs",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Curl",
+    "manufacturer": "Lone Star Discs",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Desperado",
+    "manufacturer": "Lone Star Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Dos X",
+    "manufacturer": "Lone Star Discs",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 4,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Frio",
+    "manufacturer": "Lone Star Discs",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Growler",
+    "manufacturer": "Lone Star Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 6,
+    "turn": -3,
+    "fade": 2
+  },
+  {
+    "model": "Guadalupe",
+    "manufacturer": "Lone Star Discs",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 6,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Harpoon",
+    "manufacturer": "Lone Star Discs",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Harrier",
+    "manufacturer": "Lone Star Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 6,
+    "turn": -3,
+    "fade": 2
+  },
+  {
+    "model": "Horny Toad",
+    "manufacturer": "Lone Star Discs",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Houston",
+    "manufacturer": "Lone Star Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Jack Rabbit",
+    "manufacturer": "Lone Star Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Lariat",
+    "manufacturer": "Lone Star Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Lone Wolf",
+    "manufacturer": "Lone Star Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Mad Cat",
+    "manufacturer": "Lone Star Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Middy",
+    "manufacturer": "Lone Star Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Mockingbird",
+    "manufacturer": "Lone Star Discs",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Nimitz",
+    "manufacturer": "Lone Star Discs",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Penny Putter (Premium)",
+    "manufacturer": "Lone Star Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Penny Putter (Victor)",
+    "manufacturer": "Lone Star Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Prickly Pear",
+    "manufacturer": "Lone Star Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Rig",
+    "manufacturer": "Lone Star Discs",
+    "category": "MID",
+    "speed": 6,
+    "glide": 6,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Rio Grande",
+    "manufacturer": "Lone Star Discs",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Seguin",
+    "manufacturer": "Lone Star Discs",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Spur",
+    "manufacturer": "Lone Star Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Tex",
+    "manufacturer": "Lone Star Discs",
+    "category": "FWD",
+    "speed": 6,
+    "glide": 5,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Texas Ranger",
+    "manufacturer": "Lone Star Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "The Dome",
+    "manufacturer": "Lone Star Discs",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 6,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Tombstone",
+    "manufacturer": "Lone Star Discs",
+    "category": "DD",
+    "speed": 13,
+    "glide": 4,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Trinity",
+    "manufacturer": "Lone Star Discs",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Tumbleweed",
+    "manufacturer": "Lone Star Discs",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 6,
+    "turn": -4,
+    "fade": 1
+  },
+  {
+    "model": "Walker",
+    "manufacturer": "Lone Star Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 3,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Warbird",
+    "manufacturer": "Lone Star Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 6,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Wrangler",
+    "manufacturer": "Lone Star Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Yellow Rose",
+    "manufacturer": "Lone Star Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Aquarius",
+    "manufacturer": "Millennium",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": -3,
+    "fade": 2
+  },
+  {
+    "model": "Aries",
+    "manufacturer": "Millennium",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 6,
+    "turn": -4,
+    "fade": 2
+  },
+  {
+    "model": "Astra",
+    "manufacturer": "Millennium",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Astra-X",
+    "manufacturer": "Millennium",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Aurora/QMS",
+    "manufacturer": "Millennium",
+    "category": "MID",
+    "speed": 4,
+    "glide": 5,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "Draco",
+    "manufacturer": "Millennium",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 3,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Falcon",
+    "manufacturer": "Millennium",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Helio Vela",
+    "manufacturer": "Millennium",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 4,
+    "turn": -0.5,
+    "fade": 3
+  },
+  {
+    "model": "JLS",
+    "manufacturer": "Millennium",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Mars Rover",
+    "manufacturer": "Millennium",
+    "category": "MID",
+    "speed": 5,
+    "glide": 6,
+    "turn": -4,
+    "fade": 1
+  },
+  {
+    "model": "Moab",
+    "manufacturer": "Millennium",
+    "category": "FWD",
+    "speed": 6,
+    "glide": 4,
+    "turn": 1,
+    "fade": 5
+  },
+  {
+    "model": "Mortar",
+    "manufacturer": "Millennium",
+    "category": "MID",
+    "speed": 5,
+    "glide": 2,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Omega",
+    "manufacturer": "Millennium",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "Omega 4",
+    "manufacturer": "Millennium",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Omega Big Bead",
+    "manufacturer": "Millennium",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Orion LF",
+    "manufacturer": "Millennium",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Orion LS",
+    "manufacturer": "Millennium",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Polaris LF (OOP)",
+    "manufacturer": "Millennium",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Polaris LS",
+    "manufacturer": "Millennium",
+    "category": "FWD",
+    "speed": 6,
+    "glide": 4,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Quasar",
+    "manufacturer": "Millennium",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Sabot",
+    "manufacturer": "Millennium",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 4,
+    "turn": 0,
+    "fade": 5
+  },
+  {
+    "model": "Scorpius",
+    "manufacturer": "Millennium",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Sentinel",
+    "manufacturer": "Millennium",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Solstice",
+    "manufacturer": "Millennium",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Tank",
+    "manufacturer": "Millennium",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 1,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Vela",
+    "manufacturer": "Millennium",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 4,
+    "turn": -1.5,
+    "fade": 2
+  },
+  {
+    "model": "Zodiac",
+    "manufacturer": "Millennium",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 6,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Alpha",
+    "manufacturer": "Mint Discs",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Bobcat",
+    "manufacturer": "Mint Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2.5
+  },
+  {
+    "model": "Bullet",
+    "manufacturer": "Mint Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Diamondback",
+    "manufacturer": "Mint Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Freetail",
+    "manufacturer": "Mint Discs",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": -4,
+    "fade": 1
+  },
+  {
+    "model": "Goat",
+    "manufacturer": "Mint Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 4,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Goat (Eternal)",
+    "manufacturer": "Mint Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 4,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Grackle",
+    "manufacturer": "Mint Discs",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Idol",
+    "manufacturer": "Mint Discs",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Jackalope",
+    "manufacturer": "Mint Discs",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Lasso",
+    "manufacturer": "Mint Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Lobster",
+    "manufacturer": "Mint Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Longhorn",
+    "manufacturer": "Mint Discs",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 4,
+    "turn": -1,
+    "fade": 2.5
+  },
+  {
+    "model": "Mustang",
+    "manufacturer": "Mint Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Phoenix",
+    "manufacturer": "Mint Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 3,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Pickle",
+    "manufacturer": "Mint Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3.5,
+    "turn": 0,
+    "fade": 1.5
+  },
+  {
+    "model": "Profit",
+    "manufacturer": "Mint Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Rodeo",
+    "manufacturer": "Mint Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Salamander",
+    "manufacturer": "Mint Discs",
+    "category": "FWD",
+    "speed": 6,
+    "glide": 6,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Taco",
+    "manufacturer": "Mint Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "UFO",
+    "manufacturer": "Mint Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Atom",
+    "manufacturer": "MVP",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": -0.5,
+    "fade": 0
+  },
+  {
+    "model": "Catalyst",
+    "manufacturer": "MVP",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5.5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Deflector",
+    "manufacturer": "MVP",
+    "category": "MID",
+    "speed": 5,
+    "glide": 3.5,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Detour",
+    "manufacturer": "MVP",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Dimension",
+    "manufacturer": "MVP",
+    "category": "DD",
+    "speed": 14.5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Energy",
+    "manufacturer": "MVP",
+    "category": "DD",
+    "speed": 13,
+    "glide": 4,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Entropy",
+    "manufacturer": "MVP",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Glitch",
+    "manufacturer": "MVP",
+    "category": "P&A",
+    "speed": 1,
+    "glide": 7,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "Impulse",
+    "manufacturer": "MVP",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Inertia",
+    "manufacturer": "MVP",
+    "category": "DD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Ion",
+    "manufacturer": "MVP",
+    "category": "P&A",
+    "speed": 2.5,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1.5
+  },
+  {
+    "model": "Matrix",
+    "manufacturer": "MVP",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Motion",
+    "manufacturer": "MVP",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 3.5,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Nitro",
+    "manufacturer": "MVP",
+    "category": "DD",
+    "speed": 13,
+    "glide": 4,
+    "turn": -0.5,
+    "fade": 3
+  },
+  {
+    "model": "Nomad",
+    "manufacturer": "MVP",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Octane",
+    "manufacturer": "MVP",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Ohm",
+    "manufacturer": "MVP",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 5,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Orbital",
+    "manufacturer": "MVP",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -4.5,
+    "fade": 1
+  },
+  {
+    "model": "Phase",
+    "manufacturer": "MVP",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 3.5,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Photon",
+    "manufacturer": "MVP",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2.5
+  },
+  {
+    "model": "Reactor",
+    "manufacturer": "MVP",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -0.5,
+    "fade": 1.5
+  },
+  {
+    "model": "Relativity",
+    "manufacturer": "MVP",
+    "category": "DD",
+    "speed": 14.5,
+    "glide": 5.5,
+    "turn": -3,
+    "fade": 1.5
+  },
+  {
+    "model": "Relay",
+    "manufacturer": "MVP",
+    "category": "FWD",
+    "speed": 6,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Resistor",
+    "manufacturer": "MVP",
+    "category": "FWD",
+    "speed": 6.5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3.5
+  },
+  {
+    "model": "Servo",
+    "manufacturer": "MVP",
+    "category": "FWD",
+    "speed": 6.5,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Signal",
+    "manufacturer": "MVP",
+    "category": "FWD",
+    "speed": 6,
+    "glide": 5,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Spin",
+    "manufacturer": "MVP",
+    "category": "P&A",
+    "speed": 2.5,
+    "glide": 4,
+    "turn": -2,
+    "fade": 0
+  },
+  {
+    "model": "Stasis",
+    "manufacturer": "MVP",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 1,
+    "turn": 0,
+    "fade": 2.5
+  },
+  {
+    "model": "Teleport",
+    "manufacturer": "MVP",
+    "category": "DD",
+    "speed": 14.5,
+    "glide": 5,
+    "turn": -1.5,
+    "fade": 2.5
+  },
+  {
+    "model": "Terra",
+    "manufacturer": "MVP",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Tesla",
+    "manufacturer": "MVP",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Trail",
+    "manufacturer": "MVP",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Volt",
+    "manufacturer": "MVP",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": -0.5,
+    "fade": 2
+  },
+  {
+    "model": "Watt",
+    "manufacturer": "MVP",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 5,
+    "turn": -0.5,
+    "fade": 0.5
+  },
+  {
+    "model": "Wave",
+    "manufacturer": "MVP",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Zenith",
+    "manufacturer": "MVP",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -0.5,
+    "fade": 2
+  },
+  {
+    "model": "Marlin",
+    "manufacturer": "Neptune Discs",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -4,
+    "fade": 1
+  },
+  {
+    "model": "Nautilus",
+    "manufacturer": "Neptune Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Splash",
+    "manufacturer": "Neptune Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Squid",
+    "manufacturer": "Neptune Discs",
+    "category": "DD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Andro C",
+    "manufacturer": "Other",
+    "category": "FWD",
+    "speed": 6,
+    "glide": 4,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Andro C (Retooled)",
+    "manufacturer": "Other",
+    "category": "FWD",
+    "speed": 6,
+    "glide": 4,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Apollo",
+    "manufacturer": "Other",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Cypress",
+    "manufacturer": "Other",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Flying Squirrel",
+    "manufacturer": "Other",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -3,
+    "fade": 2
+  },
+  {
+    "model": "Golem",
+    "manufacturer": "Other",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2.5
+  },
+  {
+    "model": "I-One",
+    "manufacturer": "Other",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "KGB",
+    "manufacturer": "Other",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Kraken",
+    "manufacturer": "Other",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Lawin",
+    "manufacturer": "Other",
+    "category": "DD",
+    "speed": 12,
+    "glide": 6,
+    "turn": -3,
+    "fade": 2
+  },
+  {
+    "model": "Leviathan",
+    "manufacturer": "Other",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": -4,
+    "fade": 0
+  },
+  {
+    "model": "Minotaur",
+    "manufacturer": "Other",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Narwhal",
+    "manufacturer": "Other",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": -2,
+    "fade": 0
+  },
+  {
+    "model": "Nice!",
+    "manufacturer": "Other",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 7,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Pure OG",
+    "manufacturer": "Other",
+    "category": "MID",
+    "speed": 6,
+    "glide": 4,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Stego",
+    "manufacturer": "Other",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 0,
+    "turn": 1,
+    "fade": 4
+  },
+  {
+    "model": "Strike",
+    "manufacturer": "Other",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Tiyanak",
+    "manufacturer": "Other",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": -5,
+    "fade": 1
+  },
+  {
+    "model": "Tyrant",
+    "manufacturer": "Other",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2.5
+  },
+  {
+    "model": "Ultra",
+    "manufacturer": "Other",
+    "category": "MID",
+    "speed": 5,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Zeal",
+    "manufacturer": "Other",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 4,
+    "turn": -2,
+    "fade": 0
+  },
+  {
+    "model": "A1",
+    "manufacturer": "Prodigy",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 2,
+    "turn": 0,
+    "fade": 5
+  },
+  {
+    "model": "A2",
+    "manufacturer": "Prodigy",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 2,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "A3",
+    "manufacturer": "Prodigy",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "A4",
+    "manufacturer": "Prodigy",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 3,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "A5",
+    "manufacturer": "Prodigy",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Archive",
+    "manufacturer": "Prodigy",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "D Model OS",
+    "manufacturer": "Prodigy",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "D Model S",
+    "manufacturer": "Prodigy",
+    "category": "DD",
+    "speed": 13,
+    "glide": 6,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "D Model US",
+    "manufacturer": "Prodigy",
+    "category": "DD",
+    "speed": 13,
+    "glide": 6,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "D1",
+    "manufacturer": "Prodigy",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "D1 Max",
+    "manufacturer": "Prodigy",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "D2",
+    "manufacturer": "Prodigy",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "D2 Max",
+    "manufacturer": "Prodigy",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "D2 Pro",
+    "manufacturer": "Prodigy",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "D2 Signature (Falcor)",
+    "manufacturer": "Prodigy",
+    "category": "DD",
+    "speed": 13,
+    "glide": 6,
+    "turn": -1,
+    "fade": 2.5
+  },
+  {
+    "model": "D3",
+    "manufacturer": "Prodigy",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "D3 Max",
+    "manufacturer": "Prodigy",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "D4",
+    "manufacturer": "Prodigy",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "D4 Max",
+    "manufacturer": "Prodigy",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -3,
+    "fade": 2
+  },
+  {
+    "model": "D6",
+    "manufacturer": "Prodigy",
+    "category": "DD",
+    "speed": 12,
+    "glide": 6,
+    "turn": -3,
+    "fade": 2
+  },
+  {
+    "model": "Distortion",
+    "manufacturer": "Prodigy",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "F Model OS",
+    "manufacturer": "Prodigy",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": 2,
+    "fade": 4
+  },
+  {
+    "model": "F Model S",
+    "manufacturer": "Prodigy",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": 1,
+    "fade": 3
+  },
+  {
+    "model": "F Model US",
+    "manufacturer": "Prodigy",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "F1",
+    "manufacturer": "Prodigy",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 4,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "F2",
+    "manufacturer": "Prodigy",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 4,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "F3",
+    "manufacturer": "Prodigy",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "F5",
+    "manufacturer": "Prodigy",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 6,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "F7",
+    "manufacturer": "Prodigy",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 6,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "F9",
+    "manufacturer": "Prodigy",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 6,
+    "turn": -4,
+    "fade": 0.5
+  },
+  {
+    "model": "Feedback",
+    "manufacturer": "Prodigy",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "FX-2",
+    "manufacturer": "Prodigy",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "FX-3",
+    "manufacturer": "Prodigy",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "FX-4",
+    "manufacturer": "Prodigy",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "H1 (V2)",
+    "manufacturer": "Prodigy",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "H2 (V2)",
+    "manufacturer": "Prodigy",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 4,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "H3 (V2)",
+    "manufacturer": "Prodigy",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "H4 (V2)",
+    "manufacturer": "Prodigy",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "H5",
+    "manufacturer": "Prodigy",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "H7",
+    "manufacturer": "Prodigy",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": -4,
+    "fade": 1
+  },
+  {
+    "model": "M Model S",
+    "manufacturer": "Prodigy",
+    "category": "MID",
+    "speed": 6,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "M Model US",
+    "manufacturer": "Prodigy",
+    "category": "MID",
+    "speed": 4,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "M1",
+    "manufacturer": "Prodigy",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "M2",
+    "manufacturer": "Prodigy",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "M3",
+    "manufacturer": "Prodigy",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "M4",
+    "manufacturer": "Prodigy",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "M5",
+    "manufacturer": "Prodigy",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "MX-1",
+    "manufacturer": "Prodigy",
+    "category": "MID",
+    "speed": 5,
+    "glide": 3,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "MX-2",
+    "manufacturer": "Prodigy",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "MX-3",
+    "manufacturer": "Prodigy",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "P Model OS",
+    "manufacturer": "Prodigy",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "P Model S",
+    "manufacturer": "Prodigy",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "P Model US",
+    "manufacturer": "Prodigy",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "PA1",
+    "manufacturer": "Prodigy",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2.5
+  },
+  {
+    "model": "PA2",
+    "manufacturer": "Prodigy",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "PA3",
+    "manufacturer": "Prodigy",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "PA4",
+    "manufacturer": "Prodigy",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "PA5",
+    "manufacturer": "Prodigy",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 4,
+    "turn": -2,
+    "fade": 0.5
+  },
+  {
+    "model": "Pivot",
+    "manufacturer": "Prodigy",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 4,
+    "turn": 0,
+    "fade": 0.5
+  },
+  {
+    "model": "PX-3",
+    "manufacturer": "Prodigy",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Reverb",
+    "manufacturer": "Prodigy",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3.5
+  },
+  {
+    "model": "Shadowfax",
+    "manufacturer": "Prodigy",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2.5
+  },
+  {
+    "model": "Stryder",
+    "manufacturer": "Prodigy",
+    "category": "MID",
+    "speed": 6,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Waco",
+    "manufacturer": "Prodigy",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "X2",
+    "manufacturer": "Prodigy",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "X3",
+    "manufacturer": "Prodigy",
+    "category": "DD",
+    "speed": 12,
+    "glide": 6,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "X4",
+    "manufacturer": "Prodigy",
+    "category": "DD",
+    "speed": 12,
+    "glide": 6,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "X5",
+    "manufacturer": "Prodigy",
+    "category": "DD",
+    "speed": 12,
+    "glide": 6,
+    "turn": -3,
+    "fade": 2
+  },
+  {
+    "model": "Amulet",
+    "manufacturer": "Prodiscus",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 1,
+    "fade": 3
+  },
+  {
+    "model": "Empire",
+    "manufacturer": "Prodiscus",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Fasti",
+    "manufacturer": "Prodiscus",
+    "category": "DD",
+    "speed": 12,
+    "glide": 4,
+    "turn": -3,
+    "fade": 4
+  },
+  {
+    "model": "Flipperi",
+    "manufacturer": "Prodiscus",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 3,
+    "turn": -3,
+    "fade": 0
+  },
+  {
+    "model": "Jokeri",
+    "manufacturer": "Prodiscus",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 1,
+    "fade": 2
+  },
+  {
+    "model": "JokeriX",
+    "manufacturer": "Prodiscus",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 1,
+    "fade": 2
+  },
+  {
+    "model": "Laseri",
+    "manufacturer": "Prodiscus",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 4,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Legenda",
+    "manufacturer": "Prodiscus",
+    "category": "DD",
+    "speed": 13,
+    "glide": 4,
+    "turn": -1,
+    "fade": 4
+  },
+  {
+    "model": "Midari",
+    "manufacturer": "Prodiscus",
+    "category": "MID",
+    "speed": 5,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Origo",
+    "manufacturer": "Prodiscus",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Razeri",
+    "manufacturer": "Prodiscus",
+    "category": "DD",
+    "speed": 12,
+    "glide": 4,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "RESPECTi",
+    "manufacturer": "Prodiscus",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 2,
+    "turn": 1,
+    "fade": 2
+  },
+  {
+    "model": "Slaidi",
+    "manufacturer": "Prodiscus",
+    "category": "DD",
+    "speed": 11,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Sparta",
+    "manufacturer": "Prodiscus",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 0.5
+  },
+  {
+    "model": "Stari",
+    "manufacturer": "Prodiscus",
+    "category": "MID",
+    "speed": 4,
+    "glide": 4,
+    "turn": -2,
+    "fade": 0
+  },
+  {
+    "model": "Talisman",
+    "manufacturer": "Prodiscus",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Titan",
+    "manufacturer": "Prodiscus",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Huia",
+    "manufacturer": "RPM",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Kahu",
+    "manufacturer": "RPM",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Kahu OS",
+    "manufacturer": "RPM",
+    "category": "DD",
+    "speed": 13,
+    "glide": 4,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Kahu XG",
+    "manufacturer": "RPM",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -2.5,
+    "fade": 2
+  },
+  {
+    "model": "Kea",
+    "manufacturer": "RPM",
+    "category": "MID",
+    "speed": 4,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Kiwi",
+    "manufacturer": "RPM",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 4,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Kotare",
+    "manufacturer": "RPM",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Kotuku",
+    "manufacturer": "RPM",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Pekapeka",
+    "manufacturer": "RPM",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 6,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Piwakawaka",
+    "manufacturer": "RPM",
+    "category": "MID",
+    "speed": 4,
+    "glide": 5,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "Ruru",
+    "manufacturer": "RPM",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Takapu",
+    "manufacturer": "RPM",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Tara iti",
+    "manufacturer": "RPM",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Tui",
+    "manufacturer": "RPM",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 4,
+    "turn": -1,
+    "fade": 0
+  },
+  {
+    "model": "Arrowhead",
+    "manufacturer": "Sacred Discs",
+    "category": "MID",
+    "speed": 4,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Gnome",
+    "manufacturer": "Sacred Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Oracle",
+    "manufacturer": "Sacred Discs",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Starship",
+    "manufacturer": "Sacred Discs",
+    "category": "DD",
+    "speed": 13,
+    "glide": 6,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Cardinal",
+    "manufacturer": "Stokely Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2.5
+  },
+  {
+    "model": "CHING Juju",
+    "manufacturer": "Stokely Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 4,
+    "turn": -1,
+    "fade": 0
+  },
+  {
+    "model": "Finch",
+    "manufacturer": "Stokely Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1.5
+  },
+  {
+    "model": "Lark",
+    "manufacturer": "Stokely Discs",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -1.5,
+    "fade": 1.5
+  },
+  {
+    "model": "Owl",
+    "manufacturer": "Stokely Discs",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Peregrine",
+    "manufacturer": "Stokely Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 6,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Precision",
+    "manufacturer": "Stokely Discs",
+    "category": "MID",
+    "speed": 4.5,
+    "glide": 4,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Robin",
+    "manufacturer": "Stokely Discs",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Wren",
+    "manufacturer": "Stokely Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3.5,
+    "turn": -0.5,
+    "fade": 1
+  },
+  {
+    "model": "Abyss",
+    "manufacturer": "Storm",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Radar",
+    "manufacturer": "Storm",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 5,
+    "turn": 0,
+    "fade": 0.5
+  },
+  {
+    "model": "The Crater",
+    "manufacturer": "Storm",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 2,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "The Eye",
+    "manufacturer": "Storm",
+    "category": "MID",
+    "speed": 6,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Wall Cloud",
+    "manufacturer": "Storm",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Ascend",
+    "manufacturer": "Streamline",
+    "category": "FWD",
+    "speed": 6,
+    "glide": 5,
+    "turn": -3,
+    "fade": 0.5
+  },
+  {
+    "model": "Drift",
+    "manufacturer": "Streamline",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Echo",
+    "manufacturer": "Streamline",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -1.5,
+    "fade": 1
+  },
+  {
+    "model": "Engine",
+    "manufacturer": "Streamline",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -0.5,
+    "fade": 2
+  },
+  {
+    "model": "Flare",
+    "manufacturer": "Streamline",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3.5
+  },
+  {
+    "model": "Jet",
+    "manufacturer": "Streamline",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -3,
+    "fade": 2
+  },
+  {
+    "model": "Lift",
+    "manufacturer": "Streamline",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1.5
+  },
+  {
+    "model": "Parachute",
+    "manufacturer": "Streamline",
+    "category": "P&A",
+    "speed": 1,
+    "glide": 7,
+    "turn": 0,
+    "fade": 0.5
+  },
+  {
+    "model": "Pilot",
+    "manufacturer": "Streamline",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Range",
+    "manufacturer": "Streamline",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 1,
+    "turn": -0.5,
+    "fade": 0.5
+  },
+  {
+    "model": "Runway",
+    "manufacturer": "Streamline",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3.5
+  },
+  {
+    "model": "Shift",
+    "manufacturer": "Streamline",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Stabilizer",
+    "manufacturer": "Streamline",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3.5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Trace",
+    "manufacturer": "Streamline",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Turbulence",
+    "manufacturer": "Streamline",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 2,
+    "turn": 0,
+    "fade": 3.5
+  },
+  {
+    "model": "Alter",
+    "manufacturer": "Thought Space Athletics",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Animus",
+    "manufacturer": "Thought Space Athletics",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Coalesce",
+    "manufacturer": "Thought Space Athletics",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Construct",
+    "manufacturer": "Thought Space Athletics",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 6,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Crux",
+    "manufacturer": "Thought Space Athletics",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Expanse",
+    "manufacturer": "Thought Space Athletics",
+    "category": "DD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Mana",
+    "manufacturer": "Thought Space Athletics",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Mantra",
+    "manufacturer": "Thought Space Athletics",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 6,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Muse",
+    "manufacturer": "Thought Space Athletics",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Nuance",
+    "manufacturer": "Thought Space Athletics",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Omen",
+    "manufacturer": "Thought Space Athletics",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Pathfinder",
+    "manufacturer": "Thought Space Athletics",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Persona",
+    "manufacturer": "Thought Space Athletics",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Pneuma",
+    "manufacturer": "Thought Space Athletics",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "Praxis",
+    "manufacturer": "Thought Space Athletics",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Requiem",
+    "manufacturer": "Thought Space Athletics",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Synapse",
+    "manufacturer": "Thought Space Athletics",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1.5,
+    "fade": 3
+  },
+  {
+    "model": "Temple",
+    "manufacturer": "Thought Space Athletics",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Vessel",
+    "manufacturer": "Thought Space Athletics",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Votum",
+    "manufacturer": "Thought Space Athletics",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Canyon",
+    "manufacturer": "Trash Panda",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Dune",
+    "manufacturer": "Trash Panda",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -1,
+    "fade": 0
+  },
+  {
+    "model": "Inner Core",
+    "manufacturer": "Trash Panda",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 4,
+    "turn": -0.5,
+    "fade": 0
+  },
+  {
+    "model": "Outer Core",
+    "manufacturer": "Trash Panda",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Ozone",
+    "manufacturer": "Trash Panda",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 6,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Procyon",
+    "manufacturer": "Trash Panda",
+    "category": "DD",
+    "speed": 11.5,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Arch",
+    "manufacturer": "Vibram",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Crag",
+    "manufacturer": "Vibram",
+    "category": "MID",
+    "speed": 4,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3.5
+  },
+  {
+    "model": "Ibex",
+    "manufacturer": "Vibram",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Lace",
+    "manufacturer": "Vibram",
+    "category": "DD",
+    "speed": 14,
+    "glide": 6,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Launch",
+    "manufacturer": "Vibram",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Notch",
+    "manufacturer": "Vibram",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 3,
+    "turn": 0,
+    "fade": 4.5
+  },
+  {
+    "model": "O-Lace",
+    "manufacturer": "Vibram",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Obex",
+    "manufacturer": "Vibram",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Onyx",
+    "manufacturer": "Vibram",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 6,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Ridge",
+    "manufacturer": "Vibram",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Solace",
+    "manufacturer": "Vibram",
+    "category": "DD",
+    "speed": 13,
+    "glide": 4,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Sole",
+    "manufacturer": "Vibram",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Summit",
+    "manufacturer": "Vibram",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": -1,
+    "fade": 0
+  },
+  {
+    "model": "UnLace",
+    "manufacturer": "Vibram",
+    "category": "DD",
+    "speed": 14,
+    "glide": 6,
+    "turn": -5,
+    "fade": 1
+  },
+  {
+    "model": "Valley",
+    "manufacturer": "Vibram",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Vamp",
+    "manufacturer": "Vibram",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "VP",
+    "manufacturer": "Vibram",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Axe",
+    "manufacturer": "Viking",
+    "category": "MID",
+    "speed": 4,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Barbarian",
+    "manufacturer": "Viking",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Berserker",
+    "manufacturer": "Viking",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": -3,
+    "fade": 2
+  },
+  {
+    "model": "Cosmos",
+    "manufacturer": "Viking",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Fenrir",
+    "manufacturer": "Viking",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Knife",
+    "manufacturer": "Viking",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Odin",
+    "manufacturer": "Viking",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Ragnarok",
+    "manufacturer": "Viking",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Rune",
+    "manufacturer": "Viking",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 4,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "Thor",
+    "manufacturer": "Viking",
+    "category": "DD",
+    "speed": 14,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Warrior (Viking)",
+    "manufacturer": "Viking",
+    "category": "MID",
+    "speed": 4,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Adder",
+    "manufacturer": "Westside Discs",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Ahti",
+    "manufacturer": "Westside Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 3,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Anvil",
+    "manufacturer": "Westside Discs",
+    "category": "MID",
+    "speed": 4,
+    "glide": 2,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Bard",
+    "manufacturer": "Westside Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Bear",
+    "manufacturer": "Westside Discs",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 6,
+    "turn": -0.5,
+    "fade": 2.5
+  },
+  {
+    "model": "Boatman",
+    "manufacturer": "Westside Discs",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Catapult",
+    "manufacturer": "Westside Discs",
+    "category": "DD",
+    "speed": 14,
+    "glide": 5,
+    "turn": -0.5,
+    "fade": 3
+  },
+  {
+    "model": "Crown",
+    "manufacturer": "Westside Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Destiny",
+    "manufacturer": "Westside Discs",
+    "category": "DD",
+    "speed": 14,
+    "glide": 6,
+    "turn": -2,
+    "fade": 3
+  },
+  {
+    "model": "Fortress",
+    "manufacturer": "Westside Discs",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Gatekeeper",
+    "manufacturer": "Westside Discs",
+    "category": "MID",
+    "speed": 4,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Giant",
+    "manufacturer": "Westside Discs",
+    "category": "DD",
+    "speed": 13,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3.5
+  },
+  {
+    "model": "Harp",
+    "manufacturer": "Westside Discs",
+    "category": "MID",
+    "speed": 4,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Hatchet",
+    "manufacturer": "Westside Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 6,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "King",
+    "manufacturer": "Westside Discs",
+    "category": "DD",
+    "speed": 14,
+    "glide": 5,
+    "turn": -1.5,
+    "fade": 3
+  },
+  {
+    "model": "Longbowman",
+    "manufacturer": "Westside Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Maiden",
+    "manufacturer": "Westside Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Northman",
+    "manufacturer": "Westside Discs",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Pine",
+    "manufacturer": "Westside Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Prince",
+    "manufacturer": "Westside Discs",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Queen",
+    "manufacturer": "Westside Discs",
+    "category": "DD",
+    "speed": 14,
+    "glide": 5,
+    "turn": -3,
+    "fade": 2
+  },
+  {
+    "model": "Sampo",
+    "manufacturer": "Westside Discs",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 4,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Seer",
+    "manufacturer": "Westside Discs",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Shield",
+    "manufacturer": "Westside Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Sling",
+    "manufacturer": "Westside Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Sorcerer",
+    "manufacturer": "Westside Discs",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -0.5,
+    "fade": 3
+  },
+  {
+    "model": "Stag",
+    "manufacturer": "Westside Discs",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 6,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Swan 1 Reborn",
+    "manufacturer": "Westside Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": -2.5,
+    "fade": 0
+  },
+  {
+    "model": "Swan 2",
+    "manufacturer": "Westside Discs",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": -1,
+    "fade": 0
+  },
+  {
+    "model": "Sword",
+    "manufacturer": "Westside Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -0.5,
+    "fade": 2
+  },
+  {
+    "model": "Tide",
+    "manufacturer": "Westside Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 6,
+    "turn": -0.5,
+    "fade": 3
+  },
+  {
+    "model": "Tursas",
+    "manufacturer": "Westside Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Underworld",
+    "manufacturer": "Westside Discs",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 6,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "War Horse",
+    "manufacturer": "Westside Discs",
+    "category": "DD",
+    "speed": 13,
+    "glide": 4,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Warship",
+    "manufacturer": "Westside Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 6,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "World",
+    "manufacturer": "Westside Discs",
+    "category": "DD",
+    "speed": 14,
+    "glide": 4,
+    "turn": -0.5,
+    "fade": 3
+  },
+  {
+    "model": "Addax",
+    "manufacturer": "Wild Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Addax Reborn",
+    "manufacturer": "Wild Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Angler",
+    "manufacturer": "Wild Discs",
+    "category": "MID",
+    "speed": 4,
+    "glide": 3,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Hyena",
+    "manufacturer": "Wild Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Orca",
+    "manufacturer": "Wild Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1.5,
+    "fade": 2
+  },
+  {
+    "model": "Sea Otter",
+    "manufacturer": "Wild Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Tasmanian Devil V2",
+    "manufacturer": "Wild Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": 0,
+    "fade": 4
+  },
+  {
+    "model": "Bi",
+    "manufacturer": "Yikun",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Claws",
+    "manufacturer": "Yikun",
+    "category": "P&A",
+    "speed": 1,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Crossbow",
+    "manufacturer": "Yikun",
+    "category": "MID",
+    "speed": 4,
+    "glide": 1.5,
+    "turn": 0.5,
+    "fade": 4
+  },
+  {
+    "model": "Da'E",
+    "manufacturer": "Yikun",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Fu",
+    "manufacturer": "Yikun",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Gou",
+    "manufacturer": "Yikun",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": -3.5,
+    "fade": 1
+  },
+  {
+    "model": "Gui",
+    "manufacturer": "Yikun",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Hammer",
+    "manufacturer": "Yikun",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 2.5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
+    "model": "Hu",
+    "manufacturer": "Yikun",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Jiao",
+    "manufacturer": "Yikun",
+    "category": "FWD",
+    "speed": 6,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1.5
+  },
+  {
+    "model": "Jun",
+    "manufacturer": "Yikun",
+    "category": "FWD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Kang",
+    "manufacturer": "Yikun",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 5,
+    "turn": -2,
+    "fade": 0
+  },
+  {
+    "model": "Kui",
+    "manufacturer": "Yikun",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2.5
+  },
+  {
+    "model": "Ling",
+    "manufacturer": "Yikun",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Long",
+    "manufacturer": "Yikun",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "Lu",
+    "manufacturer": "Yikun",
+    "category": "DD",
+    "speed": 14,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
+  },
+  {
+    "model": "Meteor Hammer",
+    "manufacturer": "Yikun",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 3,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "Qi",
+    "manufacturer": "Yikun",
+    "category": "DD",
+    "speed": 13,
+    "glide": 6,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Rong",
+    "manufacturer": "Yikun",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -3,
+    "fade": 1
+  },
+  {
+    "model": "Shu",
+    "manufacturer": "Yikun",
+    "category": "MID",
+    "speed": 4,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Tomahawk",
+    "manufacturer": "Yikun",
+    "category": "MID",
+    "speed": 5,
+    "glide": 6,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "Twin Swords",
+    "manufacturer": "Yikun",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
+    "model": "View",
+    "manufacturer": "Yikun",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 6,
+    "turn": -3.5,
+    "fade": 1
+  },
+  {
+    "model": "Wei",
+    "manufacturer": "Yikun",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": -2.5,
+    "fade": 2
+  },
+  {
+    "model": "Wings",
+    "manufacturer": "Yikun",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Xing",
+    "manufacturer": "Yikun",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Yan",
+    "manufacturer": "Yikun",
+    "category": "MID",
+    "speed": 3,
+    "glide": 6,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "Yao",
+    "manufacturer": "Yikun",
+    "category": "MID",
+    "speed": 4,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Yi",
+    "manufacturer": "Yikun",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 0
+  },
+  {
+    "model": "Zheng",
+    "manufacturer": "Yikun",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
+  }
+]

@@ -61,7 +61,9 @@ export function DiscCard({
             <Text style={styles.category}>{disc.category}</Text>
           </View>
           <Text style={styles.manufacturer} numberOfLines={1}>
-            {disc.manufacturer}
+            {disc.plastic
+              ? `${disc.manufacturer} · ${disc.plastic}`
+              : disc.manufacturer}
           </Text>
           {disc.tags.length > 0 && (
             <View style={styles.tagsRow}>

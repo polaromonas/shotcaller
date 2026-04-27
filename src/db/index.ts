@@ -39,6 +39,15 @@ async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
       "ALTER TABLE practice_session ADD COLUMN mode TEXT NOT NULL DEFAULT 'Practice'"
     );
   }
+
+  // disc.plastic added so users can label specific plastic blends per disc
+  // (Halo Star, Lucid Glimmer, etc.). Free-text, nullable.
+  const discCols = await db.getAllAsync<{ name: string }>(
+    "PRAGMA table_info('disc')"
+  );
+  if (discCols.length > 0 && !discCols.some((c) => c.name === 'plastic')) {
+    await db.execAsync('ALTER TABLE disc ADD COLUMN plastic TEXT');
+  }
 }
 
 async function seedDefaultTags(db: SQLite.SQLiteDatabase): Promise<void> {

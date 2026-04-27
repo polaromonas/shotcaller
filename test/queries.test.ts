@@ -63,7 +63,20 @@ describe('discs', () => {
       model: 'Aviar',
       category: 'P&A',
       in_bag: false,
+      plastic: null,
     });
+  });
+
+  test('plastic field roundtrips when set', async () => {
+    await createDisc({
+      manufacturer: 'Innova',
+      model: 'Destroyer',
+      color: '#e63946',
+      category: 'DD',
+      plastic: 'Halo Star',
+    });
+    const discs = await listDiscs();
+    expect(discs[0].plastic).toBe('Halo Star');
   });
 
   test('setInBag flips the flag', async () => {

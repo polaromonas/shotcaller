@@ -28,7 +28,8 @@ CREATE TABLE IF NOT EXISTS disc (
   speed REAL,
   glide REAL,
   turn REAL,
-  fade REAL
+  fade REAL,
+  plastic TEXT
 );
 
 CREATE TABLE IF NOT EXISTS tag (

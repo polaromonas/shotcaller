@@ -121,6 +121,39 @@ describe('SCHEMA_SQL', () => {
     expect(colNames).not.toContain('session_id');
   });
 
+  test('migration adds disc.plastic to a pre-plastic table', async () => {
+    const SQLite = await import('expo-sqlite');
+    const raw = await SQLite.openDatabaseAsync('shotcaller.db');
+    await raw.execAsync(`
+      CREATE TABLE disc (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        manufacturer TEXT NOT NULL,
+        model TEXT NOT NULL,
+        color TEXT NOT NULL,
+        category TEXT NOT NULL,
+        in_bag INTEGER NOT NULL DEFAULT 0,
+        speed REAL,
+        glide REAL,
+        turn REAL,
+        fade REAL
+      );
+      INSERT INTO disc (manufacturer, model, color, category)
+      VALUES ('Innova', 'Destroyer', '#e63946', 'DD');
+    `);
+
+    await getDb();
+
+    const cols = await raw.getAllAsync<{ name: string }>(
+      "PRAGMA table_info('disc')"
+    );
+    expect(cols.map((c) => c.name)).toContain('plastic');
+    const row = await raw.getFirstAsync<{ model: string; plastic: string | null }>(
+      'SELECT model, plastic FROM disc WHERE id = 1'
+    );
+    expect(row?.model).toBe('Destroyer');
+    expect(row?.plastic).toBeNull();
+  });
+
   test('migration adds practice_session.mode to a pre-mode table', async () => {
     const SQLite = await import('expo-sqlite');
     const raw = await SQLite.openDatabaseAsync('shotcaller.db');

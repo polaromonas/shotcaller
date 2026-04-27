@@ -12,6 +12,7 @@ export type Disc = {
   glide: number | null;
   turn: number | null;
   fade: number | null;
+  plastic: string | null;
 };
 
 export type DiscWithTags = Disc & { tags: { id: number; name: string }[] };
@@ -33,6 +34,7 @@ export type NewDiscInput = {
   glide?: number | null;
   turn?: number | null;
   fade?: number | null;
+  plastic?: string | null;
   tagIds?: number[];
 };
 
@@ -70,8 +72,8 @@ export async function listDiscs(): Promise<DiscWithTags[]> {
 export async function createDisc(input: NewDiscInput): Promise<number> {
   const db = await getDb();
   const result = await db.runAsync(
-    `INSERT INTO disc (manufacturer, model, color, category, in_bag, speed, glide, turn, fade)
-     VALUES ($manufacturer, $model, $color, $category, $in_bag, $speed, $glide, $turn, $fade)`,
+    `INSERT INTO disc (manufacturer, model, color, category, in_bag, speed, glide, turn, fade, plastic)
+     VALUES ($manufacturer, $model, $color, $category, $in_bag, $speed, $glide, $turn, $fade, $plastic)`,
     {
       $manufacturer: input.manufacturer.trim(),
       $model: input.model.trim(),
@@ -82,6 +84,7 @@ export async function createDisc(input: NewDiscInput): Promise<number> {
       $glide: input.glide ?? null,
       $turn: input.turn ?? null,
       $fade: input.fade ?? null,
+      $plastic: input.plastic?.trim() || null,
     }
   );
 
@@ -127,7 +130,8 @@ export async function updateDisc(
        speed = $speed,
        glide = $glide,
        turn = $turn,
-       fade = $fade
+       fade = $fade,
+       plastic = $plastic
      WHERE id = $id`,
     {
       $manufacturer: input.manufacturer.trim(),
@@ -138,6 +142,7 @@ export async function updateDisc(
       $glide: input.glide ?? null,
       $turn: input.turn ?? null,
       $fade: input.fade ?? null,
+      $plastic: input.plastic?.trim() || null,
       $id: discId,
     }
   );

@@ -14,6 +14,7 @@ import { DISC_CATEGORIES, type DiscCategory } from '../db/types';
 import { DISC_SWATCHES, INBAG_GREEN, UI } from '../theme/colors';
 import { createTag, listTags, type Tag } from '../db/tags';
 import type { DiscWithTags, NewDiscInput } from '../db/discs';
+import { searchCatalog, type CatalogDisc } from '../data/discCatalog';
 
 type Props = {
   visible: boolean;
@@ -39,6 +40,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
 
   const [manufacturer, setManufacturer] = useState('');
   const [model, setModel] = useState('');
+  const [plastic, setPlastic] = useState('');
   const [category, setCategory] = useState<DiscCategory | null>(null);
   const [color, setColor] = useState<string | null>(null);
   const [flight, setFlight] = useState<Record<FlightField, string>>({
@@ -52,6 +54,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
   const [tags, setTags] = useState<Tag[]>([]);
   const [selectedTagIds, setSelectedTagIds] = useState<Set<number>>(new Set());
   const [newTagName, setNewTagName] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -61,6 +64,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
     if (disc) {
       setManufacturer(disc.manufacturer);
       setModel(disc.model);
+      setPlastic(disc.plastic ?? '');
       setCategory(disc.category);
       setColor(disc.color);
       setFlight({
@@ -71,14 +75,18 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
       });
       setTurnNegative(disc.turn !== null ? disc.turn < 0 : true);
       setSelectedTagIds(new Set(disc.tags.map((t) => t.id)));
+      // Editing an existing disc — don't pester with catalog suggestions.
+      setShowSuggestions(false);
     } else {
       setManufacturer('');
       setModel('');
+      setPlastic('');
       setCategory(null);
       setColor(null);
       setFlight({ speed: '', glide: '', turn: '', fade: '' });
       setTurnNegative(true);
       setSelectedTagIds(new Set());
+      setShowSuggestions(true);
     }
     setNewTagName('');
     setError(null);
@@ -87,12 +95,14 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
   const resetForm = () => {
     setManufacturer('');
     setModel('');
+    setPlastic('');
     setCategory(null);
     setColor(null);
     setFlight({ speed: '', glide: '', turn: '', fade: '' });
     setTurnNegative(true);
     setSelectedTagIds(new Set());
     setNewTagName('');
+    setShowSuggestions(true);
     setError(null);
   };
 
@@ -144,6 +154,33 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
     return negative ? -Math.abs(n) : Math.abs(n);
   };
 
+  // Catalog suggestions are derived from the model field. Hidden once the user
+  // picks a suggestion (they probably don't want the list nagging them after
+  // selection) and re-shown whenever they edit the model field again.
+  const suggestions = useMemo<CatalogDisc[]>(
+    () => (showSuggestions ? searchCatalog(model) : []),
+    [model, showSuggestions]
+  );
+
+  const handleModelChange = (text: string) => {
+    setModel(text);
+    setShowSuggestions(true);
+  };
+
+  const handlePickCatalogDisc = (d: CatalogDisc) => {
+    setManufacturer(d.manufacturer);
+    setModel(d.model);
+    setCategory(d.category);
+    setFlight({
+      speed: flightToText(d.speed),
+      glide: flightToText(d.glide),
+      turn: flightToText(Math.abs(d.turn)),
+      fade: flightToText(d.fade),
+    });
+    setTurnNegative(d.turn < 0);
+    setShowSuggestions(false);
+  };
+
   const handleSubmit = async () => {
     if (!canSubmit || !category || !color) return;
     setSubmitting(true);
@@ -152,6 +189,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
       await onSubmit({
         manufacturer: manufacturer.trim(),
         model: model.trim(),
+        plastic: plastic.trim() || null,
         category,
         color,
         speed: parseFlight(flight.speed),
@@ -219,14 +257,50 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
             />
           </Field>
 
+          <Field label="Plastic (optional)">
+            <TextInput
+              style={styles.input}
+              value={plastic}
+              onChangeText={setPlastic}
+              autoCapitalize="words"
+              returnKeyType="next"
+            />
+          </Field>
+
           <Field label="Model">
             <TextInput
               style={styles.input}
               value={model}
-              onChangeText={setModel}
+              onChangeText={handleModelChange}
               autoCapitalize="words"
               returnKeyType="next"
             />
+            {suggestions.length > 0 && (
+              <View style={styles.suggestList}>
+                {suggestions.map((d) => (
+                  <Pressable
+                    key={`${d.manufacturer}|${d.model}`}
+                    style={({ pressed }) => [
+                      styles.suggestRow,
+                      pressed && styles.suggestRowPressed,
+                    ]}
+                    onPress={() => handlePickCatalogDisc(d)}
+                  >
+                    <View style={styles.suggestText}>
+                      <Text style={styles.suggestModel} numberOfLines={1}>
+                        {d.model}
+                      </Text>
+                      <Text style={styles.suggestMeta} numberOfLines={1}>
+                        {d.manufacturer} · {d.category}
+                      </Text>
+                    </View>
+                    <Text style={styles.suggestFlight}>
+                      {d.speed}/{d.glide}/{d.turn}/{d.fade}
+                    </Text>
+                  </Pressable>
+                ))}
+              </View>
+            )}
           </Field>
 
           <Field label="Category">
@@ -507,6 +581,28 @@ const styles = StyleSheet.create({
   },
   newTagBtnDisabled: { opacity: 0.4 },
   newTagBtnLabel: { fontSize: 14, fontWeight: '600', color: UI.text },
+  suggestList: {
+    marginTop: 4,
+    backgroundColor: UI.surface,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: UI.border,
+    overflow: 'hidden',
+  },
+  suggestRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    gap: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: UI.border,
+  },
+  suggestRowPressed: { backgroundColor: UI.bg },
+  suggestText: { flex: 1, minWidth: 0 },
+  suggestModel: { fontSize: 14, fontWeight: '600', color: UI.text },
+  suggestMeta: { fontSize: 11, color: UI.textMuted, marginTop: 1 },
+  suggestFlight: { fontSize: 12, color: UI.textMuted, fontVariant: ['tabular-nums'] },
   flightRow: { flexDirection: 'row', gap: 8 },
   // minWidth: 0 lets flex children shrink below their intrinsic content width
   // — without it the TextInput's HTML intrinsic size makes the Turn cell
@@ -518,9 +614,17 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     textAlign: 'center',
   },
-  flightInput: { textAlign: 'center' },
-  turnInputRow: { flexDirection: 'row', alignItems: 'stretch', gap: 4 },
-  turnMagnitudeInput: { flex: 1, paddingHorizontal: 4 },
+  // width: 0 + flex: 1 forces equal sizing on react-native-web; without it, the
+  // <input> reports an HTML-intrinsic min-content width that overflows its
+  // flex share.
+  flightInput: { textAlign: 'center', flex: 1, width: 0 },
+  turnInputRow: {
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    gap: 4,
+    minWidth: 0,
+  },
+  turnMagnitudeInput: { paddingHorizontal: 4, minWidth: 0 },
   signBtn: {
     width: 28,
     borderRadius: 10,
