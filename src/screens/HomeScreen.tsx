@@ -12,6 +12,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MODE, UI } from '../theme/colors';
 import {
   getMostRecentSession,
+  listOngoingSessions,
   type PracticeSessionWithContext,
 } from '../db/sessions';
 import type { RootStackParamList } from '../navigation/types';
@@ -22,10 +23,15 @@ export function HomeScreen() {
   const navigation = useNavigation<Nav>();
   const [lastSession, setLastSession] =
     useState<PracticeSessionWithContext | null>(null);
+  const [ongoing, setOngoing] = useState<PracticeSessionWithContext[]>([]);
 
   const load = useCallback(async () => {
-    const s = await getMostRecentSession();
-    setLastSession(s);
+    const [last, active] = await Promise.all([
+      getMostRecentSession(),
+      listOngoingSessions(),
+    ]);
+    setLastSession(last);
+    setOngoing(active);
   }, []);
 
   useFocusEffect(
@@ -45,6 +51,39 @@ export function HomeScreen() {
           <Text style={styles.title}>ShotCaller</Text>
           <Text style={styles.subtitle}>You call the shots.</Text>
         </View>
+
+        {ongoing.map((s) => {
+          const isTournament = s.mode === 'Tournament';
+          const tint = isTournament ? MODE.tournament : MODE.practice;
+          const bg = isTournament ? '#fff0f4' : '#eef3ff';
+          return (
+            <Pressable
+              key={s.id}
+              style={({ pressed }) => [
+                styles.resumeCard,
+                { backgroundColor: bg, borderColor: tint },
+                pressed && styles.pressed,
+              ]}
+              onPress={() =>
+                navigation.navigate(
+                  isTournament ? 'TournamentThrow' : 'PracticeThrow',
+                  { sessionId: s.id, layoutId: s.layout_id }
+                )
+              }
+            >
+              <Text style={[styles.resumeLabel, { color: tint }]}>
+                Resume {isTournament ? 'tournament' : 'practice'} round
+              </Text>
+              <Text style={styles.resumeTitle} numberOfLines={1}>
+                {s.course_name} · {s.layout_name}
+              </Text>
+              <Text style={styles.resumeMeta}>
+                {s.session_date} · {s.throw_count}{' '}
+                {s.throw_count === 1 ? 'throw' : 'throws'} so far
+              </Text>
+            </Pressable>
+          );
+        })}
 
         <View style={styles.modes}>
           <ModeCard
@@ -141,4 +180,18 @@ const styles = StyleSheet.create({
   },
   lastSessionTitle: { fontSize: 16, fontWeight: '600', color: UI.text },
   lastSessionMeta: { fontSize: 13, color: UI.textMuted },
+  resumeCard: {
+    padding: 16,
+    borderRadius: 14,
+    borderWidth: 1.5,
+    gap: 4,
+  },
+  resumeLabel: {
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+    textTransform: 'uppercase',
+  },
+  resumeTitle: { fontSize: 18, fontWeight: '700', color: UI.text },
+  resumeMeta: { fontSize: 13, color: UI.textMuted },
 });

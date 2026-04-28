@@ -15,7 +15,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { listDiscs, type DiscWithTags } from '../db/discs';
+import {
+  createDisc,
+  listDiscs,
+  type DiscWithTags,
+  type NewDiscInput,
+} from '../db/discs';
+import { markSessionCompleted } from '../db/sessions';
+import { AddDiscSheet } from '../components/AddDiscSheet';
 import {
   getLayout,
   listHoles,
@@ -26,15 +33,18 @@ import {
 import { getDb } from '../db';
 import {
   deleteThrow,
+  getMostRecentDiscIdForHole,
   listThrowsForHole,
   logThrow,
   type ThrowWithDisc,
 } from '../db/throws';
 import {
+  DISC_CATEGORIES,
   OVERHAND_SHOT_SHAPES,
   RESULTS,
   SHOT_SHAPES,
   THROW_TYPES,
+  type DiscCategory,
   type ResultKind,
   type ShotShape,
   type ThrowType,
@@ -70,6 +80,28 @@ export function PracticeThrowScreen() {
   const [throwsForHole, setThrowsForHole] = useState<ThrowWithDisc[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [addDiscOpen, setAddDiscOpen] = useState(false);
+  const [categoryFilter, setCategoryFilter] = useState<DiscCategory | 'All'>(
+    'All'
+  );
+
+  const filteredDiscs = useMemo(() => {
+    if (!discs) return [];
+    if (categoryFilter === 'All') return discs;
+    return discs.filter((d) => d.category === categoryFilter);
+  }, [discs, categoryFilter]);
+
+  const handleCategoryChange = useCallback(
+    (cat: DiscCategory | 'All') => {
+      setCategoryFilter(cat);
+      // If the currently selected disc isn't in the new filter, clear it so
+      // the form doesn't quietly hold a hidden selection.
+      if (cat === 'All' || discId === null || !discs) return;
+      const current = discs.find((d) => d.id === discId);
+      if (!current || current.category !== cat) setDiscId(null);
+    },
+    [discs, discId]
+  );
 
   const currentHole = holes && holes.length > 0 ? holes[currentIdx] : null;
 
@@ -103,12 +135,29 @@ export function PracticeThrowScreen() {
     if (currentIdx >= holes.length) setCurrentIdx(holes.length - 1);
   }, [holes, currentIdx]);
 
-  // Default selected disc to the first in-bag disc once discs load.
+  // Per-hole disc memory: when the player lands on a hole, pre-select the
+  // most recently thrown disc on that hole (across all sessions). Falls back
+  // to first in-bag disc on holes with no history. Intentionally NOT depending
+  // on `discs` — adding a new disc mid-round shouldn't override the user's
+  // just-picked selection (handleSubmitNewDisc sets discId itself).
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    if (!discs || discId !== null) return;
-    const firstInBag = discs.find((d) => d.in_bag);
-    if (firstInBag) setDiscId(firstInBag.id);
-  }, [discs, discId]);
+    if (!discs || !currentHole) return;
+    let cancelled = false;
+    (async () => {
+      const lastDiscId = await getMostRecentDiscIdForHole(currentHole.id);
+      if (cancelled) return;
+      if (lastDiscId !== null && discs.some((d) => d.id === lastDiscId)) {
+        setDiscId(lastDiscId);
+        return;
+      }
+      const firstInBag = discs.find((d) => d.in_bag);
+      setDiscId(firstInBag ? firstInBag.id : null);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [currentHole?.id]);
 
   // Thumber/Tomahawk forces throw_type = Overhand.
   useEffect(() => {
@@ -143,6 +192,18 @@ export function PracticeThrowScreen() {
     setCurrentIdx(nextIdx);
     resetAttempt();
   };
+
+  const handleSubmitNewDisc = useCallback(
+    async (input: NewDiscInput) => {
+      // Practice-screen entry point always bags the new disc — the player
+      // wouldn't be adding it mid-round if they weren't carrying it.
+      const newId = await createDisc({ ...input, in_bag: true });
+      const refreshed = await listDiscs();
+      setDiscs(refreshed);
+      setDiscId(newId);
+    },
+    []
+  );
 
   const handlePatchHole = useCallback(
     async (patch: Partial<Pick<Hole, 'par' | 'distance_ft'>>) => {
@@ -220,9 +281,22 @@ export function PracticeThrowScreen() {
     confirmAction({
       title: 'Leave practice round?',
       message:
-        'Your logged throws are saved. You can resume from Home → Practice round.',
+        'Your logged throws are saved. You can resume from Home → Resume practice round.',
       confirmLabel: 'Leave',
       onConfirm: () => navigation.popToTop(),
+    });
+  };
+
+  const handleFinish = () => {
+    confirmAction({
+      title: 'Finish practice round?',
+      message:
+        'This marks the round as done. You can still review the throws from Stats, but the round won’t show as ongoing.',
+      confirmLabel: 'Finish',
+      onConfirm: async () => {
+        await markSessionCompleted(sessionId);
+        navigation.popToTop();
+      },
     });
   };
 
@@ -263,6 +337,14 @@ export function PracticeThrowScreen() {
             {courseName} · {layout.name}
           </Text>
         </View>
+        <Pressable
+          onPress={handleFinish}
+          hitSlop={10}
+          style={styles.finishBtn}
+          accessibilityLabel="Finish practice round"
+        >
+          <Text style={styles.finishLabel}>Finish</Text>
+        </Pressable>
       </View>
 
       <EditableHoleHeader
@@ -288,10 +370,15 @@ export function PracticeThrowScreen() {
           keyboardShouldPersistTaps="handled"
         >
           <Section title="Disc">
+            <CategoryChips
+              value={categoryFilter}
+              onChange={handleCategoryChange}
+            />
             <DiscPicker
-              discs={discs}
+              discs={filteredDiscs}
               selectedId={discId}
               onSelect={setDiscId}
+              onAddNew={() => setAddDiscOpen(true)}
             />
           </Section>
 
@@ -368,6 +455,12 @@ export function PracticeThrowScreen() {
           )}
         </ScrollView>
       </KeyboardAvoidingView>
+
+      <AddDiscSheet
+        visible={addDiscOpen}
+        onClose={() => setAddDiscOpen(false)}
+        onSubmit={handleSubmitNewDisc}
+      />
     </SafeAreaView>
   );
 }
@@ -503,16 +596,47 @@ type DiscPickerProps = {
   discs: DiscWithTags[];
   selectedId: number | null;
   onSelect: (id: number) => void;
+  onAddNew: () => void;
 };
 
-function DiscPicker({ discs, selectedId, onSelect }: DiscPickerProps) {
-  if (discs.length === 0) {
-    return (
-      <Text style={styles.pickerEmpty}>
-        Add discs in the My Discs tab first.
-      </Text>
-    );
-  }
+const CATEGORY_FILTERS: ('All' | DiscCategory)[] = [
+  'All',
+  ...DISC_CATEGORIES,
+];
+
+function CategoryChips({
+  value,
+  onChange,
+}: {
+  value: DiscCategory | 'All';
+  onChange: (next: DiscCategory | 'All') => void;
+}) {
+  return (
+    <View style={styles.categoryChips}>
+      {CATEGORY_FILTERS.map((c) => {
+        const on = c === value;
+        return (
+          <Pressable
+            key={c}
+            onPress={() => !on && onChange(c)}
+            style={[styles.categoryChip, on && styles.categoryChipOn]}
+          >
+            <Text
+              style={[
+                styles.categoryChipLabel,
+                on && styles.categoryChipLabelOn,
+              ]}
+            >
+              {c}
+            </Text>
+          </Pressable>
+        );
+      })}
+    </View>
+  );
+}
+
+function DiscPicker({ discs, selectedId, onSelect, onAddNew }: DiscPickerProps) {
   return (
     <ScrollView
       horizontal
@@ -546,6 +670,14 @@ function DiscPicker({ discs, selectedId, onSelect }: DiscPickerProps) {
           </Pressable>
         );
       })}
+      <Pressable
+        onPress={onAddNew}
+        style={[styles.discPill, styles.addDiscPill]}
+        accessibilityLabel="Add a new disc"
+      >
+        <Text style={styles.addDiscGlyph}>＋</Text>
+        <Text style={styles.addDiscLabel}>Add</Text>
+      </Pressable>
     </ScrollView>
   );
 }
@@ -690,6 +822,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   closeLabel: { fontSize: 18, color: UI.textMuted },
+  finishBtn: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 14,
+    backgroundColor: MODE.practice,
+  },
+  finishLabel: {
+    color: UI.textInverse,
+    fontSize: 12,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+    textTransform: 'uppercase',
+  },
   headerText: { flex: 1, minWidth: 0, gap: 4 },
   modeBadge: {
     alignSelf: 'flex-start',
@@ -810,6 +955,49 @@ const styles = StyleSheet.create({
   discModelOn: { color: MODE.practice },
   discMfr: { fontSize: 11, color: UI.textMuted },
   pickerEmpty: { fontSize: 14, color: UI.textMuted },
+  categoryChips: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+    marginBottom: 8,
+  },
+  categoryChip: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 12,
+    backgroundColor: UI.surface,
+    borderWidth: 1,
+    borderColor: UI.border,
+  },
+  categoryChipOn: {
+    backgroundColor: MODE.practice,
+    borderColor: MODE.practice,
+  },
+  categoryChipLabel: { fontSize: 12, fontWeight: '700', color: UI.textMuted },
+  categoryChipLabelOn: { color: UI.textInverse },
+  addDiscPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 14,
+    backgroundColor: UI.bg,
+    borderStyle: 'dashed',
+    borderColor: MODE.practice,
+    maxWidth: undefined,
+  },
+  addDiscGlyph: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: MODE.practice,
+    lineHeight: 20,
+  },
+  addDiscLabel: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: MODE.practice,
+    letterSpacing: 0.3,
+    textTransform: 'uppercase',
+  },
 
   segmented: {
     flexDirection: 'row',

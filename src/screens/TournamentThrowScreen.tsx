@@ -15,6 +15,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { listDiscs, type DiscWithTags } from '../db/discs';
+import { markSessionCompleted } from '../db/sessions';
 import { getLayout, listHoles, type Hole, type Layout } from '../db/courses';
 import { getDb } from '../db';
 import {
@@ -215,9 +216,22 @@ export function TournamentThrowScreen() {
     confirmAction({
       title: 'Leave tournament round?',
       message:
-        'Your logged throws are saved. You can resume from Home → Tournament round.',
+        'Your logged throws are saved. You can resume from Home → Resume tournament round.',
       confirmLabel: 'Leave',
       onConfirm: () => navigation.popToTop(),
+    });
+  };
+
+  const handleFinish = () => {
+    confirmAction({
+      title: 'Finish tournament round?',
+      message:
+        'This marks the round as done. You can still review the throws from Stats, but the round won’t show as ongoing.',
+      confirmLabel: 'Finish',
+      onConfirm: async () => {
+        await markSessionCompleted(sessionId);
+        navigation.popToTop();
+      },
     });
   };
 
@@ -258,6 +272,14 @@ export function TournamentThrowScreen() {
             {courseName} · {layout.name}
           </Text>
         </View>
+        <Pressable
+          onPress={handleFinish}
+          hitSlop={10}
+          style={styles.finishBtn}
+          accessibilityLabel="Finish tournament round"
+        >
+          <Text style={styles.finishLabel}>Finish</Text>
+        </Pressable>
       </View>
 
       <HoleNav
@@ -654,6 +676,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   closeLabel: { fontSize: 18, color: UI.textMuted },
+  finishBtn: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 14,
+    backgroundColor: MODE.tournament,
+  },
+  finishLabel: {
+    color: UI.textInverse,
+    fontSize: 12,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+    textTransform: 'uppercase',
+  },
   headerText: { flex: 1, minWidth: 0, gap: 4 },
   modeBadge: {
     alignSelf: 'flex-start',

@@ -56,6 +56,20 @@ export async function deleteThrow(throwId: number): Promise<void> {
   await db.runAsync('DELETE FROM throw WHERE id = $id', { $id: throwId });
 }
 
+export async function getMostRecentDiscIdForHole(
+  holeId: number
+): Promise<number | null> {
+  const db = await getDb();
+  const row = await db.getFirstAsync<{ disc_id: number }>(
+    `SELECT disc_id FROM throw
+      WHERE hole_id = $hole_id
+      ORDER BY id DESC
+      LIMIT 1`,
+    { $hole_id: holeId }
+  );
+  return row?.disc_id ?? null;
+}
+
 export async function listThrowsForHole(
   sessionId: number,
   holeId: number

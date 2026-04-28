@@ -73,7 +73,8 @@ CREATE TABLE IF NOT EXISTS practice_session (
   layout_id INTEGER NOT NULL REFERENCES layout(id) ON DELETE RESTRICT,
   session_date TEXT NOT NULL,
   mode TEXT NOT NULL DEFAULT 'Practice' CHECK (${SESSION_MODE_CHECK}),
-  notes TEXT
+  notes TEXT,
+  completed_at TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_practice_session_layout ON practice_session(layout_id);
 

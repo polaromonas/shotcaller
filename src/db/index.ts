@@ -48,6 +48,20 @@ async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
   if (discCols.length > 0 && !discCols.some((c) => c.name === 'plastic')) {
     await db.execAsync('ALTER TABLE disc ADD COLUMN plastic TEXT');
   }
+
+  // practice_session.completed_at lets us distinguish in-progress rounds from
+  // finished ones. NULL = ongoing.
+  const sessionCols2 = await db.getAllAsync<{ name: string }>(
+    "PRAGMA table_info('practice_session')"
+  );
+  if (
+    sessionCols2.length > 0 &&
+    !sessionCols2.some((c) => c.name === 'completed_at')
+  ) {
+    await db.execAsync(
+      'ALTER TABLE practice_session ADD COLUMN completed_at TEXT'
+    );
+  }
 }
 
 async function seedDefaultTags(db: SQLite.SQLiteDatabase): Promise<void> {

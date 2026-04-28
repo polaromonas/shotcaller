@@ -7,6 +7,7 @@ export type PracticeSession = {
   session_date: string;
   mode: SessionMode;
   notes: string | null;
+  completed_at: string | null;
 };
 
 export type PracticeSessionWithContext = PracticeSession & {
@@ -54,6 +55,7 @@ export async function findActiveSession(input: {
       WHERE mode = $mode
         AND layout_id = $layout_id
         AND session_date = $session_date
+        AND completed_at IS NULL
       ORDER BY id DESC
       LIMIT 1`,
     {
@@ -72,7 +74,9 @@ export async function listActiveSessionsByLayout(input: {
   const db = await getDb();
   const rows = await db.getAllAsync<{ id: number; layout_id: number }>(
     `SELECT id, layout_id FROM practice_session
-      WHERE mode = $mode AND session_date = $session_date
+      WHERE mode = $mode
+        AND session_date = $session_date
+        AND completed_at IS NULL
       ORDER BY id DESC`,
     { $mode: input.mode, $session_date: input.sessionDate }
   );
@@ -81,6 +85,27 @@ export async function listActiveSessionsByLayout(input: {
     if (!map.has(r.layout_id)) map.set(r.layout_id, r.id);
   }
   return map;
+}
+
+export async function listOngoingSessions(): Promise<PracticeSessionWithContext[]> {
+  const db = await getDb();
+  return db.getAllAsync<PracticeSessionWithContext>(
+    `SELECT ps.*, c.name AS course_name, l.name AS layout_name,
+            (SELECT COUNT(*) FROM throw t WHERE t.session_id = ps.id) AS throw_count
+       FROM practice_session ps
+       JOIN layout l ON l.id = ps.layout_id
+       JOIN course c ON c.id = l.course_id
+      WHERE ps.completed_at IS NULL
+      ORDER BY ps.session_date DESC, ps.id DESC`
+  );
+}
+
+export async function markSessionCompleted(sessionId: number): Promise<void> {
+  const db = await getDb();
+  await db.runAsync(
+    `UPDATE practice_session SET completed_at = $now WHERE id = $id`,
+    { $now: new Date().toISOString(), $id: sessionId }
+  );
 }
 
 export async function getMostRecentSession(): Promise<PracticeSessionWithContext | null> {
