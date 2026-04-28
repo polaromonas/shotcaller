@@ -16,7 +16,13 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { listDiscs, type DiscWithTags } from '../db/discs';
-import { getLayout, listHoles, type Hole, type Layout } from '../db/courses';
+import {
+  getLayout,
+  listHoles,
+  updateHole,
+  type Hole,
+  type Layout,
+} from '../db/courses';
 import { getDb } from '../db';
 import {
   deleteThrow,
@@ -44,13 +50,15 @@ const DISTANCE_HIDDEN_RESULTS: readonly ResultKind[] = ['Basket', 'OB'];
 export function PracticeThrowScreen() {
   const navigation = useNavigation<Nav>();
   const route = useRoute<Rt>();
-  const { sessionId, layoutId } = route.params;
+  const { sessionId, layoutId, initialHoleIdx } = route.params;
 
   const [layout, setLayout] = useState<Layout | null>(null);
   const [courseName, setCourseName] = useState<string>('');
   const [holes, setHoles] = useState<Hole[] | null>(null);
   const [discs, setDiscs] = useState<DiscWithTags[] | null>(null);
-  const [currentIdx, setCurrentIdx] = useState(0);
+  const [currentIdx, setCurrentIdx] = useState(
+    typeof initialHoleIdx === 'number' && initialHoleIdx > 0 ? initialHoleIdx : 0
+  );
 
   const [discId, setDiscId] = useState<number | null>(null);
   const [throwType, setThrowType] = useState<ThrowType | null>(null);
@@ -87,6 +95,13 @@ export function PracticeThrowScreen() {
       }
     })();
   }, [layoutId]);
+
+  // Clamp currentIdx if the holes array is shorter than the requested start.
+  useEffect(() => {
+    if (!holes) return;
+    if (holes.length === 0) return;
+    if (currentIdx >= holes.length) setCurrentIdx(holes.length - 1);
+  }, [holes, currentIdx]);
 
   // Default selected disc to the first in-bag disc once discs load.
   useEffect(() => {
@@ -128,6 +143,22 @@ export function PracticeThrowScreen() {
     setCurrentIdx(nextIdx);
     resetAttempt();
   };
+
+  const handlePatchHole = useCallback(
+    async (patch: Partial<Pick<Hole, 'par' | 'distance_ft'>>) => {
+      if (!currentHole) return;
+      const next: Hole = { ...currentHole, ...patch };
+      await updateHole({
+        id: next.id,
+        par: next.par,
+        distance_ft: next.distance_ft,
+      });
+      setHoles((prev) =>
+        prev ? prev.map((h) => (h.id === next.id ? next : h)) : prev
+      );
+    },
+    [currentHole]
+  );
 
   const distanceApplies = useMemo(() => {
     if (result === null) return false;
@@ -234,12 +265,16 @@ export function PracticeThrowScreen() {
         </View>
       </View>
 
-      <HoleNav
+      <EditableHoleHeader
         hole={currentHole!}
         index={currentIdx}
         total={holes.length}
         onPrev={() => handleHoleChange(currentIdx - 1)}
         onNext={() => handleHoleChange(currentIdx + 1)}
+        onChangePar={(par) => void handlePatchHole({ par })}
+        onChangeDistance={(distance_ft) =>
+          void handlePatchHole({ distance_ft })
+        }
       />
 
       <KeyboardAvoidingView
@@ -337,17 +372,52 @@ export function PracticeThrowScreen() {
   );
 }
 
-type HoleNavProps = {
+const PAR_OPTIONS = [2, 3, 4, 5] as const;
+
+type EditableHoleHeaderProps = {
   hole: Hole;
   index: number;
   total: number;
   onPrev: () => void;
   onNext: () => void;
+  onChangePar: (par: number) => void;
+  onChangeDistance: (distanceFt: number) => void;
 };
 
-function HoleNav({ hole, index, total, onPrev, onNext }: HoleNavProps) {
+function EditableHoleHeader({
+  hole,
+  index,
+  total,
+  onPrev,
+  onNext,
+  onChangePar,
+  onChangeDistance,
+}: EditableHoleHeaderProps) {
   const atStart = index === 0;
   const atEnd = index === total - 1;
+
+  const [distanceDraft, setDistanceDraft] = useState(
+    hole.distance_ft > 0 ? String(hole.distance_ft) : ''
+  );
+
+  // Resync the draft when the hole changes under us (nav, or a patch from
+  // elsewhere).
+  useEffect(() => {
+    setDistanceDraft(hole.distance_ft > 0 ? String(hole.distance_ft) : '');
+  }, [hole.id, hole.distance_ft]);
+
+  const commitDistance = () => {
+    const trimmed = distanceDraft.trim();
+    if (trimmed.length === 0) {
+      if (hole.distance_ft !== 0) onChangeDistance(0);
+      return;
+    }
+    const n = Math.round(Number(trimmed));
+    if (Number.isFinite(n) && n >= 0 && n !== hole.distance_ft) {
+      onChangeDistance(n);
+    }
+  };
+
   return (
     <View style={styles.holeNav}>
       <Pressable
@@ -360,12 +430,47 @@ function HoleNav({ hole, index, total, onPrev, onNext }: HoleNavProps) {
       </Pressable>
       <View style={styles.holeInfo}>
         <Text style={styles.holeTitle}>
-          Hole {hole.hole_number} · Par {hole.par}
+          Hole {hole.hole_number} · {index + 1} of {total}
         </Text>
-        <Text style={styles.holeMeta}>
-          {hole.distance_ft > 0 ? `${hole.distance_ft} ft` : 'Distance not set'}{' '}
-          · {index + 1} of {total}
-        </Text>
+        <View style={styles.holeEditRow}>
+          <View style={styles.parChips}>
+            {PAR_OPTIONS.map((p) => {
+              const on = p === hole.par;
+              return (
+                <Pressable
+                  key={p}
+                  onPress={() => !on && onChangePar(p)}
+                  style={[styles.parChip, on && styles.parChipOn]}
+                  hitSlop={4}
+                  accessibilityLabel={`Par ${p}`}
+                >
+                  <Text
+                    style={[
+                      styles.parChipLabel,
+                      on && styles.parChipLabelOn,
+                    ]}
+                  >
+                    {p}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
+          <View style={styles.distEditWrap}>
+            <TextInput
+              style={styles.distEditInput}
+              value={distanceDraft}
+              onChangeText={setDistanceDraft}
+              onBlur={commitDistance}
+              onSubmitEditing={commitDistance}
+              keyboardType="number-pad"
+              placeholder="—"
+              maxLength={4}
+              returnKeyType="done"
+            />
+            <Text style={styles.distEditSuffix}>ft</Text>
+          </View>
+        </View>
       </View>
       <Pressable
         onPress={onNext}
@@ -615,6 +720,46 @@ const styles = StyleSheet.create({
   holeInfo: { flex: 1, alignItems: 'center' },
   holeTitle: { fontSize: 16, fontWeight: '700', color: UI.text },
   holeMeta: { fontSize: 12, color: UI.textMuted, marginTop: 2 },
+  holeEditRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginTop: 6,
+  },
+  parChips: { flexDirection: 'row', gap: 4 },
+  parChip: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: UI.bg,
+    borderWidth: 1,
+    borderColor: UI.border,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  parChipOn: { backgroundColor: MODE.practice, borderColor: MODE.practice },
+  parChipLabel: { fontSize: 13, fontWeight: '700', color: UI.textMuted },
+  parChipLabelOn: { color: UI.textInverse },
+  distEditWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: UI.bg,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: UI.border,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+  },
+  distEditInput: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: UI.text,
+    minWidth: 48,
+    textAlign: 'center',
+    paddingVertical: 4,
+  },
+  distEditSuffix: { fontSize: 12, color: UI.textMuted },
   holeNavBtn: {
     width: 36,
     height: 36,

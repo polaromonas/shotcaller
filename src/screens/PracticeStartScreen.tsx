@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -13,7 +13,10 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
+  findOrCreateCourse,
+  findOrCreateLayout,
   listCoursesWithLayouts,
+  listHoles,
   type CourseWithLayouts,
   type Layout,
 } from '../db/courses';
@@ -21,7 +24,6 @@ import { listDiscs } from '../db/discs';
 import {
   createSession,
   findActiveSession,
-  listActiveSessionsByLayout,
   todayIso,
 } from '../db/sessions';
 import { MODE, UI } from '../theme/colors';
@@ -29,30 +31,37 @@ import type { RootStackParamList } from '../navigation/types';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'PracticeStart'>;
 
+const HOLE_COUNT_PRESETS = [9, 18];
+const DEFAULT_HOLE_COUNT = 18;
+
 export function PracticeStartScreen() {
   const navigation = useNavigation<Nav>();
+
   const [courses, setCourses] = useState<CourseWithLayouts[] | null>(null);
   const [discCount, setDiscCount] = useState<number | null>(null);
-  const [selectedLayoutId, setSelectedLayoutId] = useState<number | null>(null);
-  const [sessionDate] = useState<string>(todayIso());
-  const [notes, setNotes] = useState('');
-  const [activeByLayout, setActiveByLayout] = useState<Map<number, number>>(
-    new Map()
+
+  const [courseName, setCourseName] = useState('');
+  const [courseLocation, setCourseLocation] = useState('');
+  const [matchedCourseId, setMatchedCourseId] = useState<number | null>(null);
+
+  const [layoutName, setLayoutName] = useState('');
+  const [matchedLayoutId, setMatchedLayoutId] = useState<number | null>(null);
+  const [matchedLayoutHoleCount, setMatchedLayoutHoleCount] = useState<number | null>(
+    null
   );
+
+  const [holeCount, setHoleCount] = useState<number>(DEFAULT_HOLE_COUNT);
+  const [startHole, setStartHole] = useState<string>('1');
+
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
-    const [rows, active, discs] = await Promise.all([
+    const [rows, discs] = await Promise.all([
       listCoursesWithLayouts(),
-      listActiveSessionsByLayout({
-        sessionDate: todayIso(),
-        mode: 'Practice',
-      }),
       listDiscs(),
     ]);
     setCourses(rows);
-    setActiveByLayout(active);
     setDiscCount(discs.length);
   }, []);
 
@@ -60,30 +69,140 @@ export function PracticeStartScreen() {
     void load();
   }, [load]);
 
+  // Course suggestions filtered by typed name OR location.
+  const courseSuggestions = useMemo(() => {
+    if (courses === null) return [];
+    const q = courseName.trim().toLowerCase();
+    const qLoc = courseLocation.trim().toLowerCase();
+    if (q.length === 0 && qLoc.length === 0) return [];
+    return courses
+      .filter((c) => {
+        if (matchedCourseId !== null && c.id === matchedCourseId) return false;
+        const nameHit = q.length > 0 && c.name.toLowerCase().includes(q);
+        const locHit = qLoc.length > 0 && c.location.toLowerCase().includes(qLoc);
+        return q.length === 0 ? locHit : nameHit;
+      })
+      .slice(0, 6);
+  }, [courses, courseName, courseLocation, matchedCourseId]);
+
+  const matchedCourse = useMemo(
+    () =>
+      matchedCourseId !== null
+        ? courses?.find((c) => c.id === matchedCourseId) ?? null
+        : null,
+    [courses, matchedCourseId]
+  );
+
+  // Layout suggestions only show after a course is matched.
+  const layoutSuggestions = useMemo(() => {
+    if (!matchedCourse) return [];
+    const q = layoutName.trim().toLowerCase();
+    if (q.length === 0) {
+      return matchedCourse.layouts.filter((l) => l.id !== matchedLayoutId);
+    }
+    return matchedCourse.layouts
+      .filter((l) => l.id !== matchedLayoutId)
+      .filter((l) => l.name.toLowerCase().includes(q));
+  }, [matchedCourse, layoutName, matchedLayoutId]);
+
+  const handlePickCourse = (c: CourseWithLayouts) => {
+    setCourseName(c.name);
+    setCourseLocation(c.location);
+    setMatchedCourseId(c.id);
+    // Reset layout when switching course.
+    setLayoutName('');
+    setMatchedLayoutId(null);
+    setMatchedLayoutHoleCount(null);
+  };
+
+  const handleCourseNameChange = (text: string) => {
+    setCourseName(text);
+    if (matchedCourseId !== null) {
+      // User edited away from the matched course; back to "creating new".
+      const m = courses?.find((c) => c.id === matchedCourseId);
+      if (!m || m.name !== text) {
+        setMatchedCourseId(null);
+        setMatchedLayoutId(null);
+        setMatchedLayoutHoleCount(null);
+      }
+    }
+  };
+
+  const handlePickLayout = async (l: Layout) => {
+    setLayoutName(l.name);
+    setMatchedLayoutId(l.id);
+    const holes = await listHoles(l.id);
+    setMatchedLayoutHoleCount(holes.length);
+  };
+
+  const handleLayoutNameChange = (text: string) => {
+    setLayoutName(text);
+    if (matchedLayoutId !== null) {
+      const m = matchedCourse?.layouts.find((l) => l.id === matchedLayoutId);
+      if (!m || m.name !== text) {
+        setMatchedLayoutId(null);
+        setMatchedLayoutHoleCount(null);
+      }
+    }
+  };
+
+  const effectiveHoleCount = matchedLayoutHoleCount ?? holeCount;
+
+  const courseValid =
+    courseName.trim().length > 0 && courseLocation.trim().length > 0;
+  const layoutValid = layoutName.trim().length > 0;
+  const startNum = Number(startHole);
+  const startValid =
+    Number.isInteger(startNum) &&
+    startNum >= 1 &&
+    startNum <= effectiveHoleCount;
+
+  const canStart =
+    !submitting &&
+    discCount !== null &&
+    discCount > 0 &&
+    courseValid &&
+    layoutValid &&
+    startValid;
+
   const handleStart = async () => {
-    if (selectedLayoutId === null) return;
+    if (!canStart) return;
     setSubmitting(true);
     setError(null);
     try {
+      const courseId =
+        matchedCourseId ??
+        (await findOrCreateCourse({
+          name: courseName,
+          location: courseLocation,
+        }));
+      const layoutId =
+        matchedLayoutId ??
+        (await findOrCreateLayout({
+          courseId,
+          name: layoutName,
+          holeCount,
+        }));
+      const today = todayIso();
       const existing = await findActiveSession({
-        layoutId: selectedLayoutId,
-        sessionDate,
+        layoutId,
+        sessionDate: today,
         mode: 'Practice',
       });
       const sessionId =
         existing ??
         (await createSession({
-          layoutId: selectedLayoutId,
-          sessionDate,
+          layoutId,
+          sessionDate: today,
           mode: 'Practice',
-          notes,
         }));
       navigation.replace('PracticeThrow', {
         sessionId,
-        layoutId: selectedLayoutId,
+        layoutId,
+        initialHoleIdx: startNum - 1,
       });
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to start session');
+      setError(e instanceof Error ? e.message : 'Failed to start round');
       setSubmitting(false);
     }
   };
@@ -96,19 +215,18 @@ export function PracticeStartScreen() {
     );
   }
 
-  const layoutsExist = courses.some((c) => c.layouts.length > 0);
-  const discsExist = discCount > 0;
-  const canStart = layoutsExist && discsExist && selectedLayoutId !== null;
-  const isResuming =
-    selectedLayoutId !== null && activeByLayout.has(selectedLayoutId);
+  const noDiscs = discCount === 0;
 
   return (
     <KeyboardAvoidingView
       style={styles.root}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <ScrollView contentContainerStyle={styles.content}>
-        {!discsExist && (
+      <ScrollView
+        contentContainerStyle={styles.content}
+        keyboardShouldPersistTaps="handled"
+      >
+        {noDiscs && (
           <View style={styles.empty}>
             <Text style={styles.emptyBody}>
               Add at least one disc in the My discs tab before starting a
@@ -117,70 +235,149 @@ export function PracticeStartScreen() {
           </View>
         )}
 
-        <View style={styles.dateRow}>
-          <Text style={styles.fieldLabel}>Date</Text>
-          <Text style={styles.dateValue}>{sessionDate}</Text>
-        </View>
-
         <View style={styles.field}>
-          <Text style={styles.fieldLabel}>Layout</Text>
-          {!layoutsExist ? (
-            <View style={styles.empty}>
-              <Text style={styles.emptyBody}>
-                Add a course and a layout in the Courses tab before starting a
-                practice round.
-              </Text>
-            </View>
-          ) : (
-            <View style={styles.layoutList}>
-              {courses.flatMap((course) =>
-                course.layouts.map((layout) => (
-                  <LayoutRow
-                    key={layout.id}
-                    course={course}
-                    layout={layout}
-                    selected={selectedLayoutId === layout.id}
-                    inProgress={activeByLayout.has(layout.id)}
-                    onSelect={() => setSelectedLayoutId(layout.id)}
-                  />
-                ))
-              )}
+          <Text style={styles.label}>Course</Text>
+          <TextInput
+            style={styles.input}
+            value={courseName}
+            onChangeText={handleCourseNameChange}
+            autoCapitalize="words"
+            returnKeyType="next"
+          />
+          {courseSuggestions.length > 0 && (
+            <View style={styles.suggestList}>
+              {courseSuggestions.map((c) => (
+                <Pressable
+                  key={c.id}
+                  style={({ pressed }) => [
+                    styles.suggestRow,
+                    pressed && styles.suggestRowPressed,
+                  ]}
+                  onPress={() => handlePickCourse(c)}
+                >
+                  <Text style={styles.suggestModel} numberOfLines={1}>
+                    {c.name}
+                  </Text>
+                  <Text style={styles.suggestMeta} numberOfLines={1}>
+                    {c.location}
+                  </Text>
+                </Pressable>
+              ))}
             </View>
           )}
         </View>
 
-        {!isResuming && (
+        <View style={styles.field}>
+          <Text style={styles.label}>Location</Text>
+          <TextInput
+            style={[styles.input, matchedCourseId !== null && styles.inputLocked]}
+            value={courseLocation}
+            onChangeText={setCourseLocation}
+            editable={matchedCourseId === null}
+            autoCapitalize="words"
+            returnKeyType="next"
+          />
+          {matchedCourseId !== null && (
+            <Text style={styles.hint}>Locked because you picked an existing course.</Text>
+          )}
+        </View>
+
+        <View style={styles.field}>
+          <Text style={styles.label}>Layout</Text>
+          <TextInput
+            style={styles.input}
+            value={layoutName}
+            onChangeText={handleLayoutNameChange}
+            autoCapitalize="words"
+            returnKeyType="next"
+          />
+          {layoutSuggestions.length > 0 && (
+            <View style={styles.suggestList}>
+              {layoutSuggestions.map((l) => (
+                <Pressable
+                  key={l.id}
+                  style={({ pressed }) => [
+                    styles.suggestRow,
+                    pressed && styles.suggestRowPressed,
+                  ]}
+                  onPress={() => void handlePickLayout(l)}
+                >
+                  <Text style={styles.suggestModel} numberOfLines={1}>
+                    {l.name}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+          )}
+        </View>
+
+        {matchedLayoutId === null && (
           <View style={styles.field}>
-            <Text style={styles.fieldLabel}>Notes (optional)</Text>
-            <TextInput
-              style={[styles.input, styles.notesInput]}
-              value={notes}
-              onChangeText={setNotes}
-              placeholder="How did it feel, wind, etc."
-              multiline
-              numberOfLines={3}
-            />
+            <Text style={styles.label}>Number of holes</Text>
+            <View style={styles.segmentedRow}>
+              <View style={styles.segmented}>
+                {HOLE_COUNT_PRESETS.map((n) => {
+                  const on = holeCount === n;
+                  return (
+                    <Pressable
+                      key={n}
+                      style={[styles.segment, on && styles.segmentOn]}
+                      onPress={() => setHoleCount(n)}
+                    >
+                      <Text
+                        style={[
+                          styles.segmentLabel,
+                          on && styles.segmentLabelOn,
+                        ]}
+                      >
+                        {n}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </View>
+              <TextInput
+                style={[styles.input, styles.numericInput]}
+                value={String(holeCount)}
+                onChangeText={(v) => {
+                  const n = Number(v);
+                  if (Number.isInteger(n) && n >= 1 && n <= 27) setHoleCount(n);
+                  else if (v === '') setHoleCount(0);
+                }}
+                keyboardType="number-pad"
+                maxLength={2}
+              />
+            </View>
           </View>
         )}
+
+        <View style={styles.field}>
+          <Text style={styles.label}>Start at hole</Text>
+          <TextInput
+            style={[styles.input, styles.numericInput]}
+            value={startHole}
+            onChangeText={setStartHole}
+            keyboardType="number-pad"
+            maxLength={2}
+          />
+          {!startValid && startHole.trim().length > 0 && (
+            <Text style={styles.hint}>
+              Pick a hole between 1 and {effectiveHoleCount}.
+            </Text>
+          )}
+        </View>
 
         {error && <Text style={styles.error}>{error}</Text>}
       </ScrollView>
 
       <View style={styles.footer}>
         <Pressable
-          style={[
-            styles.startBtn,
-            (!canStart || submitting) && styles.startBtnDisabled,
-          ]}
-          disabled={!canStart || submitting}
+          style={[styles.startBtn, !canStart && styles.startBtnDisabled]}
+          disabled={!canStart}
           onPress={handleStart}
         >
-          <Text style={styles.startBtnLabel}>
-            {submitting
-              ? 'Starting…'
-              : isResuming
-              ? "Resume today's round"
-              : 'Start practice round'}
+          <Text style={styles.startLabel}>
+            {submitting ? 'Starting…' : 'Start practice round'}
           </Text>
         </Pressable>
       </View>
@@ -188,72 +385,10 @@ export function PracticeStartScreen() {
   );
 }
 
-type LayoutRowProps = {
-  course: CourseWithLayouts;
-  layout: Layout;
-  selected: boolean;
-  inProgress: boolean;
-  onSelect: () => void;
-};
-
-function LayoutRow({
-  course,
-  layout,
-  selected,
-  inProgress,
-  onSelect,
-}: LayoutRowProps) {
-  return (
-    <Pressable
-      onPress={onSelect}
-      style={[styles.layoutRow, selected && styles.layoutRowOn]}
-    >
-      <View style={styles.layoutText}>
-        <View style={styles.layoutNameRow}>
-          <Text
-            style={[styles.layoutName, selected && styles.layoutNameOn]}
-            numberOfLines={1}
-          >
-            {layout.name}
-          </Text>
-          {inProgress && (
-            <View style={styles.inProgressTag}>
-              <Text style={styles.inProgressTagLabel}>Today</Text>
-            </View>
-          )}
-        </View>
-        <Text style={styles.layoutCourse} numberOfLines={1}>
-          {course.name} · {course.location}
-        </Text>
-      </View>
-      {selected && <Text style={styles.check}>✓</Text>}
-    </Pressable>
-  );
-}
-
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: UI.bg },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  content: { padding: 16, gap: 20, paddingBottom: 32 },
-  dateRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 14,
-    backgroundColor: UI.surface,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: UI.border,
-  },
-  dateValue: { fontSize: 15, fontWeight: '600', color: UI.text },
-  field: { gap: 8 },
-  fieldLabel: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: UI.textMuted,
-    letterSpacing: 0.3,
-    textTransform: 'uppercase',
-  },
+  content: { padding: 16, gap: 18, paddingBottom: 40 },
   empty: {
     padding: 16,
     backgroundColor: UI.surface,
@@ -262,45 +397,14 @@ const styles = StyleSheet.create({
     borderColor: UI.border,
   },
   emptyBody: { fontSize: 14, color: UI.textMuted, lineHeight: 20 },
-  layoutList: { gap: 8 },
-  layoutRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 14,
-    backgroundColor: UI.surface,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: UI.border,
-  },
-  layoutRowOn: {
-    backgroundColor: '#eef3ff',
-    borderColor: MODE.practice,
-  },
-  layoutText: { flex: 1, minWidth: 0, gap: 2 },
-  layoutNameRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    flexWrap: 'wrap',
-  },
-  layoutName: { fontSize: 16, fontWeight: '600', color: UI.text },
-  layoutNameOn: { color: MODE.practice },
-  layoutCourse: { fontSize: 12, color: UI.textMuted },
-  inProgressTag: {
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 8,
-    backgroundColor: MODE.practice,
-  },
-  inProgressTagLabel: {
-    fontSize: 10,
-    fontWeight: '700',
-    color: UI.textInverse,
-    letterSpacing: 0.5,
+  field: { gap: 8 },
+  label: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: UI.textMuted,
+    letterSpacing: 0.3,
     textTransform: 'uppercase',
   },
-  check: { fontSize: 18, color: MODE.practice, fontWeight: '700' },
   input: {
     backgroundColor: UI.surface,
     borderRadius: 10,
@@ -311,7 +415,45 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: UI.border,
   },
-  notesInput: { minHeight: 70, textAlignVertical: 'top' },
+  inputLocked: { opacity: 0.55 },
+  numericInput: { width: 80, textAlign: 'center' },
+  segmentedRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  segmented: {
+    flexDirection: 'row',
+    backgroundColor: UI.surface,
+    borderRadius: 10,
+    padding: 3,
+    borderWidth: 1,
+    borderColor: UI.border,
+    flex: 1,
+  },
+  segment: {
+    flex: 1,
+    paddingVertical: 10,
+    alignItems: 'center',
+    borderRadius: 8,
+  },
+  segmentOn: { backgroundColor: MODE.practice },
+  segmentLabel: { fontSize: 14, fontWeight: '600', color: UI.textMuted },
+  segmentLabelOn: { color: UI.textInverse },
+  hint: { fontSize: 12, color: UI.textMuted },
+  suggestList: {
+    backgroundColor: UI.surface,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: UI.border,
+    overflow: 'hidden',
+    marginTop: 4,
+  },
+  suggestRow: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: UI.border,
+  },
+  suggestRowPressed: { backgroundColor: UI.bg },
+  suggestModel: { fontSize: 14, fontWeight: '600', color: UI.text },
+  suggestMeta: { fontSize: 12, color: UI.textMuted, marginTop: 1 },
   error: { color: UI.danger, fontSize: 14 },
   footer: {
     padding: 16,
@@ -326,5 +468,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   startBtnDisabled: { opacity: 0.4 },
-  startBtnLabel: { color: UI.textInverse, fontSize: 16, fontWeight: '700' },
+  startLabel: { color: UI.textInverse, fontSize: 16, fontWeight: '700' },
 });

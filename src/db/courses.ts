@@ -65,6 +65,48 @@ export async function createCourse(input: {
   return result.lastInsertRowId;
 }
 
+export async function findOrCreateCourse(input: {
+  name: string;
+  location: string;
+}): Promise<number> {
+  const db = await getDb();
+  const trimmedName = input.name.trim();
+  const trimmedLocation = input.location.trim();
+  const existing = await db.getFirstAsync<{ id: number }>(
+    `SELECT id FROM course
+      WHERE LOWER(name) = LOWER($name) AND LOWER(location) = LOWER($location)
+      LIMIT 1`,
+    { $name: trimmedName, $location: trimmedLocation }
+  );
+  if (existing) return existing.id;
+  const result = await db.runAsync(
+    'INSERT INTO course (name, location) VALUES ($name, $location)',
+    { $name: trimmedName, $location: trimmedLocation }
+  );
+  return result.lastInsertRowId;
+}
+
+export async function findOrCreateLayout(input: {
+  courseId: number;
+  name: string;
+  holeCount: number;
+}): Promise<number> {
+  const db = await getDb();
+  const trimmedName = input.name.trim();
+  const existing = await db.getFirstAsync<{ id: number }>(
+    `SELECT id FROM layout
+      WHERE course_id = $course_id AND LOWER(name) = LOWER($name)
+      LIMIT 1`,
+    { $course_id: input.courseId, $name: trimmedName }
+  );
+  if (existing) return existing.id;
+  return createLayoutWithHoles({
+    courseId: input.courseId,
+    name: trimmedName,
+    holeCount: input.holeCount,
+  });
+}
+
 export async function deleteCourse(courseId: number): Promise<void> {
   const db = await getDb();
   await db.runAsync('DELETE FROM course WHERE id = $id', { $id: courseId });
