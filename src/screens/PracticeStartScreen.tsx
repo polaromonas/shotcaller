@@ -31,7 +31,6 @@ import type { RootStackParamList } from '../navigation/types';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'PracticeStart'>;
 
-const HOLE_COUNT_PRESETS = [9, 18];
 const DEFAULT_HOLE_COUNT = 18;
 
 export function PracticeStartScreen() {
@@ -314,40 +313,21 @@ export function PracticeStartScreen() {
         {matchedLayoutId === null && (
           <View style={styles.field}>
             <Text style={styles.label}>Number of holes</Text>
-            <View style={styles.segmentedRow}>
-              <View style={styles.segmented}>
-                {HOLE_COUNT_PRESETS.map((n) => {
-                  const on = holeCount === n;
-                  return (
-                    <Pressable
-                      key={n}
-                      style={[styles.segment, on && styles.segmentOn]}
-                      onPress={() => setHoleCount(n)}
-                    >
-                      <Text
-                        style={[
-                          styles.segmentLabel,
-                          on && styles.segmentLabelOn,
-                        ]}
-                      >
-                        {n}
-                      </Text>
-                    </Pressable>
-                  );
-                })}
-              </View>
-              <TextInput
-                style={[styles.input, styles.numericInput]}
-                value={String(holeCount)}
-                onChangeText={(v) => {
-                  const n = Number(v);
-                  if (Number.isInteger(n) && n >= 1 && n <= 27) setHoleCount(n);
-                  else if (v === '') setHoleCount(0);
-                }}
-                keyboardType="number-pad"
-                maxLength={2}
-              />
-            </View>
+            <TextInput
+              style={[styles.input, styles.numericInput]}
+              value={holeCount === 0 ? '' : String(holeCount)}
+              onChangeText={(v) => {
+                if (v === '') {
+                  setHoleCount(0);
+                  return;
+                }
+                const n = Number(v);
+                if (Number.isInteger(n) && n >= 1 && n <= 27) setHoleCount(n);
+              }}
+              keyboardType="number-pad"
+              maxLength={2}
+              placeholder="18"
+            />
           </View>
         )}
 
@@ -417,25 +397,6 @@ const styles = StyleSheet.create({
   },
   inputLocked: { opacity: 0.55 },
   numericInput: { width: 80, textAlign: 'center' },
-  segmentedRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  segmented: {
-    flexDirection: 'row',
-    backgroundColor: UI.surface,
-    borderRadius: 10,
-    padding: 3,
-    borderWidth: 1,
-    borderColor: UI.border,
-    flex: 1,
-  },
-  segment: {
-    flex: 1,
-    paddingVertical: 10,
-    alignItems: 'center',
-    borderRadius: 8,
-  },
-  segmentOn: { backgroundColor: MODE.practice },
-  segmentLabel: { fontSize: 14, fontWeight: '600', color: UI.textMuted },
-  segmentLabelOn: { color: UI.textInverse },
   hint: { fontSize: 12, color: UI.textMuted },
   suggestList: {
     backgroundColor: UI.surface,
