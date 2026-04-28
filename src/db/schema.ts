@@ -1,5 +1,6 @@
 import {
   DISC_CATEGORIES,
+  DISC_SORTS,
   RESULTS,
   SESSION_MODES,
   SHOT_SHAPES,
@@ -14,6 +15,7 @@ const THROW_TYPE_CHECK = `throw_type IN (${quote(THROW_TYPES)})`;
 const SHOT_SHAPE_CHECK = `shot_shape IN (${quote(SHOT_SHAPES)})`;
 const RESULT_CHECK = `result IN (${quote(RESULTS)})`;
 const SESSION_MODE_CHECK = `mode IN (${quote(SESSION_MODES)})`;
+const DISC_SORT_CHECK = `disc_sort IN (${quote(DISC_SORTS)})`;
 
 export const SCHEMA_SQL = `
 PRAGMA foreign_keys = ON;
@@ -106,4 +108,10 @@ CREATE TABLE IF NOT EXISTS game_plan_shot (
   UNIQUE (layout_id, hole_id)
 );
 CREATE INDEX IF NOT EXISTS idx_game_plan_shot_layout ON game_plan_shot(layout_id);
+
+CREATE TABLE IF NOT EXISTS app_settings (
+  id INTEGER PRIMARY KEY CHECK (id = 1),
+  disc_sort TEXT NOT NULL DEFAULT 'bag-order' CHECK (${DISC_SORT_CHECK})
+);
+INSERT OR IGNORE INTO app_settings (id, disc_sort) VALUES (1, 'bag-order');
 `;

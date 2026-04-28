@@ -108,6 +108,49 @@ describe('discs', () => {
     const discs = await listDiscs();
     expect(discs.map((d) => d.model)).toEqual(['In', 'Out']);
   });
+
+  test('default bag-order sorts category then speed within in-bag group', async () => {
+    // Insert in mixed order; expect drivers > fairways > mids > putters,
+    // and faster discs first within each.
+    const slowMid = await createDisc({
+      manufacturer: 'X',
+      model: 'SlowMid',
+      color: '#000',
+      category: 'MID',
+      speed: 4,
+    });
+    const fastDriver = await createDisc({
+      manufacturer: 'X',
+      model: 'FastDriver',
+      color: '#000',
+      category: 'DD',
+      speed: 13,
+    });
+    const slowDriver = await createDisc({
+      manufacturer: 'X',
+      model: 'SlowDriver',
+      color: '#000',
+      category: 'DD',
+      speed: 10,
+    });
+    const putter = await createDisc({
+      manufacturer: 'X',
+      model: 'Putter',
+      color: '#000',
+      category: 'P&A',
+      speed: 2,
+    });
+    for (const id of [slowMid, fastDriver, slowDriver, putter]) {
+      await setInBag(id, true);
+    }
+    const discs = await listDiscs();
+    expect(discs.map((d) => d.model)).toEqual([
+      'FastDriver',
+      'SlowDriver',
+      'SlowMid',
+      'Putter',
+    ]);
+  });
 });
 
 describe('game plan', () => {

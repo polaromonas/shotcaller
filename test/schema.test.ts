@@ -59,6 +59,14 @@ describe('SCHEMA_SQL', () => {
     expect(row?.count).toBe(8);
   });
 
+  test('app_settings singleton is seeded with bag-order default', async () => {
+    const db = await getDb();
+    const row = await db.getFirstAsync<{ disc_sort: string }>(
+      'SELECT disc_sort FROM app_settings WHERE id = 1'
+    );
+    expect(row?.disc_sort).toBe('bag-order');
+  });
+
   test('disc.category CHECK rejects a bogus enum', async () => {
     const db = await getDb();
     await expectRejection(

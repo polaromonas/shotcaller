@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
+  Modal,
   Pressable,
   StyleSheet,
   Text,
@@ -22,18 +23,49 @@ import {
   type DiscWithTags,
   type NewDiscInput,
 } from '../db/discs';
+import { getDiscSort, setDiscSort } from '../db/settings';
+import { DEFAULT_DISC_SORT, type DiscSort } from '../db/types';
 import { UI } from '../theme/colors';
 import { confirmAction } from '../util/confirm';
 
+const SORT_OPTIONS: { value: DiscSort; label: string; hint: string }[] = [
+  {
+    value: 'bag-order',
+    label: 'Bag order',
+    hint: 'Drivers → fairways → mids → putters; fastest first within each',
+  },
+  {
+    value: 'alphabetical',
+    label: 'Alphabetical',
+    hint: 'By disc model name',
+  },
+  {
+    value: 'speed-fast',
+    label: 'Speed (fast → slow)',
+    hint: 'Highest speed first',
+  },
+  {
+    value: 'speed-slow',
+    label: 'Speed (slow → fast)',
+    hint: 'Lowest speed first',
+  },
+];
+
+const labelFor = (s: DiscSort): string =>
+  SORT_OPTIONS.find((o) => o.value === s)?.label ?? s;
+
 export function MyDiscsScreen() {
   const [discs, setDiscs] = useState<DiscWithTags[] | null>(null);
+  const [sortValue, setSortValue] = useState<DiscSort>(DEFAULT_DISC_SORT);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [editingDisc, setEditingDisc] = useState<DiscWithTags | null>(null);
+  const [sortPickerOpen, setSortPickerOpen] = useState(false);
   const openRow = useRef<SwipeableMethods | null>(null);
 
   const refresh = useCallback(async () => {
-    const rows = await listDiscs();
+    const [rows, sort] = await Promise.all([listDiscs(), getDiscSort()]);
     setDiscs(rows);
+    setSortValue(sort);
   }, []);
 
   useEffect(() => {
@@ -81,6 +113,15 @@ export function MyDiscsScreen() {
   const handleToggleInBag = useCallback(
     async (disc: DiscWithTags) => {
       await setInBag(disc.id, !disc.in_bag);
+      await refresh();
+    },
+    [refresh]
+  );
+
+  const handlePickSort = useCallback(
+    async (value: DiscSort) => {
+      setSortPickerOpen(false);
+      await setDiscSort(value);
       await refresh();
     },
     [refresh]
@@ -141,6 +182,20 @@ export function MyDiscsScreen() {
         </Pressable>
       </View>
 
+      {discs !== null && discs.length > 0 && (
+        <View style={styles.sortBar}>
+          <Text style={styles.sortLabel}>Sorted by</Text>
+          <Pressable
+            onPress={() => setSortPickerOpen(true)}
+            hitSlop={6}
+            style={styles.sortPill}
+          >
+            <Text style={styles.sortPillLabel}>{labelFor(sortValue)}</Text>
+            <Text style={styles.sortPillCaret}>▾</Text>
+          </Pressable>
+        </View>
+      )}
+
       {discs === null ? (
         <View style={styles.center}>
           <ActivityIndicator />
@@ -169,7 +224,60 @@ export function MyDiscsScreen() {
         onClose={closeSheet}
         onSubmit={handleSubmit}
       />
+
+      <SortPicker
+        visible={sortPickerOpen}
+        current={sortValue}
+        onPick={handlePickSort}
+        onClose={() => setSortPickerOpen(false)}
+      />
     </SafeAreaView>
+  );
+}
+
+function SortPicker({
+  visible,
+  current,
+  onPick,
+  onClose,
+}: {
+  visible: boolean;
+  current: DiscSort;
+  onPick: (value: DiscSort) => void;
+  onClose: () => void;
+}) {
+  return (
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+      onRequestClose={onClose}
+    >
+      <Pressable style={styles.modalBackdrop} onPress={onClose}>
+        <Pressable style={styles.modalCard} onPress={() => undefined}>
+          <Text style={styles.modalTitle}>Sort discs</Text>
+          {SORT_OPTIONS.map((opt) => {
+            const on = opt.value === current;
+            return (
+              <Pressable
+                key={opt.value}
+                onPress={() => onPick(opt.value)}
+                style={({ pressed }) => [
+                  styles.optionRow,
+                  pressed && styles.optionRowPressed,
+                ]}
+              >
+                <View style={styles.optionText}>
+                  <Text style={styles.optionLabel}>{opt.label}</Text>
+                  <Text style={styles.optionHint}>{opt.hint}</Text>
+                </View>
+                {on && <Text style={styles.optionCheck}>✓</Text>}
+              </Pressable>
+            );
+          })}
+        </Pressable>
+      </Pressable>
+    </Modal>
   );
 }
 
@@ -208,6 +316,30 @@ const styles = StyleSheet.create({
     borderColor: UI.border,
   },
   addBtnLabel: { fontSize: 14, fontWeight: '600', color: UI.text },
+  sortBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: UI.border,
+    backgroundColor: UI.bg,
+  },
+  sortLabel: { fontSize: 12, color: UI.textMuted },
+  sortPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    backgroundColor: UI.surface,
+    borderWidth: 1,
+    borderColor: UI.border,
+  },
+  sortPillLabel: { fontSize: 12, fontWeight: '600', color: UI.text },
+  sortPillCaret: { fontSize: 10, color: UI.textMuted },
   center: {
     flex: 1,
     alignItems: 'center',
@@ -230,4 +362,37 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   emptyBtnLabel: { color: UI.textInverse, fontSize: 15, fontWeight: '600' },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'center',
+    padding: 24,
+  },
+  modalCard: {
+    backgroundColor: UI.bg,
+    borderRadius: 14,
+    padding: 16,
+    gap: 6,
+  },
+  modalTitle: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: UI.textMuted,
+    letterSpacing: 0.5,
+    textTransform: 'uppercase',
+    marginBottom: 4,
+  },
+  optionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 8,
+    borderRadius: 10,
+    gap: 12,
+  },
+  optionRowPressed: { backgroundColor: UI.surface },
+  optionText: { flex: 1, minWidth: 0, gap: 2 },
+  optionLabel: { fontSize: 15, fontWeight: '600', color: UI.text },
+  optionHint: { fontSize: 12, color: UI.textMuted },
+  optionCheck: { fontSize: 18, color: UI.text, fontWeight: '700' },
 });

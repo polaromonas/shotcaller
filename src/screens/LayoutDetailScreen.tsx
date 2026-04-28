@@ -21,10 +21,10 @@ import {
   type Layout,
 } from '../db/courses';
 import { INBAG_GREEN, UI } from '../theme/colors';
-import type { CoursesStackParamList } from '../navigation/types';
+import type { YouStackParamList } from '../navigation/types';
 
-type Nav = NativeStackNavigationProp<CoursesStackParamList, 'LayoutDetail'>;
-type Rt = RouteProp<CoursesStackParamList, 'LayoutDetail'>;
+type Nav = NativeStackNavigationProp<YouStackParamList, 'LayoutDetail'>;
+type Rt = RouteProp<YouStackParamList, 'LayoutDetail'>;
 
 const PARS = [2, 3, 4, 5];
 

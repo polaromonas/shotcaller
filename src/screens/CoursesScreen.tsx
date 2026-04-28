@@ -21,9 +21,9 @@ import {
 import { AddCourseSheet } from '../components/AddCourseSheet';
 import { AddLayoutSheet } from '../components/AddLayoutSheet';
 import { UI } from '../theme/colors';
-import type { CoursesStackParamList } from '../navigation/types';
+import type { YouStackParamList } from '../navigation/types';
 
-type Nav = NativeStackNavigationProp<CoursesStackParamList, 'CoursesList'>;
+type Nav = NativeStackNavigationProp<YouStackParamList, 'CoursesList'>;
 
 export function CoursesScreen() {
   const navigation = useNavigation<Nav>();

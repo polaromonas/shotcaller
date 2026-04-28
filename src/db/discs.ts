@@ -1,5 +1,6 @@
 import { getDb } from './index';
-import type { DiscCategory } from './types';
+import { getDiscSort } from './settings';
+import type { DiscCategory, DiscSort } from './types';
 
 export type Disc = {
   id: number;
@@ -38,11 +39,38 @@ export type NewDiscInput = {
   tagIds?: number[];
 };
 
+function orderBySql(sort: DiscSort): string {
+  // In-bag always sorts first regardless of mode — players want bagged discs
+  // up top during a round.
+  switch (sort) {
+    case 'alphabetical':
+      return 'in_bag DESC, model COLLATE NOCASE ASC';
+    case 'speed-fast':
+      // `speed IS NULL` puts unset speeds at the end whether ASC or DESC.
+      return 'in_bag DESC, speed IS NULL, speed DESC, model COLLATE NOCASE ASC';
+    case 'speed-slow':
+      return 'in_bag DESC, speed IS NULL, speed ASC, model COLLATE NOCASE ASC';
+    case 'bag-order':
+    default:
+      // Mirrors a physical bag: drivers, fairways, mids, putters; within each,
+      // fastest first; ties break alphabetically by model.
+      return `in_bag DESC,
+        CASE category
+          WHEN 'DD' THEN 1
+          WHEN 'FWD' THEN 2
+          WHEN 'MID' THEN 3
+          WHEN 'P&A' THEN 4
+        END,
+        speed IS NULL, speed DESC, model COLLATE NOCASE ASC`;
+  }
+}
+
 export async function listDiscs(): Promise<DiscWithTags[]> {
   const db = await getDb();
+  const sort = await getDiscSort();
   const discs = (
     await db.getAllAsync<DiscRow>(
-      'SELECT * FROM disc ORDER BY in_bag DESC, manufacturer ASC, model ASC'
+      `SELECT * FROM disc ORDER BY ${orderBySql(sort)}`
     )
   ).map(toDisc);
 

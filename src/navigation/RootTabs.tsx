@@ -1,21 +1,54 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { StyleSheet, Text, View } from 'react-native';
+import {
+  createBottomTabNavigator,
+  type BottomTabBarButtonProps,
+} from '@react-navigation/bottom-tabs';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { Ionicons } from '@expo/vector-icons';
 import { HomeScreen } from '../screens/HomeScreen';
-import { MyDiscsScreen } from '../screens/MyDiscsScreen';
-import { CoursesStack } from './CoursesStack';
-import { StatsScreen } from '../screens/StatsScreen';
-import { UI } from '../theme/colors';
+import { YouStack } from './YouStack';
+import { MODE, UI } from '../theme/colors';
+import type { RootStackParamList } from './types';
 
 const Tab = createBottomTabNavigator();
 
-type TabIconProps = { glyph: string; focused: boolean };
+type TabIconProps = {
+  name: React.ComponentProps<typeof Ionicons>['name'];
+  focused: boolean;
+  tint?: string;
+};
 
-function TabIcon({ glyph, focused }: TabIconProps) {
+function TabIcon({ name, focused, tint }: TabIconProps) {
+  const color = tint ?? (focused ? UI.text : UI.textMuted);
   return (
     <View style={styles.iconWrap}>
-      <Text style={[styles.glyph, focused && styles.glyphOn]}>{glyph}</Text>
+      <Ionicons name={name} size={24} color={color} />
     </View>
   );
+}
+
+// Center "Practice" tab navigates onto the root stack instead of switching
+// tabs. Same shape as the other tabs — practice color and center position
+// carry the visual emphasis.
+function PracticeTabButton(props: BottomTabBarButtonProps) {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel="Practice round"
+      onPress={() => navigation.navigate('PracticeStart')}
+      style={[styles.tabBtn, props.style]}
+    >
+      <TabIcon name="disc" focused tint={MODE.practice} />
+      <Text style={[styles.tabLabel, { color: MODE.practice }]}>Practice</Text>
+    </Pressable>
+  );
+}
+
+function PracticeStub() {
+  return null;
 }
 
 export function RootTabs() {
@@ -25,35 +58,38 @@ export function RootTabs() {
         headerShown: false,
         tabBarActiveTintColor: UI.text,
         tabBarInactiveTintColor: UI.textMuted,
-        tabBarStyle: { borderTopColor: UI.border },
+        tabBarLabelStyle: styles.tabLabel,
+        tabBarLabelPosition: 'below-icon',
+        tabBarStyle: { borderTopColor: UI.border, height: 64 },
       }}
     >
       <Tab.Screen
         name="Home"
         component={HomeScreen}
         options={{
-          tabBarIcon: ({ focused }) => <TabIcon glyph="⌂" focused={focused} />,
+          tabBarIcon: ({ focused }) => (
+            <TabIcon name={focused ? 'home' : 'home-outline'} focused={focused} />
+          ),
         }}
       />
       <Tab.Screen
-        name="My discs"
-        component={MyDiscsScreen}
+        name="Practice"
+        component={PracticeStub}
         options={{
-          tabBarIcon: ({ focused }) => <TabIcon glyph="◎" focused={focused} />,
+          tabBarLabel: () => null,
+          tabBarButton: (props) => <PracticeTabButton {...props} />,
         }}
       />
       <Tab.Screen
-        name="Courses"
-        component={CoursesStack}
+        name="More"
+        component={YouStack}
         options={{
-          tabBarIcon: ({ focused }) => <TabIcon glyph="⛳" focused={focused} />,
-        }}
-      />
-      <Tab.Screen
-        name="Stats"
-        component={StatsScreen}
-        options={{
-          tabBarIcon: ({ focused }) => <TabIcon glyph="◧" focused={focused} />,
+          tabBarIcon: ({ focused }) => (
+            <TabIcon
+              name={focused ? 'menu' : 'menu-outline'}
+              focused={focused}
+            />
+          ),
         }}
       />
     </Tab.Navigator>
@@ -62,6 +98,17 @@ export function RootTabs() {
 
 const styles = StyleSheet.create({
   iconWrap: { alignItems: 'center', justifyContent: 'center' },
-  glyph: { fontSize: 20, color: UI.textMuted },
-  glyphOn: { color: UI.text },
+  tabBtn: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 4,
+  },
+  tabLabel: {
+    fontSize: 10,
+    fontWeight: '600',
+    letterSpacing: 0.3,
+    textTransform: 'uppercase',
+    marginTop: 2,
+  },
 });

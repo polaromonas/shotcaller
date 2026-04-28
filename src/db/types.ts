@@ -25,6 +25,16 @@ export type DiscCategory = (typeof DISC_CATEGORIES)[number];
 export const SESSION_MODES = ['Practice', 'Tournament'] as const;
 export type SessionMode = (typeof SESSION_MODES)[number];
 
+export const DISC_SORTS = [
+  'bag-order',
+  'alphabetical',
+  'speed-fast',
+  'speed-slow',
+] as const;
+export type DiscSort = (typeof DISC_SORTS)[number];
+
+export const DEFAULT_DISC_SORT: DiscSort = 'bag-order';
+
 export const DEFAULT_TAGS = [
   'Flippy',
   'Overstable',

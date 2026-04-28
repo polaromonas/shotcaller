@@ -1,4 +1,7 @@
-export type CoursesStackParamList = {
+export type YouStackParamList = {
+  YouHome: undefined;
+  MyDiscs: undefined;
+  MyStats: undefined;
   CoursesList: undefined;
   LayoutDetail: { layoutId: number };
 };
