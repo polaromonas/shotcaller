@@ -22,6 +22,12 @@ const ITEMS: Item[] = [
     route: 'MyDiscs',
   },
   {
+    label: 'Sessions',
+    description: 'Past practice and tournament rounds',
+    glyph: '⌚',
+    route: 'Sessions',
+  },
+  {
     label: 'My Stats',
     description: 'Performance and activity',
     glyph: '◧',

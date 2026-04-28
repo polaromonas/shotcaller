@@ -2,6 +2,7 @@ export type YouStackParamList = {
   YouHome: undefined;
   MyDiscs: undefined;
   MyStats: undefined;
+  Sessions: undefined;
   CoursesList: undefined;
   LayoutDetail: { layoutId: number };
 };

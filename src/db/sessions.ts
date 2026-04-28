@@ -108,6 +108,28 @@ export async function markSessionCompleted(sessionId: number): Promise<void> {
   );
 }
 
+export async function listSessions(): Promise<PracticeSessionWithContext[]> {
+  const db = await getDb();
+  return db.getAllAsync<PracticeSessionWithContext>(
+    `SELECT ps.*, c.name AS course_name, l.name AS layout_name,
+            (SELECT COUNT(*) FROM throw t WHERE t.session_id = ps.id) AS throw_count
+       FROM practice_session ps
+       JOIN layout l ON l.id = ps.layout_id
+       JOIN course c ON c.id = l.course_id
+      ORDER BY ps.session_date DESC, ps.id DESC`
+  );
+}
+
+// throw.session_id has ON DELETE CASCADE, so this also removes every throw
+// logged in the session. game_plan_shot is keyed on layout, not session, so
+// saved game plans are unaffected.
+export async function deleteSession(sessionId: number): Promise<void> {
+  const db = await getDb();
+  await db.runAsync('DELETE FROM practice_session WHERE id = $id', {
+    $id: sessionId,
+  });
+}
+
 export async function getMostRecentSession(): Promise<PracticeSessionWithContext | null> {
   const db = await getDb();
   const row = await db.getFirstAsync<PracticeSessionWithContext>(

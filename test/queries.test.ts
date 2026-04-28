@@ -5,7 +5,11 @@ import {
   createLayoutWithHoles,
   listHoles,
 } from '../src/db/courses';
-import { createSession } from '../src/db/sessions';
+import {
+  createSession,
+  deleteSession,
+  listSessions,
+} from '../src/db/sessions';
 import { logThrow } from '../src/db/throws';
 import {
   loadGamePlanContext,
@@ -286,6 +290,51 @@ describe('game plan', () => {
     const ctx = await loadGamePlanContext(layoutId);
     const rec = ctx!.holes.find((h) => h.hole.id === hole1.id);
     expect(rec?.combo?.disc_id).toBe(fwdId);
+  });
+});
+
+describe('sessions', () => {
+  test('deleteSession cascades to throws but leaves game plan untouched', async () => {
+    const { layoutId, discId, sessionId, holes } = await seedBaseline();
+    await logThrow({
+      sessionId,
+      holeId: holes[0].id,
+      discId,
+      throwType: 'Backhand',
+      shotShape: 'Flat',
+      result: 'Fairway',
+      distanceFt: 80,
+    });
+    // Save a game plan on the layout — must survive the session delete.
+    const { saveGamePlan, listSavedPlansForLayout } = await import(
+      '../src/db/gamePlan'
+    );
+    await saveGamePlan(layoutId, [
+      {
+        holeId: holes[0].id,
+        discId,
+        throwType: 'Backhand',
+        shotShape: 'Flat',
+        notes: null,
+        isManualOverride: false,
+      },
+    ]);
+
+    await deleteSession(sessionId);
+
+    const sessions = await listSessions();
+    expect(sessions.find((s) => s.id === sessionId)).toBeUndefined();
+
+    const { getDb } = await import('../src/db');
+    const db = await getDb();
+    const throwRow = await db.getFirstAsync<{ count: number }>(
+      'SELECT COUNT(*) AS count FROM throw WHERE session_id = $id',
+      { $id: sessionId }
+    );
+    expect(throwRow?.count).toBe(0);
+
+    const plans = await listSavedPlansForLayout(layoutId);
+    expect(plans).toHaveLength(1);
   });
 });
 
