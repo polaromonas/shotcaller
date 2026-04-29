@@ -17,6 +17,7 @@ export type ThrowWithDisc = Throw & {
   disc_manufacturer: string;
   disc_model: string;
   disc_color: string;
+  disc_nickname: string | null;
 };
 
 export type NewThrowInput = {
@@ -79,7 +80,8 @@ export async function listThrowsForHole(
     `SELECT t.*,
             d.manufacturer AS disc_manufacturer,
             d.model AS disc_model,
-            d.color AS disc_color
+            d.color AS disc_color,
+            d.nickname AS disc_nickname
        FROM throw t
        JOIN disc d ON d.id = t.disc_id
       WHERE t.session_id = $session_id AND t.hole_id = $hole_id

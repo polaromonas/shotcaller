@@ -14,7 +14,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { listDiscs, type DiscWithTags } from '../db/discs';
+import {
+  discDisplayName,
+  listDiscs,
+  type DiscWithTags,
+} from '../db/discs';
 import { markSessionCompleted } from '../db/sessions';
 import { getLayout, listHoles, type Hole, type Layout } from '../db/courses';
 import { getDb } from '../db';
@@ -202,7 +206,7 @@ export function TournamentThrowScreen() {
   const handleDeleteThrow = (t: ThrowWithDisc) => {
     confirmAction({
       title: 'Delete throw?',
-      message: `${t.disc_model} · ${t.shot_shape} · ${t.result}. This cannot be undone.`,
+      message: `${t.disc_nickname || t.disc_model} · ${t.shot_shape} · ${t.result}. This cannot be undone.`,
       confirmLabel: 'Delete',
       destructive: true,
       onConfirm: async () => {
@@ -455,10 +459,14 @@ function PlanCard({ plan, discsById }: PlanCardProps) {
         )}
         <View style={styles.planTextWrap}>
           <Text style={styles.planDisc}>
-            {disc ? disc.model : `Disc #${plan.disc_id}`}
+            {disc ? discDisplayName(disc) : `Disc #${plan.disc_id}`}
           </Text>
           <Text style={styles.planMfr}>
-            {disc ? disc.manufacturer : 'Disc not in collection'}
+            {disc
+              ? disc.nickname
+                ? `${disc.manufacturer} · ${disc.model}`
+                : disc.manufacturer
+              : 'Disc not in collection'}
           </Text>
         </View>
       </View>
@@ -523,7 +531,7 @@ function DiscPicker({ discs, selectedId, onSelect }: DiscPickerProps) {
                 style={[styles.discModel, on && styles.discModelOn]}
                 numberOfLines={1}
               >
-                {d.model}
+                {discDisplayName(d)}
               </Text>
               <Text style={styles.discMfr} numberOfLines={1}>
                 {d.manufacturer} · {d.category}
@@ -636,7 +644,7 @@ function ThrowRow({
       />
       <View style={styles.throwText}>
         <Text style={styles.throwTitle} numberOfLines={1}>
-          {throwRow.disc_model} · {throwRow.shot_shape}
+          {throwRow.disc_nickname || throwRow.disc_model} · {throwRow.shot_shape}
         </Text>
         <Text style={styles.throwMeta} numberOfLines={1}>
           {throwRow.throw_type} · {throwRow.result}

@@ -40,13 +40,16 @@ async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
     );
   }
 
-  // disc.plastic added so users can label specific plastic blends per disc
-  // (Halo Star, Lucid Glimmer, etc.). Free-text, nullable.
+  // disc.plastic and disc.nickname added so users can label specific plastic
+  // blends and personal nicknames ("My Roller") per disc. Free-text, nullable.
   const discCols = await db.getAllAsync<{ name: string }>(
     "PRAGMA table_info('disc')"
   );
   if (discCols.length > 0 && !discCols.some((c) => c.name === 'plastic')) {
     await db.execAsync('ALTER TABLE disc ADD COLUMN plastic TEXT');
+  }
+  if (discCols.length > 0 && !discCols.some((c) => c.name === 'nickname')) {
+    await db.execAsync('ALTER TABLE disc ADD COLUMN nickname TEXT');
   }
 
   // practice_session.completed_at lets us distinguish in-progress rounds from

@@ -41,6 +41,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
   const [manufacturer, setManufacturer] = useState('');
   const [model, setModel] = useState('');
   const [plastic, setPlastic] = useState('');
+  const [nickname, setNickname] = useState('');
   const [category, setCategory] = useState<DiscCategory | null>(null);
   const [color, setColor] = useState<string | null>(null);
   const [flight, setFlight] = useState<Record<FlightField, string>>({
@@ -71,6 +72,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
       setManufacturer(disc.manufacturer);
       setModel(disc.model);
       setPlastic(disc.plastic ?? '');
+      setNickname(disc.nickname ?? '');
       setCategory(disc.category);
       setColor(disc.color);
       setFlight({
@@ -87,6 +89,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
       setManufacturer('');
       setModel('');
       setPlastic('');
+      setNickname('');
       setCategory(null);
       setColor(null);
       setFlight({ speed: '', glide: '', turn: '', fade: '' });
@@ -103,6 +106,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
     setManufacturer('');
     setModel('');
     setPlastic('');
+    setNickname('');
     setCategory(null);
     setColor(null);
     setFlight({ speed: '', glide: '', turn: '', fade: '' });
@@ -198,6 +202,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
         manufacturer: manufacturer.trim(),
         model: model.trim(),
         plastic: plastic.trim() || null,
+        nickname: nickname.trim() || null,
         category,
         color,
         speed: parseFlight(flight.speed),
@@ -306,6 +311,16 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
               style={styles.input}
               value={plastic}
               onChangeText={setPlastic}
+              autoCapitalize="words"
+              returnKeyType="next"
+            />
+          </Field>
+
+          <Field label="Nickname">
+            <TextInput
+              style={styles.input}
+              value={nickname}
+              onChangeText={setNickname}
               autoCapitalize="words"
               returnKeyType="next"
             />

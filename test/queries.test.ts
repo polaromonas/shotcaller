@@ -83,6 +83,31 @@ describe('discs', () => {
     expect(discs[0].plastic).toBe('Halo Star');
   });
 
+  test('nickname roundtrips and drives alphabetical sort', async () => {
+    const { setDiscSort } = await import('../src/db/settings');
+    await setDiscSort('alphabetical');
+
+    // Without nickname → sorts by model. With nickname → sorts by nickname.
+    await createDisc({
+      manufacturer: 'Innova',
+      model: 'Destroyer',
+      color: '#e63946',
+      category: 'DD',
+      nickname: 'Bomber',
+    });
+    await createDisc({
+      manufacturer: 'Innova',
+      model: 'Aviar',
+      color: '#ffffff',
+      category: 'P&A',
+    });
+
+    const discs = await listDiscs();
+    // 'Aviar' (no nickname) vs 'Bomber' (nickname for Destroyer): Aviar wins alphabetically.
+    expect(discs.map((d) => d.nickname || d.model)).toEqual(['Aviar', 'Bomber']);
+    expect(discs.find((d) => d.model === 'Destroyer')?.nickname).toBe('Bomber');
+  });
+
   test('setInBag flips the flag', async () => {
     const id = await createDisc({
       manufacturer: 'Discraft',

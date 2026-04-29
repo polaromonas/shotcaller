@@ -15,7 +15,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { listDiscs, type DiscWithTags } from '../db/discs';
+import {
+  discDisplayName,
+  listDiscs,
+  type DiscWithTags,
+} from '../db/discs';
 import {
   loadGamePlanContext,
   saveGamePlan,
@@ -218,7 +222,15 @@ export function GamePlanReviewScreen() {
   const handleExport = () => {
     if (!ctx || !discs) return;
     const discsById = new Map(
-      discs.map((d) => [d.id, { manufacturer: d.manufacturer, model: d.model, category: d.category }])
+      discs.map((d) => [
+        d.id,
+        {
+          manufacturer: d.manufacturer,
+          model: d.model,
+          nickname: d.nickname,
+          category: d.category,
+        },
+      ])
     );
     try {
       downloadTextFile(gamePlanFilename(ctx), gamePlanToText(ctx, discsById));
@@ -598,7 +610,7 @@ function DiscPicker({
                 style={[styles.discModel, on && styles.discModelOn]}
                 numberOfLines={1}
               >
-                {d.model}
+                {discDisplayName(d)}
               </Text>
               <Text style={styles.discMfr} numberOfLines={1}>
                 {d.manufacturer} · {d.category}

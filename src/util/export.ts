@@ -42,7 +42,15 @@ export function gamePlanFilename(ctx: GamePlanContext): string {
 
 export function gamePlanToText(
   ctx: GamePlanContext,
-  discsById: Map<number, { manufacturer: string; model: string; category: string }>
+  discsById: Map<
+    number,
+    {
+      manufacturer: string;
+      model: string;
+      nickname: string | null;
+      category: string;
+    }
+  >
 ): string {
   const lines: string[] = [];
   lines.push('ShotCaller — Game Plan');
@@ -57,7 +65,9 @@ export function gamePlanToText(
     if (rec.savedPlan) {
       const disc = discsById.get(rec.savedPlan.disc_id);
       const discLabel = disc
-        ? `${disc.manufacturer} ${disc.model} (${disc.category})`
+        ? disc.nickname
+          ? `${disc.nickname} (${disc.manufacturer} ${disc.model}, ${disc.category})`
+          : `${disc.manufacturer} ${disc.model} (${disc.category})`
         : `Disc #${rec.savedPlan.disc_id}`;
       lines.push(`  Disc:  ${discLabel}`);
       lines.push(

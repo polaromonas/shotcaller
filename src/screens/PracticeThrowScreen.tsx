@@ -17,6 +17,7 @@ import type { RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
   createDisc,
+  discDisplayName,
   listDiscs,
   type DiscWithTags,
   type NewDiscInput,
@@ -267,7 +268,7 @@ export function PracticeThrowScreen() {
   const handleDeleteThrow = (t: ThrowWithDisc) => {
     confirmAction({
       title: 'Delete throw?',
-      message: `${t.disc_model} · ${t.shot_shape} · ${t.result}. This cannot be undone.`,
+      message: `${t.disc_nickname || t.disc_model} · ${t.shot_shape} · ${t.result}. This cannot be undone.`,
       confirmLabel: 'Delete',
       destructive: true,
       onConfirm: async () => {
@@ -661,7 +662,7 @@ function DiscPicker({ discs, selectedId, onSelect, onAddNew }: DiscPickerProps) 
                 style={[styles.discModel, on && styles.discModelOn]}
                 numberOfLines={1}
               >
-                {d.model}
+                {discDisplayName(d)}
               </Text>
               <Text style={styles.discMfr} numberOfLines={1}>
                 {d.manufacturer} · {d.category}
@@ -782,7 +783,7 @@ function ThrowRow({
       />
       <View style={styles.throwText}>
         <Text style={styles.throwTitle} numberOfLines={1}>
-          {throwRow.disc_model} · {throwRow.shot_shape}
+          {throwRow.disc_nickname || throwRow.disc_model} · {throwRow.shot_shape}
         </Text>
         <Text style={styles.throwMeta} numberOfLines={1}>
           {throwRow.throw_type} · {throwRow.result}

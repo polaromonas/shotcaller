@@ -14,6 +14,7 @@ export type Disc = {
   turn: number | null;
   fade: number | null;
   plastic: string | null;
+  nickname: string | null;
 };
 
 export type DiscWithTags = Disc & { tags: { id: number; name: string }[] };
@@ -24,6 +25,18 @@ const toDisc = (row: DiscRow): Disc => ({
   ...row,
   in_bag: row.in_bag === 1,
 });
+
+// Single source of truth for "what to display as a disc's primary name."
+// Falls back to model when no nickname is set. Use this everywhere a disc is
+// rendered to the user; it lets a player call their Destroyer "My Roller" and
+// see that label in the picker, throw history, plan card, etc.
+export function discDisplayName(d: {
+  nickname: string | null;
+  model: string;
+}): string {
+  if (d.nickname && d.nickname.trim().length > 0) return d.nickname;
+  return d.model;
+}
 
 export type NewDiscInput = {
   manufacturer: string;
@@ -36,24 +49,27 @@ export type NewDiscInput = {
   turn?: number | null;
   fade?: number | null;
   plastic?: string | null;
+  nickname?: string | null;
   tagIds?: number[];
 };
 
 function orderBySql(sort: DiscSort): string {
   // In-bag always sorts first regardless of mode — players want bagged discs
-  // up top during a round.
+  // up top during a round. Display name (nickname OR model) drives every
+  // alphabetical tiebreak so the visible order matches the visible label.
+  const nameExpr = "COALESCE(NULLIF(nickname, ''), model) COLLATE NOCASE ASC";
   switch (sort) {
     case 'alphabetical':
-      return 'in_bag DESC, model COLLATE NOCASE ASC';
+      return `in_bag DESC, ${nameExpr}`;
     case 'speed-fast':
       // `speed IS NULL` puts unset speeds at the end whether ASC or DESC.
-      return 'in_bag DESC, speed IS NULL, speed DESC, model COLLATE NOCASE ASC';
+      return `in_bag DESC, speed IS NULL, speed DESC, ${nameExpr}`;
     case 'speed-slow':
-      return 'in_bag DESC, speed IS NULL, speed ASC, model COLLATE NOCASE ASC';
+      return `in_bag DESC, speed IS NULL, speed ASC, ${nameExpr}`;
     case 'bag-order':
     default:
       // Mirrors a physical bag: drivers, fairways, mids, putters; within each,
-      // fastest first; ties break alphabetically by model.
+      // fastest first; ties break by display name.
       return `in_bag DESC,
         CASE category
           WHEN 'DD' THEN 1
@@ -61,7 +77,7 @@ function orderBySql(sort: DiscSort): string {
           WHEN 'MID' THEN 3
           WHEN 'P&A' THEN 4
         END,
-        speed IS NULL, speed DESC, model COLLATE NOCASE ASC`;
+        speed IS NULL, speed DESC, ${nameExpr}`;
   }
 }
 
@@ -100,8 +116,8 @@ export async function listDiscs(): Promise<DiscWithTags[]> {
 export async function createDisc(input: NewDiscInput): Promise<number> {
   const db = await getDb();
   const result = await db.runAsync(
-    `INSERT INTO disc (manufacturer, model, color, category, in_bag, speed, glide, turn, fade, plastic)
-     VALUES ($manufacturer, $model, $color, $category, $in_bag, $speed, $glide, $turn, $fade, $plastic)`,
+    `INSERT INTO disc (manufacturer, model, color, category, in_bag, speed, glide, turn, fade, plastic, nickname)
+     VALUES ($manufacturer, $model, $color, $category, $in_bag, $speed, $glide, $turn, $fade, $plastic, $nickname)`,
     {
       $manufacturer: input.manufacturer.trim(),
       $model: input.model.trim(),
@@ -113,6 +129,7 @@ export async function createDisc(input: NewDiscInput): Promise<number> {
       $turn: input.turn ?? null,
       $fade: input.fade ?? null,
       $plastic: input.plastic?.trim() || null,
+      $nickname: input.nickname?.trim() || null,
     }
   );
 
@@ -159,7 +176,8 @@ export async function updateDisc(
        glide = $glide,
        turn = $turn,
        fade = $fade,
-       plastic = $plastic
+       plastic = $plastic,
+       nickname = $nickname
      WHERE id = $id`,
     {
       $manufacturer: input.manufacturer.trim(),
@@ -171,6 +189,7 @@ export async function updateDisc(
       $turn: input.turn ?? null,
       $fade: input.fade ?? null,
       $plastic: input.plastic?.trim() || null,
+      $nickname: input.nickname?.trim() || null,
       $id: discId,
     }
   );

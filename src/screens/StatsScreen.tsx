@@ -212,10 +212,12 @@ function TopDiscRow({ disc }: { disc: TopDisc }) {
       <View style={[styles.discSwatch, { backgroundColor: disc.color }]} />
       <View style={styles.discText}>
         <Text style={styles.discModel} numberOfLines={1}>
-          {disc.model}
+          {disc.nickname || disc.model}
         </Text>
         <Text style={styles.discMeta} numberOfLines={1}>
-          {disc.manufacturer} · {disc.category}
+          {disc.nickname
+            ? `${disc.manufacturer} · ${disc.model} · ${disc.category}`
+            : `${disc.manufacturer} · ${disc.category}`}
         </Text>
       </View>
       <Text style={styles.discCount}>{disc.throws}</Text>

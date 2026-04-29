@@ -4,8 +4,18 @@ import ReanimatedSwipeable, {
   type SwipeableMethods,
 } from 'react-native-gesture-handler/ReanimatedSwipeable';
 import { UI } from '../theme/colors';
-import type { DiscWithTags } from '../db/discs';
+import { discDisplayName, type DiscWithTags } from '../db/discs';
 import { InBagButton } from './InBagButton';
+
+// When the user has nicknamed a disc, surface the model in the subtitle so
+// they can still tell what disc this actually is. Plastic gets appended to
+// either form when set.
+const discSubtitle = (disc: DiscWithTags): string => {
+  const parts: string[] = [disc.manufacturer];
+  if (disc.nickname) parts.push(disc.model);
+  if (disc.plastic) parts.push(disc.plastic);
+  return parts.join(' · ');
+};
 
 type Props = {
   disc: DiscWithTags;
@@ -56,14 +66,12 @@ export function DiscCard({
         <View style={styles.body}>
           <View style={styles.headerRow}>
             <Text style={styles.model} numberOfLines={1}>
-              {disc.model}
+              {discDisplayName(disc)}
             </Text>
             <Text style={styles.category}>{disc.category}</Text>
           </View>
           <Text style={styles.manufacturer} numberOfLines={1}>
-            {disc.plastic
-              ? `${disc.manufacturer} · ${disc.plastic}`
-              : disc.manufacturer}
+            {discSubtitle(disc)}
           </Text>
           {disc.tags.length > 0 && (
             <View style={styles.tagsRow}>

@@ -27,6 +27,7 @@ export type TopDisc = {
   id: number;
   manufacturer: string;
   model: string;
+  nickname: string | null;
   color: string;
   category: DiscCategory;
   throws: number;
@@ -84,12 +85,12 @@ export async function loadStats(): Promise<Stats> {
   }
 
   const topDiscs = await db.getAllAsync<TopDisc>(
-    `SELECT d.id, d.manufacturer, d.model, d.color, d.category,
+    `SELECT d.id, d.manufacturer, d.model, d.nickname, d.color, d.category,
             COUNT(*) AS throws
        FROM throw t
        JOIN disc d ON d.id = t.disc_id
       GROUP BY d.id
-      ORDER BY throws DESC, d.model ASC
+      ORDER BY throws DESC, COALESCE(NULLIF(d.nickname, ''), d.model) ASC
       LIMIT 5`
   );
 

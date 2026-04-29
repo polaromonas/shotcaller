@@ -38,6 +38,7 @@ export type ComboRec = {
   disc_id: number;
   disc_manufacturer: string;
   disc_model: string;
+  disc_nickname: string | null;
   disc_color: string;
   disc_category: DiscCategory;
   throw_type: ThrowType;
@@ -196,6 +197,7 @@ async function computeBestCombo(holeId: number): Promise<ComboRec | null> {
         t.disc_id,
         d.manufacturer AS disc_manufacturer,
         d.model AS disc_model,
+        d.nickname AS disc_nickname,
         d.color AS disc_color,
         d.category AS disc_category,
         t.throw_type,

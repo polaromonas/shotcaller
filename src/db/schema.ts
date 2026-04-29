@@ -31,7 +31,8 @@ CREATE TABLE IF NOT EXISTS disc (
   glide REAL,
   turn REAL,
   fade REAL,
-  plastic TEXT
+  plastic TEXT,
+  nickname TEXT
 );
 
 CREATE TABLE IF NOT EXISTS tag (
