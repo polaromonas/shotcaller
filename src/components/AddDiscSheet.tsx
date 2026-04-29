@@ -296,6 +296,16 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
             )}
           </Field>
 
+          <Field label="Nickname">
+            <TextInput
+              style={styles.input}
+              value={nickname}
+              onChangeText={setNickname}
+              autoCapitalize="words"
+              returnKeyType="next"
+            />
+          </Field>
+
           <Field label="Manufacturer">
             <TextInput
               style={styles.input}
@@ -311,16 +321,6 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
               style={styles.input}
               value={plastic}
               onChangeText={setPlastic}
-              autoCapitalize="words"
-              returnKeyType="next"
-            />
-          </Field>
-
-          <Field label="Nickname">
-            <TextInput
-              style={styles.input}
-              value={nickname}
-              onChangeText={setNickname}
               autoCapitalize="words"
               returnKeyType="next"
             />
