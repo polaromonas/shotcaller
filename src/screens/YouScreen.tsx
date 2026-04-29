@@ -39,6 +39,12 @@ const ITEMS: Item[] = [
     glyph: '⛳',
     route: 'CoursesList',
   },
+  {
+    label: 'About ShotCaller',
+    description: 'How the app works',
+    glyph: 'ⓘ',
+    route: 'About',
+  },
 ];
 
 export function YouScreen() {

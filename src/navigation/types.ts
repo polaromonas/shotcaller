@@ -5,6 +5,7 @@ export type YouStackParamList = {
   Sessions: undefined;
   CoursesList: undefined;
   LayoutDetail: { layoutId: number };
+  About: undefined;
 };
 
 export type RootStackParamList = {
