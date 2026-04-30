@@ -71,6 +71,24 @@ export async function getMostRecentDiscIdForHole(
   return row?.disc_id ?? null;
 }
 
+export async function listThrowsForSession(
+  sessionId: number
+): Promise<ThrowWithDisc[]> {
+  const db = await getDb();
+  return db.getAllAsync<ThrowWithDisc>(
+    `SELECT t.*,
+            d.manufacturer AS disc_manufacturer,
+            d.model AS disc_model,
+            d.color AS disc_color,
+            d.nickname AS disc_nickname
+       FROM throw t
+       JOIN disc d ON d.id = t.disc_id
+      WHERE t.session_id = $session_id
+      ORDER BY t.id ASC`,
+    { $session_id: sessionId }
+  );
+}
+
 export async function listThrowsForHole(
   sessionId: number,
   holeId: number

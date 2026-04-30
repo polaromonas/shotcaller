@@ -108,6 +108,22 @@ export async function markSessionCompleted(sessionId: number): Promise<void> {
   );
 }
 
+export async function getSession(
+  sessionId: number
+): Promise<PracticeSessionWithContext | null> {
+  const db = await getDb();
+  const row = await db.getFirstAsync<PracticeSessionWithContext>(
+    `SELECT ps.*, c.name AS course_name, l.name AS layout_name,
+            (SELECT COUNT(*) FROM throw t WHERE t.session_id = ps.id) AS throw_count
+       FROM practice_session ps
+       JOIN layout l ON l.id = ps.layout_id
+       JOIN course c ON c.id = l.course_id
+      WHERE ps.id = $id`,
+    { $id: sessionId }
+  );
+  return row ?? null;
+}
+
 export async function listSessions(): Promise<PracticeSessionWithContext[]> {
   const db = await getDb();
   return db.getAllAsync<PracticeSessionWithContext>(

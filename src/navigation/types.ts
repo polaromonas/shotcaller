@@ -20,4 +20,5 @@ export type RootStackParamList = {
   GamePlanReview: { layoutId: number };
   TournamentStart: undefined;
   TournamentThrow: { sessionId: number; layoutId: number };
+  SessionDetail: { sessionId: number };
 };

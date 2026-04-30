@@ -11,6 +11,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import ReanimatedSwipeable, {
   type SwipeableMethods,
 } from 'react-native-gesture-handler/ReanimatedSwipeable';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
   deleteSession,
   listSessions,
@@ -18,8 +20,12 @@ import {
 } from '../db/sessions';
 import { MODE, UI } from '../theme/colors';
 import { confirmAction } from '../util/confirm';
+import type { RootStackParamList } from '../navigation/types';
+
+type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 export function SessionsScreen() {
+  const navigation = useNavigation<Nav>();
   const [sessions, setSessions] = useState<PracticeSessionWithContext[] | null>(
     null
   );
@@ -86,6 +92,9 @@ export function SessionsScreen() {
           renderItem={({ item }) => (
             <SessionRow
               session={item}
+              onPress={() =>
+                navigation.navigate('SessionDetail', { sessionId: item.id })
+              }
               onDelete={() => handleDelete(item)}
               onOpen={handleRowOpen}
             />
@@ -98,11 +107,12 @@ export function SessionsScreen() {
 
 type RowProps = {
   session: PracticeSessionWithContext;
+  onPress: () => void;
   onDelete: () => void;
   onOpen: (methods: SwipeableMethods) => void;
 };
 
-function SessionRow({ session, onDelete, onOpen }: RowProps) {
+function SessionRow({ session, onPress, onDelete, onOpen }: RowProps) {
   const ref = useRef<SwipeableMethods>(null);
   const isTournament = session.mode === 'Tournament';
   const tint = isTournament ? MODE.tournament : MODE.practice;
@@ -131,7 +141,11 @@ function SessionRow({ session, onDelete, onOpen }: RowProps) {
         if (ref.current) onOpen(ref.current);
       }}
     >
-      <View style={styles.row}>
+      <Pressable
+        onPress={onPress}
+        style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
+        accessibilityLabel={`Review ${session.course_name} ${session.layout_name} on ${session.session_date}`}
+      >
         <View style={[styles.modeStripe, { backgroundColor: tint }]} />
         <View style={styles.body}>
           <View style={styles.headerRow}>
@@ -148,7 +162,8 @@ function SessionRow({ session, onDelete, onOpen }: RowProps) {
             {isOngoing ? ' · ongoing' : ''}
           </Text>
         </View>
-      </View>
+        <Text style={styles.chev}>›</Text>
+      </Pressable>
     </ReanimatedSwipeable>
   );
 }
@@ -178,12 +193,14 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    alignItems: 'stretch',
+    alignItems: 'center',
     backgroundColor: UI.bg,
     borderBottomWidth: 1,
     borderBottomColor: UI.border,
   },
-  modeStripe: { width: 4 },
+  rowPressed: { backgroundColor: UI.surface },
+  chev: { fontSize: 22, color: UI.textMuted, paddingHorizontal: 14 },
+  modeStripe: { width: 4, alignSelf: 'stretch' },
   body: { flex: 1, minWidth: 0, paddingVertical: 12, paddingHorizontal: 14, gap: 4 },
   headerRow: {
     flexDirection: 'row',

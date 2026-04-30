@@ -107,10 +107,38 @@ export function HomeScreen() {
         </View>
 
         {lastSession && (
-          <View style={styles.lastSession}>
-            <Text style={styles.lastSessionLabel}>
-              Last {lastSession.mode === 'Tournament' ? 'tournament' : 'practice'}
-            </Text>
+          <Pressable
+            style={({ pressed }) => [
+              styles.lastSession,
+              pressed && styles.pressed,
+            ]}
+            onPress={() => {
+              // Ongoing → drop into the throw screen (resume).
+              // Finished → open the read-only review.
+              if (lastSession.completed_at === null) {
+                navigation.navigate(
+                  lastSession.mode === 'Tournament'
+                    ? 'TournamentThrow'
+                    : 'PracticeThrow',
+                  {
+                    sessionId: lastSession.id,
+                    layoutId: lastSession.layout_id,
+                  }
+                );
+              } else {
+                navigation.navigate('SessionDetail', {
+                  sessionId: lastSession.id,
+                });
+              }
+            }}
+          >
+            <View style={styles.lastSessionTopRow}>
+              <Text style={styles.lastSessionLabel}>
+                Last{' '}
+                {lastSession.mode === 'Tournament' ? 'tournament' : 'practice'}
+              </Text>
+              <Text style={styles.lastSessionChev}>›</Text>
+            </View>
             <Text style={styles.lastSessionTitle}>
               {lastSession.course_name} · {lastSession.layout_name}
             </Text>
@@ -118,7 +146,7 @@ export function HomeScreen() {
               {lastSession.session_date} · {lastSession.throw_count}{' '}
               {lastSession.throw_count === 1 ? 'throw' : 'throws'} logged
             </Text>
-          </View>
+          </Pressable>
         )}
       </ScrollView>
     </SafeAreaView>
@@ -171,6 +199,12 @@ const styles = StyleSheet.create({
     borderColor: UI.border,
     gap: 2,
   },
+  lastSessionTopRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  lastSessionChev: { fontSize: 18, color: UI.textMuted },
   lastSessionLabel: {
     fontSize: 11,
     fontWeight: '600',

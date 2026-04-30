@@ -6,6 +6,7 @@ import { GamePlanStartScreen } from '../screens/GamePlanStartScreen';
 import { GamePlanReviewScreen } from '../screens/GamePlanReviewScreen';
 import { TournamentStartScreen } from '../screens/TournamentStartScreen';
 import { TournamentThrowScreen } from '../screens/TournamentThrowScreen';
+import { SessionDetailScreen } from '../screens/SessionDetailScreen';
 import type { RootStackParamList } from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -46,6 +47,11 @@ export function RootStack() {
       <Stack.Screen
         name="TournamentThrow"
         component={TournamentThrowScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="SessionDetail"
+        component={SessionDetailScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
