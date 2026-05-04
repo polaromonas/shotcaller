@@ -1,6 +1,10 @@
 import * as SQLite from 'expo-sqlite';
 import { SCHEMA_SQL } from './schema';
-import { DEFAULT_TAGS } from './types';
+import {
+  DEFAULT_SHOT_TAGS,
+  DEFAULT_TAGS,
+  LEGACY_SHOT_TAG_NAMES,
+} from './types';
 
 const DB_NAME = 'shotcaller.db';
 
@@ -12,6 +16,7 @@ export async function getDb(): Promise<SQLite.SQLiteDatabase> {
       await migrate(db);
       await db.execAsync(SCHEMA_SQL);
       await seedDefaultTags(db);
+      await seedDefaultShotTags(db);
       return db;
     });
   }
@@ -65,6 +70,22 @@ async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
       'ALTER TABLE practice_session ADD COLUMN completed_at TEXT'
     );
   }
+
+  // Prune legacy shot-tag defaults if the table exists and the rows aren't
+  // referenced by any throw_tag (so user-actually-used tags with the same
+  // name survive). Idempotent and cheap.
+  const shotTagTable = await db.getAllAsync<{ name: string }>(
+    "PRAGMA table_info('shot_tag')"
+  );
+  if (shotTagTable.length > 0) {
+    const placeholders = LEGACY_SHOT_TAG_NAMES.map(() => '?').join(', ');
+    await db.runAsync(
+      `DELETE FROM shot_tag
+        WHERE name IN (${placeholders})
+          AND id NOT IN (SELECT shot_tag_id FROM throw_tag)`,
+      [...LEGACY_SHOT_TAG_NAMES]
+    );
+  }
 }
 
 async function seedDefaultTags(db: SQLite.SQLiteDatabase): Promise<void> {
@@ -73,6 +94,21 @@ async function seedDefaultTags(db: SQLite.SQLiteDatabase): Promise<void> {
   );
   try {
     for (const name of DEFAULT_TAGS) {
+      await statement.executeAsync({ $name: name });
+    }
+  } finally {
+    await statement.finalizeAsync();
+  }
+}
+
+async function seedDefaultShotTags(
+  db: SQLite.SQLiteDatabase
+): Promise<void> {
+  const statement = await db.prepareAsync(
+    'INSERT OR IGNORE INTO shot_tag (name) VALUES ($name)'
+  );
+  try {
+    for (const name of DEFAULT_SHOT_TAGS) {
       await statement.executeAsync({ $name: name });
     }
   } finally {

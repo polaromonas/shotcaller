@@ -35,6 +35,29 @@ export type DiscSort = (typeof DISC_SORTS)[number];
 
 export const DEFAULT_DISC_SORT: DiscSort = 'bag-order';
 
+// Shot tags should describe what the player did with the shot — effort, line,
+// release height — not outcome or environment (those go in notes). Five
+// starter tags; users add their own from the throw form.
+export const DEFAULT_SHOT_TAGS = [
+  'Full send',
+  'Low',
+  'High',
+  'Layup',
+  'Soft',
+] as const;
+
+// Tags that were seeded as defaults in an earlier build but have since been
+// dropped from the recommended set (outcome/environment, which don't fit the
+// "what the player did" framing). Pruned on next launch from any DB that
+// still has them, but only if they aren't referenced by any throw_tag join —
+// that way a user's custom tag with the same name (and actual usage) is safe.
+export const LEGACY_SHOT_TAG_NAMES = [
+  'Headwind',
+  'Tailwind',
+  'Tree hit',
+  'Park job',
+] as const;
+
 export const DEFAULT_TAGS = [
   'Flippy',
   'Overstable',

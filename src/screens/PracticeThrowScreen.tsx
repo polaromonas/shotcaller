@@ -24,6 +24,7 @@ import {
 } from '../db/discs';
 import { markSessionCompleted } from '../db/sessions';
 import { AddDiscSheet } from '../components/AddDiscSheet';
+import { ShotTagPicker } from '../components/ShotTagPicker';
 import {
   getLayout,
   listHoles,
@@ -77,6 +78,7 @@ export function PracticeThrowScreen() {
   const [result, setResult] = useState<ResultKind | null>(null);
   const [distance, setDistance] = useState('');
   const [notes, setNotes] = useState('');
+  const [shotTagIds, setShotTagIds] = useState<Set<number>>(new Set());
 
   const [throwsForHole, setThrowsForHole] = useState<ThrowWithDisc[]>([]);
   const [submitting, setSubmitting] = useState(false);
@@ -184,7 +186,17 @@ export function PracticeThrowScreen() {
     setResult(null);
     setDistance('');
     setNotes('');
+    setShotTagIds(new Set());
     setError(null);
+  };
+
+  const toggleShotTag = (id: number) => {
+    setShotTagIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
   };
 
   const handleHoleChange = (nextIdx: number) => {
@@ -255,6 +267,7 @@ export function PracticeThrowScreen() {
         result,
         distanceFt: distanceApplies ? parsedDistance : null,
         notes,
+        shotTagIds: Array.from(shotTagIds),
       });
       resetAttempt();
       await refreshThrowsForHole();
@@ -424,6 +437,14 @@ export function PracticeThrowScreen() {
               onChangeText={setNotes}
               multiline
               placeholder="How it felt, wind, tree hit, etc."
+            />
+          </Section>
+
+          <Section title="Shot tags (optional)">
+            <ShotTagPicker
+              selectedIds={shotTagIds}
+              onToggle={toggleShotTag}
+              accent={MODE.practice}
             />
           </Section>
 
@@ -791,6 +812,15 @@ function ThrowRow({
             ? ` · ${throwRow.distance_from_basket_ft} ft`
             : ''}
         </Text>
+        {throwRow.tags.length > 0 && (
+          <View style={styles.throwTagsRow}>
+            {throwRow.tags.map((t) => (
+              <View key={t.id} style={styles.throwTagChip}>
+                <Text style={styles.throwTagLabel}>{t.name}</Text>
+              </View>
+            ))}
+          </View>
+        )}
         {throwRow.notes && (
           <Text style={styles.throwNotes} numberOfLines={2}>
             {throwRow.notes}
@@ -1102,6 +1132,16 @@ const styles = StyleSheet.create({
   throwText: { flex: 1, minWidth: 0 },
   throwTitle: { fontSize: 14, fontWeight: '600', color: UI.text },
   throwMeta: { fontSize: 12, color: UI.textMuted, marginTop: 2 },
+  throwTagsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 4, marginTop: 4 },
+  throwTagChip: {
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 8,
+    backgroundColor: UI.bg,
+    borderWidth: 1,
+    borderColor: UI.border,
+  },
+  throwTagLabel: { fontSize: 10, fontWeight: '600', color: UI.textMuted },
   throwNotes: {
     fontSize: 12,
     color: UI.textMuted,

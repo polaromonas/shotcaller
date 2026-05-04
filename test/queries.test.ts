@@ -318,6 +318,74 @@ describe('game plan', () => {
   });
 });
 
+describe('shot tags', () => {
+  test('seeded defaults are present', async () => {
+    const { listShotTags } = await import('../src/db/shotTags');
+    const tags = await listShotTags();
+    const names = tags.map((t) => t.name);
+    expect(names).toEqual(
+      expect.arrayContaining(['Full send', 'Low', 'High', 'Layup', 'Soft'])
+    );
+    // No outcome/environment tags get auto-seeded.
+    expect(names).not.toEqual(expect.arrayContaining(['Headwind']));
+    expect(names).not.toEqual(expect.arrayContaining(['Park job']));
+  });
+
+  test('legacy default shot tags get pruned if unused', async () => {
+    const SQLite = await import('expo-sqlite');
+    const raw = await SQLite.openDatabaseAsync('shotcaller.db');
+    // Pre-seed a legacy default and a custom-but-unused tag with the same name.
+    await raw.execAsync(`
+      CREATE TABLE shot_tag (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL UNIQUE
+      );
+      CREATE TABLE throw_tag (
+        throw_id INTEGER NOT NULL,
+        shot_tag_id INTEGER NOT NULL,
+        PRIMARY KEY (throw_id, shot_tag_id)
+      );
+      INSERT INTO shot_tag (name) VALUES ('Park job');
+    `);
+
+    await getDb();
+
+    const row = await raw.getFirstAsync<{ count: number }>(
+      "SELECT COUNT(*) AS count FROM shot_tag WHERE name = 'Park job'"
+    );
+    expect(row?.count).toBe(0);
+  });
+
+  test('logThrow attaches shot tags and listThrowsForHole returns them', async () => {
+    const { listShotTags, createShotTag } = await import('../src/db/shotTags');
+    const { layoutId, discId, sessionId, holes } = await seedBaseline();
+
+    const seeded = await listShotTags();
+    const fullSend = seeded.find((t) => t.name === 'Full send')!;
+    const custom = await createShotTag('Cheek');
+
+    await logThrow({
+      sessionId,
+      holeId: holes[0].id,
+      discId,
+      throwType: 'Backhand',
+      shotShape: 'Flat',
+      result: 'Fairway',
+      distanceFt: 80,
+      shotTagIds: [fullSend.id, custom.id],
+    });
+
+    const { listThrowsForHole } = await import('../src/db/throws');
+    const throws = await listThrowsForHole(sessionId, holes[0].id);
+    expect(throws).toHaveLength(1);
+    expect(throws[0].tags.map((t) => t.name).sort()).toEqual(
+      ['Cheek', 'Full send']
+    );
+    // Suppress unused-var warning on layoutId in the future-proof form.
+    expect(layoutId).toBeGreaterThan(0);
+  });
+});
+
 describe('sessions', () => {
   test('deleteSession cascades to throws but leaves game plan untouched', async () => {
     const { layoutId, discId, sessionId, holes } = await seedBaseline();

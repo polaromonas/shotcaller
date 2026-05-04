@@ -1,4 +1,5 @@
 import { getDb } from './index';
+import { listShotTagsForThrows, setThrowShotTags, type ShotTag } from './shotTags';
 import type { ResultKind, ShotShape, ThrowType } from './types';
 
 export type Throw = {
@@ -18,6 +19,7 @@ export type ThrowWithDisc = Throw & {
   disc_model: string;
   disc_color: string;
   disc_nickname: string | null;
+  tags: ShotTag[];
 };
 
 export type NewThrowInput = {
@@ -29,27 +31,35 @@ export type NewThrowInput = {
   result: ResultKind;
   distanceFt: number | null;
   notes?: string | null;
+  shotTagIds?: number[];
 };
 
 export async function logThrow(input: NewThrowInput): Promise<number> {
   const db = await getDb();
-  const result = await db.runAsync(
-    `INSERT INTO throw
-       (session_id, hole_id, disc_id, throw_type, shot_shape, result, distance_from_basket_ft, notes)
-     VALUES
-       ($session_id, $hole_id, $disc_id, $throw_type, $shot_shape, $result, $distance, $notes)`,
-    {
-      $session_id: input.sessionId,
-      $hole_id: input.holeId,
-      $disc_id: input.discId,
-      $throw_type: input.throwType,
-      $shot_shape: input.shotShape,
-      $result: input.result,
-      $distance: input.distanceFt,
-      $notes: input.notes?.trim() || null,
+  let throwId = 0;
+  await db.withTransactionAsync(async () => {
+    const result = await db.runAsync(
+      `INSERT INTO throw
+         (session_id, hole_id, disc_id, throw_type, shot_shape, result, distance_from_basket_ft, notes)
+       VALUES
+         ($session_id, $hole_id, $disc_id, $throw_type, $shot_shape, $result, $distance, $notes)`,
+      {
+        $session_id: input.sessionId,
+        $hole_id: input.holeId,
+        $disc_id: input.discId,
+        $throw_type: input.throwType,
+        $shot_shape: input.shotShape,
+        $result: input.result,
+        $distance: input.distanceFt,
+        $notes: input.notes?.trim() || null,
+      }
+    );
+    throwId = result.lastInsertRowId;
+    if (input.shotTagIds && input.shotTagIds.length > 0) {
+      await setThrowShotTags(throwId, input.shotTagIds);
     }
-  );
-  return result.lastInsertRowId;
+  });
+  return throwId;
 }
 
 export async function deleteThrow(throwId: number): Promise<void> {
@@ -71,11 +81,19 @@ export async function getMostRecentDiscIdForHole(
   return row?.disc_id ?? null;
 }
 
+async function attachTags(
+  rows: Omit<ThrowWithDisc, 'tags'>[]
+): Promise<ThrowWithDisc[]> {
+  if (rows.length === 0) return [];
+  const tagsByThrow = await listShotTagsForThrows(rows.map((r) => r.id));
+  return rows.map((r) => ({ ...r, tags: tagsByThrow.get(r.id) ?? [] }));
+}
+
 export async function listThrowsForSession(
   sessionId: number
 ): Promise<ThrowWithDisc[]> {
   const db = await getDb();
-  return db.getAllAsync<ThrowWithDisc>(
+  const rows = await db.getAllAsync<Omit<ThrowWithDisc, 'tags'>>(
     `SELECT t.*,
             d.manufacturer AS disc_manufacturer,
             d.model AS disc_model,
@@ -87,6 +105,7 @@ export async function listThrowsForSession(
       ORDER BY t.id ASC`,
     { $session_id: sessionId }
   );
+  return attachTags(rows);
 }
 
 export async function listThrowsForHole(
@@ -94,7 +113,7 @@ export async function listThrowsForHole(
   holeId: number
 ): Promise<ThrowWithDisc[]> {
   const db = await getDb();
-  return db.getAllAsync<ThrowWithDisc>(
+  const rows = await db.getAllAsync<Omit<ThrowWithDisc, 'tags'>>(
     `SELECT t.*,
             d.manufacturer AS disc_manufacturer,
             d.model AS disc_model,
@@ -106,4 +125,5 @@ export async function listThrowsForHole(
       ORDER BY t.id DESC`,
     { $session_id: sessionId, $hole_id: holeId }
   );
+  return attachTags(rows);
 }

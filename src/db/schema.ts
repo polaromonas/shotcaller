@@ -116,4 +116,16 @@ CREATE TABLE IF NOT EXISTS app_settings (
   disc_sort TEXT NOT NULL DEFAULT 'bag-order' CHECK (${DISC_SORT_CHECK})
 );
 INSERT OR IGNORE INTO app_settings (id, disc_sort) VALUES (1, 'bag-order');
+
+CREATE TABLE IF NOT EXISTS shot_tag (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS throw_tag (
+  throw_id INTEGER NOT NULL REFERENCES throw(id) ON DELETE CASCADE,
+  shot_tag_id INTEGER NOT NULL REFERENCES shot_tag(id) ON DELETE CASCADE,
+  PRIMARY KEY (throw_id, shot_tag_id)
+);
+CREATE INDEX IF NOT EXISTS idx_throw_tag_throw ON throw_tag(throw_id);
 `;

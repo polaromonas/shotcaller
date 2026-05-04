@@ -198,6 +198,17 @@ export function SessionDetailScreen() {
                           ? ` · ${t.distance_from_basket_ft} ft`
                           : ''}
                       </Text>
+                      {t.tags.length > 0 && (
+                        <View style={styles.throwTagsRow}>
+                          {t.tags.map((tag) => (
+                            <View key={tag.id} style={styles.throwTagChip}>
+                              <Text style={styles.throwTagLabel}>
+                                {tag.name}
+                              </Text>
+                            </View>
+                          ))}
+                        </View>
+                      )}
                       {t.notes && (
                         <Text style={styles.throwNotes} numberOfLines={3}>
                           {t.notes}
@@ -324,6 +335,16 @@ const styles = StyleSheet.create({
   throwText: { flex: 1, minWidth: 0 },
   throwTitle: { fontSize: 14, fontWeight: '600', color: UI.text },
   throwMeta: { fontSize: 12, color: UI.textMuted, marginTop: 2 },
+  throwTagsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 4, marginTop: 4 },
+  throwTagChip: {
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 8,
+    backgroundColor: UI.bg,
+    borderWidth: 1,
+    borderColor: UI.border,
+  },
+  throwTagLabel: { fontSize: 10, fontWeight: '600', color: UI.textMuted },
   throwNotes: {
     fontSize: 12,
     color: UI.textMuted,
