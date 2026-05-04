@@ -15,6 +15,7 @@ import { DISC_SWATCHES, INBAG_GREEN, UI } from '../theme/colors';
 import { createTag, listTags, type Tag } from '../db/tags';
 import type { DiscWithTags, NewDiscInput } from '../db/discs';
 import { searchCatalog, type CatalogDisc } from '../data/discCatalog';
+import { confirmAction } from '../util/confirm';
 
 type Props = {
   visible: boolean;
@@ -115,6 +116,31 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
     setNewTagName('');
     setShowSuggestions(true);
     setError(null);
+  };
+
+  // Wipe identity fields but keep the disc's id (we're updating in place) and
+  // its color (the player typically keeps the same dye/band when re-bagging
+  // a slot). Tags clear too — different disc, different labels.
+  const handleReplace = () => {
+    confirmAction({
+      title: 'Replace this disc?',
+      message:
+        'Fill in the new disc that takes this slot. Throws and game plans stay attached. Color carries over; everything else clears.',
+      confirmLabel: 'Replace',
+      onConfirm: () => {
+        setManufacturer('');
+        setModel('');
+        setPlastic('');
+        setNickname('');
+        setCategory(null);
+        setFlight({ speed: '', glide: '', turn: '', fade: '' });
+        setTurnNegative(true);
+        setSelectedTagIds(new Set());
+        setFlightGen((g) => g + 1);
+        setShowSuggestions(true);
+        setError(null);
+      },
+    });
   };
 
   const canSubmit = useMemo(
@@ -260,6 +286,22 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
           contentContainerStyle={styles.content}
           keyboardShouldPersistTaps="handled"
         >
+          {isEditing && (
+            <Pressable
+              onPress={handleReplace}
+              style={({ pressed }) => [
+                styles.replaceBtn,
+                pressed && styles.replaceBtnPressed,
+              ]}
+              accessibilityLabel="Replace this disc with a new one"
+            >
+              <Text style={styles.replaceLabel}>Replace this disc</Text>
+              <Text style={styles.replaceHint}>
+                Same bag slot, throws and plans carry over
+              </Text>
+            </Pressable>
+          )}
+
           <Field label="Model">
             <TextInput
               style={styles.input}
@@ -604,6 +646,18 @@ const styles = StyleSheet.create({
   },
   newTagBtnDisabled: { opacity: 0.4 },
   newTagBtnLabel: { fontSize: 14, fontWeight: '600', color: UI.text },
+  replaceBtn: {
+    padding: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: UI.border,
+    backgroundColor: UI.surface,
+    alignItems: 'center',
+    gap: 2,
+  },
+  replaceBtnPressed: { opacity: 0.7 },
+  replaceLabel: { fontSize: 14, fontWeight: '700', color: UI.text },
+  replaceHint: { fontSize: 11, color: UI.textMuted },
   suggestList: {
     marginTop: 4,
     backgroundColor: UI.surface,
