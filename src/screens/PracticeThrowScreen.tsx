@@ -23,6 +23,10 @@ import {
   type NewDiscInput,
 } from '../db/discs';
 import { markSessionCompleted } from '../db/sessions';
+import {
+  listSavedPlansForLayout,
+  type SavedPlan,
+} from '../db/gamePlan';
 import { AddDiscSheet } from '../components/AddDiscSheet';
 import { ShotTagPicker } from '../components/ShotTagPicker';
 import {
@@ -84,6 +88,9 @@ export function PracticeThrowScreen() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [addDiscOpen, setAddDiscOpen] = useState(false);
+  const [plansByHole, setPlansByHole] = useState<Map<number, SavedPlan>>(
+    new Map()
+  );
   const [categoryFilter, setCategoryFilter] = useState<DiscCategory | 'All'>(
     'All'
   );
@@ -108,17 +115,20 @@ export function PracticeThrowScreen() {
 
   const currentHole = holes && holes.length > 0 ? holes[currentIdx] : null;
 
-  // Initial load: layout + course name + holes + discs.
+  // Initial load: layout + course name + holes + discs + saved plan rows for
+  // this layout (so the plan card can render as a reference per hole).
   useEffect(() => {
     (async () => {
-      const [l, hs, ds] = await Promise.all([
+      const [l, hs, ds, plans] = await Promise.all([
         getLayout(layoutId),
         listHoles(layoutId),
         listDiscs(),
+        listSavedPlansForLayout(layoutId),
       ]);
       setLayout(l);
       setHoles(hs);
       setDiscs(ds);
+      setPlansByHole(new Map(plans.map((p) => [p.hole_id, p])));
 
       if (l) {
         const db = await getDb();
@@ -383,6 +393,46 @@ export function PracticeThrowScreen() {
           contentContainerStyle={styles.content}
           keyboardShouldPersistTaps="handled"
         >
+          {(() => {
+            // Reference card only — per-hole memory still drives pre-selection.
+            // Showing what the player committed to during planning lets them
+            // test the plan and notice when their actual choice drifts.
+            if (!currentHole) return null;
+            const plan = plansByHole.get(currentHole.id);
+            if (!plan) return null;
+            const planDisc = discs.find((d) => d.id === plan.disc_id);
+            return (
+              <View style={styles.planCard}>
+                <Text style={styles.planLabel}>Game plan</Text>
+                <View style={styles.planBody}>
+                  {planDisc && (
+                    <View
+                      style={[
+                        styles.planSwatch,
+                        { backgroundColor: planDisc.color },
+                      ]}
+                    />
+                  )}
+                  <View style={styles.planTextWrap}>
+                    <Text style={styles.planDisc} numberOfLines={1}>
+                      {planDisc
+                        ? discDisplayName(planDisc)
+                        : `Disc #${plan.disc_id}`}
+                    </Text>
+                    <Text style={styles.planShot} numberOfLines={1}>
+                      {plan.throw_type} · {plan.shot_shape}
+                    </Text>
+                  </View>
+                </View>
+                {plan.notes && plan.notes.trim().length > 0 && (
+                  <Text style={styles.planNotes} numberOfLines={3}>
+                    {plan.notes}
+                  </Text>
+                )}
+              </View>
+            );
+          })()}
+
           <Section title="Disc">
             <CategoryChips
               value={categoryFilter}
@@ -986,6 +1036,38 @@ const styles = StyleSheet.create({
   discModelOn: { color: MODE.practice },
   discMfr: { fontSize: 11, color: UI.textMuted },
   pickerEmpty: { fontSize: 14, color: UI.textMuted },
+  planCard: {
+    padding: 12,
+    borderRadius: 12,
+    backgroundColor: '#ecf7ee',
+    borderWidth: 1,
+    borderColor: MODE.gamePlan,
+    gap: 6,
+  },
+  planLabel: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: MODE.gamePlan,
+    letterSpacing: 0.5,
+    textTransform: 'uppercase',
+  },
+  planBody: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  planSwatch: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    borderWidth: 1,
+    borderColor: UI.border,
+  },
+  planTextWrap: { flex: 1, minWidth: 0 },
+  planDisc: { fontSize: 16, fontWeight: '700', color: UI.text },
+  planShot: { fontSize: 13, color: UI.text },
+  planNotes: {
+    fontSize: 12,
+    color: UI.textMuted,
+    lineHeight: 18,
+    fontStyle: 'italic',
+  },
   categoryChips: {
     flexDirection: 'row',
     flexWrap: 'wrap',
