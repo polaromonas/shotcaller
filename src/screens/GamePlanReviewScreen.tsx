@@ -28,6 +28,7 @@ import {
   type HoleRec,
   type HolePlanInput,
 } from '../db/gamePlan';
+import { updateHole, type Hole } from '../db/courses';
 import {
   OVERHAND_SHOT_SHAPES,
   SHOT_SHAPES,
@@ -156,6 +157,30 @@ export function GamePlanReviewScreen() {
       setDirty(true);
     },
     []
+  );
+
+  const handlePatchHole = useCallback(
+    async (patch: Partial<Pick<Hole, 'par' | 'distance_ft'>>) => {
+      const cur = currentRec?.hole;
+      if (!cur) return;
+      const next: Hole = { ...cur, ...patch };
+      await updateHole({
+        id: next.id,
+        par: next.par,
+        distance_ft: next.distance_ft,
+      });
+      setCtx((prev) =>
+        prev
+          ? {
+              ...prev,
+              holes: prev.holes.map((h) =>
+                h.hole.id === next.id ? { ...h, hole: next } : h
+              ),
+            }
+          : prev
+      );
+    },
+    [currentRec]
   );
 
   // Thumber/Tomahawk → force Overhand.
@@ -322,15 +347,15 @@ export function GamePlanReviewScreen() {
         >
           <Text style={styles.holeNavLabel}>‹</Text>
         </Pressable>
-        <View style={styles.holeInfo}>
-          <Text style={styles.holeTitle}>
-            Hole {rec.hole.hole_number} · Par {rec.hole.par}
-          </Text>
-          <Text style={styles.holeMeta}>
-            {rec.hole.distance_ft > 0 ? `${rec.hole.distance_ft} ft` : 'Distance not set'}{' '}
-            · {currentIdx + 1} of {ctx.holes.length}
-          </Text>
-        </View>
+        <EditableHoleHeader
+          hole={rec.hole}
+          index={currentIdx}
+          total={ctx.holes.length}
+          onChangePar={(par) => void handlePatchHole({ par })}
+          onChangeDistance={(distance_ft) =>
+            void handlePatchHole({ distance_ft })
+          }
+        />
         <Pressable
           onPress={() =>
             setCurrentIdx((i) => Math.min(ctx.holes.length - 1, i + 1))
@@ -509,6 +534,90 @@ function Section({
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>{title}</Text>
       {children}
+    </View>
+  );
+}
+
+const PAR_OPTIONS = [2, 3, 4, 5] as const;
+
+// Same control pattern as PracticeThrowScreen's hole header — par chips that
+// save immediately, distance input that commits on blur. Lets a player
+// drafting a plan for a fresh layout fill in hole metadata as they go,
+// without first running practice rounds to populate it.
+function EditableHoleHeader({
+  hole,
+  index,
+  total,
+  onChangePar,
+  onChangeDistance,
+}: {
+  hole: Hole;
+  index: number;
+  total: number;
+  onChangePar: (par: number) => void;
+  onChangeDistance: (distanceFt: number) => void;
+}) {
+  const [distanceDraft, setDistanceDraft] = useState(
+    hole.distance_ft > 0 ? String(hole.distance_ft) : ''
+  );
+
+  useEffect(() => {
+    setDistanceDraft(hole.distance_ft > 0 ? String(hole.distance_ft) : '');
+  }, [hole.id, hole.distance_ft]);
+
+  const commitDistance = () => {
+    const trimmed = distanceDraft.trim();
+    if (trimmed.length === 0) {
+      if (hole.distance_ft !== 0) onChangeDistance(0);
+      return;
+    }
+    const n = Math.round(Number(trimmed));
+    if (Number.isFinite(n) && n >= 0 && n !== hole.distance_ft) {
+      onChangeDistance(n);
+    }
+  };
+
+  return (
+    <View style={styles.holeInfo}>
+      <Text style={styles.holeTitle}>
+        Hole {hole.hole_number} · {index + 1} of {total}
+      </Text>
+      <View style={styles.holeEditRow}>
+        <View style={styles.parChips}>
+          {PAR_OPTIONS.map((p) => {
+            const on = p === hole.par;
+            return (
+              <Pressable
+                key={p}
+                onPress={() => !on && onChangePar(p)}
+                style={[styles.parChip, on && styles.parChipOn]}
+                hitSlop={4}
+                accessibilityLabel={`Par ${p}`}
+              >
+                <Text
+                  style={[styles.parChipLabel, on && styles.parChipLabelOn]}
+                >
+                  {p}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+        <View style={styles.distEditWrap}>
+          <TextInput
+            style={styles.distEditInput}
+            value={distanceDraft}
+            onChangeText={setDistanceDraft}
+            onBlur={commitDistance}
+            onSubmitEditing={commitDistance}
+            keyboardType="number-pad"
+            placeholder="—"
+            maxLength={4}
+            returnKeyType="done"
+          />
+          <Text style={styles.distEditSuffix}>ft</Text>
+        </View>
+      </View>
     </View>
   );
 }
@@ -741,6 +850,46 @@ const styles = StyleSheet.create({
   holeInfo: { flex: 1, alignItems: 'center' },
   holeTitle: { fontSize: 16, fontWeight: '700', color: UI.text },
   holeMeta: { fontSize: 12, color: UI.textMuted, marginTop: 2 },
+  holeEditRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginTop: 6,
+  },
+  parChips: { flexDirection: 'row', gap: 4 },
+  parChip: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: UI.bg,
+    borderWidth: 1,
+    borderColor: UI.border,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  parChipOn: { backgroundColor: MODE.gamePlan, borderColor: MODE.gamePlan },
+  parChipLabel: { fontSize: 13, fontWeight: '700', color: UI.textMuted },
+  parChipLabelOn: { color: UI.textInverse },
+  distEditWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: UI.bg,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: UI.border,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+  },
+  distEditInput: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: UI.text,
+    minWidth: 48,
+    textAlign: 'center',
+    paddingVertical: 4,
+  },
+  distEditSuffix: { fontSize: 12, color: UI.textMuted },
   holeNavBtn: {
     width: 36,
     height: 36,
