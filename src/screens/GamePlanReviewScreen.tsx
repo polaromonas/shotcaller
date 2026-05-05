@@ -23,6 +23,7 @@ import {
 import {
   loadGamePlanContext,
   saveGamePlan,
+  type ComboBreakdown,
   type GamePlanContext,
   type HoleRec,
   type HolePlanInput,
@@ -52,7 +53,6 @@ type HoleDraft = {
   throwType: ThrowType | null;
   shotShape: ShotShape | null;
   notes: string;
-  isManualOverride: boolean;
 };
 
 type Confidence = 'high' | 'low' | 'none';
@@ -93,24 +93,16 @@ function draftFromRec(rec: HoleRec, discs: DiscWithTags[]): HoleDraft {
       throwType: rec.savedPlan.throw_type,
       shotShape: rec.savedPlan.shot_shape,
       notes: rec.savedPlan.notes ?? '',
-      isManualOverride: rec.savedPlan.is_manual_override,
     };
   }
-  if (rec.combo) {
-    return {
-      discId: rec.combo.disc_id,
-      throwType: rec.combo.throw_type,
-      shotShape: rec.combo.shot_shape,
-      notes: '',
-      isManualOverride: false,
-    };
-  }
+  // No saved plan and no app-recommended combo by design — the player picks
+  // from the disc list. The distance-bucket fallback is just a UI default
+  // (something to start on rather than an empty picker), not a suggestion.
   return {
     discId: fallbackDiscId(rec.hole.distance_ft, discs),
     throwType: 'Backhand',
     shotShape: 'Flat',
     notes: '',
-    isManualOverride: false,
   };
 }
 
@@ -125,6 +117,9 @@ export function GamePlanReviewScreen() {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Tracks whether the player has touched any draft since the screen opened.
+  // Drives the close-confirm so a clean close (no edits) doesn't nag.
+  const [dirty, setDirty] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -156,21 +151,9 @@ export function GamePlanReviewScreen() {
       setDrafts((prev) => {
         const existing = prev[holeId];
         if (!existing) return prev;
-        const touchesPlan =
-          'discId' in changes ||
-          'throwType' in changes ||
-          'shotShape' in changes;
-        return {
-          ...prev,
-          [holeId]: {
-            ...existing,
-            ...changes,
-            isManualOverride: touchesPlan
-              ? true
-              : existing.isManualOverride,
-          },
-        };
+        return { ...prev, [holeId]: { ...existing, ...changes } };
       });
+      setDirty(true);
     },
     []
   );
@@ -195,16 +178,11 @@ export function GamePlanReviewScreen() {
     });
   }, [ctx, drafts]);
 
-  const anyOverride = useMemo(
-    () => Object.values(drafts).some((d) => d.isManualOverride),
-    [drafts]
-  );
-
   const handleClose = () => {
-    if (anyOverride) {
+    if (dirty) {
       confirmAction({
         title: 'Discard game plan edits?',
-        message: 'Your overrides on this session will not be saved.',
+        message: 'Your changes on this session will not be saved.',
         confirmLabel: 'Discard',
         destructive: true,
         onConfirm: () => navigation.popToTop(),
@@ -268,7 +246,10 @@ export function GamePlanReviewScreen() {
           throwType: d.throwType as ThrowType,
           shotShape: d.shotShape as ShotShape,
           notes: d.notes,
-          isManualOverride: d.isManualOverride,
+          // Plan rows are always the player's intentional pick now (no
+          // engine to override). The schema column is kept for legacy
+          // compatibility; we just always mark true.
+          isManualOverride: true,
         };
       });
       await saveGamePlan(layoutId, plans);
@@ -386,44 +367,11 @@ export function GamePlanReviewScreen() {
             </View>
           )}
 
-          <Section title="Recommendation">
-            <View style={styles.recCard}>
-              {(() => {
-                const selectedDisc = discs.find((d) => d.id === draft.discId) ?? null;
-                return (
-                  <View style={styles.recCardRow}>
-                    {selectedDisc ? (
-                      <>
-                        <View
-                          style={[
-                            styles.discSwatch,
-                            { backgroundColor: selectedDisc.color },
-                          ]}
-                        />
-                        <View style={styles.recText}>
-                          <Text style={styles.recTitle}>
-                            {selectedDisc.model} · {selectedDisc.category}
-                          </Text>
-                          <Text style={styles.recMeta}>
-                            {draft.throwType ?? '—'} · {draft.shotShape ?? '—'}
-                          </Text>
-                        </View>
-                      </>
-                    ) : (
-                      <Text style={styles.recMeta}>
-                        No disc picked yet. Choose below.
-                      </Text>
-                    )}
-                    {draft.isManualOverride && (
-                      <View style={styles.overridePill}>
-                        <Text style={styles.overrideLabel}>Override</Text>
-                      </View>
-                    )}
-                  </View>
-                );
-              })()}
-            </View>
-          </Section>
+          {rec.combos.length > 0 && (
+            <Section title="Throws on this hole">
+              <CombosTable combos={rec.combos} />
+            </Section>
+          )}
 
           <Section title="Practice stats">
             <View style={styles.statsGrid}>
@@ -570,6 +518,56 @@ function StatCell({ label, value }: { label: string; value: string }) {
     <View style={styles.statCell}>
       <Text style={styles.statValue}>{value}</Text>
       <Text style={styles.statLabel}>{label}</Text>
+    </View>
+  );
+}
+
+// Compact short-codes for the result distribution: "3F · 1C2 · 1OB"
+// Order matches the ResultKind priority so the line scans consistently.
+const COMBO_RESULT_PARTS: { key: keyof ComboBreakdown; short: string }[] = [
+  { key: 'basket', short: 'Basket' },
+  { key: 'c1', short: 'C1' },
+  { key: 'c2', short: 'C2' },
+  { key: 'fairway', short: 'F' },
+  { key: 'rough', short: 'Rough' },
+  { key: 'ob', short: 'OB' },
+];
+
+function CombosTable({ combos }: { combos: ComboBreakdown[] }) {
+  return (
+    <View style={styles.combosCard}>
+      {combos.map((c, i) => {
+        const breakdown = COMBO_RESULT_PARTS.flatMap(({ key, short }) => {
+          const n = c[key] as number;
+          return n > 0 ? [`${n}${short}`] : [];
+        }).join(' · ');
+        const display = c.disc_nickname || c.disc_model;
+        return (
+          <View
+            key={`${c.disc_id}-${c.throw_type}-${c.shot_shape}`}
+            style={[
+              styles.comboRow,
+              i < combos.length - 1 && styles.comboRowDivider,
+            ]}
+          >
+            <View
+              style={[styles.discSwatch, { backgroundColor: c.disc_color }]}
+            />
+            <View style={styles.comboTextWrap}>
+              <Text style={styles.comboTitle} numberOfLines={1}>
+                {display} · {c.throw_type} · {c.shot_shape}
+              </Text>
+              <Text style={styles.comboBreakdown} numberOfLines={1}>
+                {breakdown || '—'}
+              </Text>
+            </View>
+            <View style={styles.comboNumbers}>
+              <Text style={styles.comboTotal}>{c.total}</Text>
+              <Text style={styles.comboAvg}>avg {c.avg_score.toFixed(1)}</Text>
+            </View>
+          </View>
+        );
+      })}
     </View>
   );
 }
@@ -790,30 +788,30 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
 
-  recCard: {
-    backgroundColor: '#ecf7ee',
+  combosCard: {
+    backgroundColor: UI.surface,
     borderRadius: 12,
-    padding: 14,
     borderWidth: 1,
-    borderColor: MODE.gamePlan,
+    borderColor: UI.border,
+    overflow: 'hidden',
   },
-  recCardRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  recText: { flex: 1, minWidth: 0 },
-  recTitle: { fontSize: 16, fontWeight: '700', color: UI.text },
-  recMeta: { fontSize: 13, color: UI.textMuted, marginTop: 2 },
-  overridePill: {
-    backgroundColor: MODE.gamePlan,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 8,
+  comboRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
   },
-  overrideLabel: {
-    color: UI.textInverse,
-    fontSize: 10,
-    fontWeight: '700',
-    letterSpacing: 0.5,
-    textTransform: 'uppercase',
+  comboRowDivider: {
+    borderBottomWidth: 1,
+    borderBottomColor: UI.border,
   },
+  comboTextWrap: { flex: 1, minWidth: 0 },
+  comboTitle: { fontSize: 14, fontWeight: '600', color: UI.text },
+  comboBreakdown: { fontSize: 12, color: UI.textMuted, marginTop: 2 },
+  comboNumbers: { alignItems: 'flex-end' },
+  comboTotal: { fontSize: 16, fontWeight: '700', color: UI.text },
+  comboAvg: { fontSize: 11, color: UI.textMuted },
 
   statsGrid: {
     flexDirection: 'row',

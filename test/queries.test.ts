@@ -250,18 +250,20 @@ describe('game plan', () => {
     const ctx = await loadGamePlanContext(layoutId);
     expect(ctx).not.toBeNull();
     const rec = ctx!.holes.find((h) => h.hole.id === hole1.id);
-    expect(rec?.combo).toMatchObject({
+    expect(rec?.combos).toHaveLength(1);
+    expect(rec?.combos[0]).toMatchObject({
       disc_id: discId,
       throw_type: 'Backhand',
       shot_shape: 'Flat',
       total: 3,
+      c2: 3,
     });
     expect(rec?.stats.total).toBe(3);
     expect(rec?.stats.fairway_pct).toBe(100);
     expect(rec?.stats.best).toBe('C2');
   });
 
-  test('OB weighted negative drops a combo below a safer one', async () => {
+  test('OB weighting reflects in per-combo avg_score (not used for ranking)', async () => {
     const { layoutId, sessionId, holes } = await seedBaseline();
     const hole1 = holes[0];
 
@@ -314,7 +316,15 @@ describe('game plan', () => {
 
     const ctx = await loadGamePlanContext(layoutId);
     const rec = ctx!.holes.find((h) => h.hole.id === hole1.id);
-    expect(rec?.combo?.disc_id).toBe(fwdId);
+    // Sort is by total DESC, not score — the breakdown is data, not a ranking.
+    // Driver has 3 throws, FWD has 2, so driver lists first.
+    expect(rec?.combos.map((c) => c.disc_id)).toEqual([driverId, fwdId]);
+    const driverCombo = rec?.combos.find((c) => c.disc_id === driverId);
+    const fwdCombo = rec?.combos.find((c) => c.disc_id === fwdId);
+    expect(driverCombo?.avg_score).toBeCloseTo(7 / 3, 1);
+    expect(fwdCombo?.avg_score).toBeCloseTo(3.0, 1);
+    expect(driverCombo?.ob).toBe(1);
+    expect(fwdCombo?.fairway).toBe(2);
   });
 });
 

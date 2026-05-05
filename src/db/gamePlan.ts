@@ -22,9 +22,10 @@ const RANK_TO_RESULT: Record<number, ResultKind> = {
   1: 'OB',
 };
 
-// Scoring weight for the recommendation engine. Basket and C1 are tied
-// because aces are luck-dependent; a reliable C1 is worth just as much.
-// OB is negative because it costs a real penalty stroke.
+// Per-throw scoring weight. Basket and C1 are tied because aces are
+// luck-dependent; a reliable C1 is worth as much as a basket. OB is negative
+// because it costs a real penalty stroke. Used as a comparable number per
+// combo in the breakdown table — not a recommendation. The player decides.
 const SCORE_CASE_SQL = `CASE result
   WHEN 'Basket' THEN 5
   WHEN 'C1' THEN 5
@@ -34,7 +35,7 @@ const SCORE_CASE_SQL = `CASE result
   WHEN 'OB' THEN -1
 END`;
 
-export type ComboRec = {
+export type ComboBreakdown = {
   disc_id: number;
   disc_manufacturer: string;
   disc_model: string;
@@ -44,7 +45,11 @@ export type ComboRec = {
   throw_type: ThrowType;
   shot_shape: ShotShape;
   total: number;
-  good: number;
+  basket: number;
+  c1: number;
+  c2: number;
+  fairway: number;
+  rough: number;
   ob: number;
   avg_score: number;
 };
@@ -71,7 +76,7 @@ export type SavedPlan = {
 export type HoleRec = {
   hole: Hole;
   stats: HoleStats;
-  combo: ComboRec | null;
+  combos: ComboBreakdown[];
   savedPlan: SavedPlan | null;
 };
 
@@ -127,14 +132,14 @@ export async function loadGamePlanContext(
 
   const holeRecs: HoleRec[] = [];
   for (const hole of holes) {
-    const [stats, combo] = await Promise.all([
+    const [stats, combos] = await Promise.all([
       computeHoleStats(hole.id),
-      computeBestCombo(hole.id),
+      listHoleCombos(hole.id),
     ]);
     holeRecs.push({
       hole,
       stats,
-      combo,
+      combos,
       savedPlan: savedByHole.get(hole.id) ?? null,
     });
   }
@@ -190,9 +195,12 @@ async function computeHoleStats(holeId: number): Promise<HoleStats> {
   };
 }
 
-async function computeBestCombo(holeId: number): Promise<ComboRec | null> {
+// Every (disc, throw_type, shot_shape) combo the player has thrown on this
+// hole, with the result distribution and avg score so they can compare in the
+// game-plan review. Sorted most-tried first; no implicit "winner."
+async function listHoleCombos(holeId: number): Promise<ComboBreakdown[]> {
   const db = await getDb();
-  const row = await db.getFirstAsync<ComboRec>(
+  return db.getAllAsync<ComboBreakdown>(
     `SELECT
         t.disc_id,
         d.manufacturer AS disc_manufacturer,
@@ -203,18 +211,20 @@ async function computeBestCombo(holeId: number): Promise<ComboRec | null> {
         t.throw_type,
         t.shot_shape,
         COUNT(*) AS total,
-        SUM(CASE WHEN t.result IN ('Basket','C1','C2','Fairway') THEN 1 ELSE 0 END) AS good,
+        SUM(CASE WHEN t.result = 'Basket' THEN 1 ELSE 0 END) AS basket,
+        SUM(CASE WHEN t.result = 'C1' THEN 1 ELSE 0 END) AS c1,
+        SUM(CASE WHEN t.result = 'C2' THEN 1 ELSE 0 END) AS c2,
+        SUM(CASE WHEN t.result = 'Fairway' THEN 1 ELSE 0 END) AS fairway,
+        SUM(CASE WHEN t.result = 'Rough' THEN 1 ELSE 0 END) AS rough,
         SUM(CASE WHEN t.result = 'OB' THEN 1 ELSE 0 END) AS ob,
         AVG(${SCORE_CASE_SQL}) AS avg_score
        FROM throw t
        JOIN disc d ON d.id = t.disc_id
       WHERE t.hole_id = $hole_id
       GROUP BY t.disc_id, t.throw_type, t.shot_shape
-      ORDER BY avg_score DESC, total DESC
-      LIMIT 1`,
+      ORDER BY total DESC, avg_score DESC`,
     { $hole_id: holeId }
   );
-  return row ?? null;
 }
 
 export type HolePlanInput = {
