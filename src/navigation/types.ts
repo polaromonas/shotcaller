@@ -16,7 +16,8 @@ export type RootStackParamList = {
     initialHoleIdx?: number;
   };
   GamePlanStart: undefined;
-  GamePlanReview: { layoutId: number };
+  GamePlanReview: { layoutId: number; startHoleIdx?: number };
+  GamePlanSummary: { layoutId: number };
   TournamentStart: undefined;
   TournamentThrow: { sessionId: number; layoutId: number };
   SessionDetail: { sessionId: number };

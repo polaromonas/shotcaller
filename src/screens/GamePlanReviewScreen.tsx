@@ -10,7 +10,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { confirmAction, notify } from '../util/confirm';
+import { notify } from '../util/confirm';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
@@ -21,7 +21,6 @@ import {
   type DiscWithTags,
 } from '../db/discs';
 import {
-  deleteGamePlan,
   loadGamePlanContext,
   saveGamePlan,
   type ComboBreakdown,
@@ -39,12 +38,6 @@ import {
   type ThrowType,
 } from '../db/types';
 import { CONFIDENCE, MODE, MODE_TINT, UI } from '../theme/colors';
-import {
-  downloadTextFile,
-  gamePlanFilename,
-  gamePlanToText,
-  isExportSupported,
-} from '../util/export';
 import type { RootStackParamList } from '../navigation/types';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'GamePlanReview'>;
@@ -111,12 +104,14 @@ function draftFromRec(rec: HoleRec, discs: DiscWithTags[]): HoleDraft {
 export function GamePlanReviewScreen() {
   const navigation = useNavigation<Nav>();
   const route = useRoute<Rt>();
-  const { layoutId } = route.params;
+  const { layoutId, startHoleIdx } = route.params;
 
   const [ctx, setCtx] = useState<GamePlanContext | null>(null);
   const [discs, setDiscs] = useState<DiscWithTags[] | null>(null);
   const [drafts, setDrafts] = useState<Record<number, HoleDraft>>({});
-  const [currentIdx, setCurrentIdx] = useState(0);
+  const [currentIdx, setCurrentIdx] = useState(
+    typeof startHoleIdx === 'number' && startHoleIdx >= 0 ? startHoleIdx : 0
+  );
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   // Tracks whether the player has touched any draft since the screen opened.
@@ -140,6 +135,18 @@ export function GamePlanReviewScreen() {
       }
     })();
   }, [layoutId]);
+
+  // Clamp currentIdx if a startHoleIdx route param ended up past the holes
+  // count (e.g., the layout was edited after the summary was opened).
+  useEffect(() => {
+    if (!ctx) return;
+    if (ctx.holes.length === 0) return;
+    if (currentIdx >= ctx.holes.length) {
+      setCurrentIdx(ctx.holes.length - 1);
+    } else if (currentIdx < 0) {
+      setCurrentIdx(0);
+    }
+  }, [ctx, currentIdx]);
 
   const currentRec = useMemo(
     () => (ctx && ctx.holes.length > 0 ? ctx.holes[currentIdx] : null),
@@ -196,13 +203,18 @@ export function GamePlanReviewScreen() {
     }
   }, [currentRec, currentDraft, updateDraft]);
 
-  const incompleteHoles = useMemo(() => {
-    if (!ctx) return [];
-    return ctx.holes.filter((rec) => {
-      const d = drafts[rec.hole.id];
-      return !d || d.discId === null || d.throwType === null || d.shotShape === null;
-    });
-  }, [ctx, drafts]);
+  // If the plan is complete and the player didn't navigate here from the
+  // summary (no explicit startHoleIdx), drop them straight on the summary.
+  // The wizard view is for filling in holes, not for re-walking a finished
+  // plan — they'd hit Next 17 times to reach the summary they actually want.
+  useEffect(() => {
+    if (typeof startHoleIdx === 'number') return;
+    if (!ctx || ctx.holes.length === 0) return;
+    const allPlanned = ctx.holes.every((h) => h.savedPlan !== null);
+    if (allPlanned) {
+      navigation.replace('GamePlanSummary', { layoutId });
+    }
+  }, [ctx, startHoleIdx, layoutId, navigation]);
 
   // Save whatever complete drafts the player has and exit. Holes the player
   // never finished filling in are skipped (planned_holes < hole_count surfaces
@@ -252,94 +264,57 @@ export function GamePlanReviewScreen() {
     void savePartialAndExit();
   };
 
-  const handleDelete = () => {
-    if (!ctx) return;
-    const planned = ctx.holes.filter((h) => h.savedPlan !== null).length;
-    if (planned === 0) {
-      // Nothing to delete; just close.
-      navigation.popToTop();
-      return;
-    }
-    confirmAction({
-      title: 'Delete this game plan?',
-      message: `${ctx.courseName} · ${ctx.layoutName}. ${planned} ${
-        planned === 1 ? 'hole' : 'holes'
-      } will be cleared. Practice throws on this layout aren't affected.`,
-      confirmLabel: 'Delete',
-      destructive: true,
-      onConfirm: async () => {
-        await deleteGamePlan(layoutId);
-        navigation.popToTop();
-      },
-    });
-  };
-
-  const savedHoleCount = useMemo(
-    () => (ctx ? ctx.holes.filter((h) => h.savedPlan !== null).length : 0),
-    [ctx]
-  );
-
-  const handleExport = () => {
-    if (!ctx || !discs) return;
-    const discsById = new Map(
-      discs.map((d) => [
-        d.id,
-        {
-          manufacturer: d.manufacturer,
-          model: d.model,
-          nickname: d.nickname,
-          category: d.category,
-        },
-      ])
-    );
-    try {
-      downloadTextFile(gamePlanFilename(ctx), gamePlanToText(ctx, discsById));
-    } catch (e) {
-      notify({
-        title: 'Export failed',
-        message: e instanceof Error ? e.message : String(e),
-      });
-    }
-  };
-
-  const handleLockIn = async () => {
-    if (!ctx) return;
-    if (incompleteHoles.length > 0) {
-      const first = incompleteHoles[0];
-      notify({
-        title: 'Missing plan for some holes',
-        message: `Hole ${first.hole.hole_number} has no disc or shape selected. Fill it in before locking the plan.`,
-      });
-      const idx = ctx.holes.findIndex(
-        (r) => r.hole.id === first.hole.id
-      );
-      if (idx >= 0) setCurrentIdx(idx);
-      return;
-    }
-
+  // Save whatever complete drafts the player has so far. Used by both Next
+  // (no navigation effect — drafts already in memory) and Done (which then
+  // pushes to the summary). Skips holes the player hasn't fully filled in.
+  const persistDrafts = async (): Promise<boolean> => {
+    if (!ctx) return false;
     setSubmitting(true);
     setError(null);
     try {
-      const plans: HolePlanInput[] = ctx.holes.map((rec) => {
+      const plans: HolePlanInput[] = [];
+      for (const rec of ctx.holes) {
         const d = drafts[rec.hole.id];
-        return {
+        if (
+          !d ||
+          d.discId === null ||
+          d.throwType === null ||
+          d.shotShape === null
+        ) {
+          continue;
+        }
+        plans.push({
           holeId: rec.hole.id,
-          discId: d.discId as number,
-          throwType: d.throwType as ThrowType,
-          shotShape: d.shotShape as ShotShape,
+          discId: d.discId,
+          throwType: d.throwType,
+          shotShape: d.shotShape,
           notes: d.notes,
-          // Plan rows are always the player's intentional pick now (no
-          // engine to override). The schema column is kept for legacy
-          // compatibility; we just always mark true.
+          // Plan rows are always the player's intentional pick now.
           isManualOverride: true,
-        };
-      });
+        });
+      }
       await saveGamePlan(layoutId, plans);
-      navigation.popToTop();
+      return true;
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to lock in plan');
+      setError(e instanceof Error ? e.message : 'Failed to save plan');
+      return false;
+    } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleNext = () => {
+    if (!ctx) return;
+    if (currentIdx < ctx.holes.length - 1) {
+      setCurrentIdx(currentIdx + 1);
+    }
+  };
+
+  const handleDone = async () => {
+    if (!ctx) return;
+    const ok = await persistDrafts();
+    if (!ok) return;
+    navigation.replace('GamePlanSummary', { layoutId });
   };
 
   if (!ctx || !discs) {
@@ -383,28 +358,6 @@ export function GamePlanReviewScreen() {
             {ctx.courseName} · {ctx.layoutName}
           </Text>
         </View>
-        {savedHoleCount > 0 && (
-          <View style={styles.headerActions}>
-            {isExportSupported && (
-              <Pressable
-                onPress={handleExport}
-                hitSlop={10}
-                style={styles.exportBtn}
-                accessibilityLabel="Export game plan as text file"
-              >
-                <Text style={styles.exportLabel}>Export</Text>
-              </Pressable>
-            )}
-            <Pressable
-              onPress={handleDelete}
-              hitSlop={10}
-              style={styles.deleteBtn}
-              accessibilityLabel="Delete this game plan"
-            >
-              <Text style={styles.deleteLabel}>Delete</Text>
-            </Pressable>
-          </View>
-        )}
       </View>
 
       <View style={styles.holeNav}>
@@ -528,22 +481,27 @@ export function GamePlanReviewScreen() {
 
         <View style={styles.footer}>
           <Text style={styles.footerMeta}>
-            {incompleteHoles.length > 0
-              ? `${incompleteHoles.length} ${incompleteHoles.length === 1 ? 'hole' : 'holes'} need a pick`
-              : `${ctx.holes.length} holes planned`}
+            Hole {currentIdx + 1} of {ctx.holes.length}
           </Text>
-          <Pressable
-            style={[
-              styles.lockBtn,
-              (submitting || incompleteHoles.length > 0) && styles.lockBtnDisabled,
-            ]}
-            disabled={submitting || incompleteHoles.length > 0}
-            onPress={handleLockIn}
-          >
-            <Text style={styles.lockLabel}>
-              {submitting ? 'Locking…' : 'Lock in game plan'}
-            </Text>
-          </Pressable>
+          {currentIdx < ctx.holes.length - 1 ? (
+            <Pressable
+              style={[styles.lockBtn, submitting && styles.lockBtnDisabled]}
+              disabled={submitting}
+              onPress={handleNext}
+            >
+              <Text style={styles.lockLabel}>Next →</Text>
+            </Pressable>
+          ) : (
+            <Pressable
+              style={[styles.lockBtn, submitting && styles.lockBtnDisabled]}
+              disabled={submitting}
+              onPress={() => void handleDone()}
+            >
+              <Text style={styles.lockLabel}>
+                {submitting ? 'Saving…' : 'Done →'}
+              </Text>
+            </Pressable>
+          )}
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -896,25 +854,6 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   headerSubtitle: { fontSize: 13, color: UI.textMuted },
-  headerActions: { flexDirection: 'row', gap: 6 },
-  exportBtn: {
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 10,
-    backgroundColor: UI.surface,
-    borderWidth: 1,
-    borderColor: UI.border,
-  },
-  exportLabel: { fontSize: 13, fontWeight: '600', color: MODE.gamePlan },
-  deleteBtn: {
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 10,
-    backgroundColor: UI.surface,
-    borderWidth: 1,
-    borderColor: UI.border,
-  },
-  deleteLabel: { fontSize: 13, fontWeight: '600', color: UI.danger },
 
   holeNav: {
     flexDirection: 'row',

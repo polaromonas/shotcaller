@@ -4,6 +4,7 @@ import { PracticeStartScreen } from '../screens/PracticeStartScreen';
 import { PracticeThrowScreen } from '../screens/PracticeThrowScreen';
 import { GamePlanStartScreen } from '../screens/GamePlanStartScreen';
 import { GamePlanReviewScreen } from '../screens/GamePlanReviewScreen';
+import { GamePlanSummaryScreen } from '../screens/GamePlanSummaryScreen';
 import { TournamentStartScreen } from '../screens/TournamentStartScreen';
 import { TournamentThrowScreen } from '../screens/TournamentThrowScreen';
 import { SessionDetailScreen } from '../screens/SessionDetailScreen';
@@ -38,6 +39,11 @@ export function RootStack() {
       <Stack.Screen
         name="GamePlanReview"
         component={GamePlanReviewScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="GamePlanSummary"
+        component={GamePlanSummaryScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen
