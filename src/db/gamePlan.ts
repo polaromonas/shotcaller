@@ -281,6 +281,23 @@ export type LayoutCandidate = {
   planned_holes: number;
 };
 
+// Layouts with a partial plan started but not yet finalized — i.e., some
+// holes have plan rows but not all do. Surfaces as Resume cards on Home so
+// players don't lose track of plans they're mid-way through.
+export async function listInProgressGamePlans(): Promise<LayoutCandidate[]> {
+  const rows = await listLayoutsForGamePlan();
+  return rows.filter(
+    (r) => r.planned_holes > 0 && r.planned_holes < r.hole_count
+  );
+}
+
+export async function deleteGamePlan(layoutId: number): Promise<void> {
+  const db = await getDb();
+  await db.runAsync('DELETE FROM game_plan_shot WHERE layout_id = $id', {
+    $id: layoutId,
+  });
+}
+
 export async function listLayoutsForGamePlan(): Promise<LayoutCandidate[]> {
   const db = await getDb();
   return db.getAllAsync<LayoutCandidate>(

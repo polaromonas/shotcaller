@@ -21,6 +21,7 @@ import {
   type DiscWithTags,
 } from '../db/discs';
 import {
+  deleteGamePlan,
   loadGamePlanContext,
   saveGamePlan,
   type ComboBreakdown,
@@ -203,18 +204,74 @@ export function GamePlanReviewScreen() {
     });
   }, [ctx, drafts]);
 
-  const handleClose = () => {
-    if (dirty) {
-      confirmAction({
-        title: 'Discard game plan edits?',
-        message: 'Your changes on this session will not be saved.',
-        confirmLabel: 'Discard',
-        destructive: true,
-        onConfirm: () => navigation.popToTop(),
-      });
-    } else {
+  // Save whatever complete drafts the player has and exit. Holes the player
+  // never finished filling in are skipped (planned_holes < hole_count surfaces
+  // them later as a "Resume game plan" card on Home). No discard prompt — the
+  // intent is that planning work always persists.
+  const savePartialAndExit = async () => {
+    if (!ctx) {
       navigation.popToTop();
+      return;
     }
+    if (dirty) {
+      const plans: HolePlanInput[] = [];
+      for (const rec of ctx.holes) {
+        const d = drafts[rec.hole.id];
+        if (
+          !d ||
+          d.discId === null ||
+          d.throwType === null ||
+          d.shotShape === null
+        ) {
+          continue;
+        }
+        plans.push({
+          holeId: rec.hole.id,
+          discId: d.discId,
+          throwType: d.throwType,
+          shotShape: d.shotShape,
+          notes: d.notes,
+          isManualOverride: true,
+        });
+      }
+      try {
+        await saveGamePlan(layoutId, plans);
+      } catch (e) {
+        // Surface the failure but still let the player back out — better than
+        // trapping them on the screen.
+        notify({
+          title: 'Saving plan failed',
+          message: e instanceof Error ? e.message : String(e),
+        });
+      }
+    }
+    navigation.popToTop();
+  };
+
+  const handleClose = () => {
+    void savePartialAndExit();
+  };
+
+  const handleDelete = () => {
+    if (!ctx) return;
+    const planned = ctx.holes.filter((h) => h.savedPlan !== null).length;
+    if (planned === 0) {
+      // Nothing to delete; just close.
+      navigation.popToTop();
+      return;
+    }
+    confirmAction({
+      title: 'Delete this game plan?',
+      message: `${ctx.courseName} · ${ctx.layoutName}. ${planned} ${
+        planned === 1 ? 'hole' : 'holes'
+      } will be cleared. Practice throws on this layout aren't affected.`,
+      confirmLabel: 'Delete',
+      destructive: true,
+      onConfirm: async () => {
+        await deleteGamePlan(layoutId);
+        navigation.popToTop();
+      },
+    });
   };
 
   const savedHoleCount = useMemo(
@@ -326,15 +383,27 @@ export function GamePlanReviewScreen() {
             {ctx.courseName} · {ctx.layoutName}
           </Text>
         </View>
-        {isExportSupported && savedHoleCount > 0 && (
-          <Pressable
-            onPress={handleExport}
-            hitSlop={10}
-            style={styles.exportBtn}
-            accessibilityLabel="Export game plan as text file"
-          >
-            <Text style={styles.exportLabel}>Export</Text>
-          </Pressable>
+        {savedHoleCount > 0 && (
+          <View style={styles.headerActions}>
+            {isExportSupported && (
+              <Pressable
+                onPress={handleExport}
+                hitSlop={10}
+                style={styles.exportBtn}
+                accessibilityLabel="Export game plan as text file"
+              >
+                <Text style={styles.exportLabel}>Export</Text>
+              </Pressable>
+            )}
+            <Pressable
+              onPress={handleDelete}
+              hitSlop={10}
+              style={styles.deleteBtn}
+              accessibilityLabel="Delete this game plan"
+            >
+              <Text style={styles.deleteLabel}>Delete</Text>
+            </Pressable>
+          </View>
         )}
       </View>
 
@@ -827,6 +896,7 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   headerSubtitle: { fontSize: 13, color: UI.textMuted },
+  headerActions: { flexDirection: 'row', gap: 6 },
   exportBtn: {
     paddingHorizontal: 10,
     paddingVertical: 6,
@@ -836,6 +906,15 @@ const styles = StyleSheet.create({
     borderColor: UI.border,
   },
   exportLabel: { fontSize: 13, fontWeight: '600', color: MODE.gamePlan },
+  deleteBtn: {
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 10,
+    backgroundColor: UI.surface,
+    borderWidth: 1,
+    borderColor: UI.border,
+  },
+  deleteLabel: { fontSize: 13, fontWeight: '600', color: UI.danger },
 
   holeNav: {
     flexDirection: 'row',

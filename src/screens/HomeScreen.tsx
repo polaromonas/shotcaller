@@ -15,6 +15,10 @@ import {
   listOngoingSessions,
   type PracticeSessionWithContext,
 } from '../db/sessions';
+import {
+  listInProgressGamePlans,
+  type LayoutCandidate,
+} from '../db/gamePlan';
 import type { RootStackParamList } from '../navigation/types';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
@@ -24,14 +28,17 @@ export function HomeScreen() {
   const [lastSession, setLastSession] =
     useState<PracticeSessionWithContext | null>(null);
   const [ongoing, setOngoing] = useState<PracticeSessionWithContext[]>([]);
+  const [unfinishedPlans, setUnfinishedPlans] = useState<LayoutCandidate[]>([]);
 
   const load = useCallback(async () => {
-    const [last, active] = await Promise.all([
+    const [last, active, plans] = await Promise.all([
       getMostRecentSession(),
       listOngoingSessions(),
+      listInProgressGamePlans(),
     ]);
     setLastSession(last);
     setOngoing(active);
+    setUnfinishedPlans(plans);
   }, []);
 
   useFocusEffect(
@@ -51,6 +58,33 @@ export function HomeScreen() {
           <Text style={styles.title}>ShotCaller</Text>
           <Text style={styles.subtitle}>You call the shots.</Text>
         </View>
+
+        {unfinishedPlans.map((p) => (
+          <Pressable
+            key={`plan-${p.layout_id}`}
+            style={({ pressed }) => [
+              styles.resumeCard,
+              {
+                backgroundColor: MODE_TINT.gamePlan,
+                borderColor: MODE.gamePlan,
+              },
+              pressed && styles.pressed,
+            ]}
+            onPress={() =>
+              navigation.navigate('GamePlanReview', { layoutId: p.layout_id })
+            }
+          >
+            <Text style={[styles.resumeLabel, { color: MODE.gamePlan }]}>
+              Resume game plan
+            </Text>
+            <Text style={styles.resumeTitle} numberOfLines={1}>
+              {p.course_name} · {p.layout_name}
+            </Text>
+            <Text style={styles.resumeMeta}>
+              {p.planned_holes} of {p.hole_count} holes planned
+            </Text>
+          </Pressable>
+        ))}
 
         {ongoing.map((s) => {
           const isTournament = s.mode === 'Tournament';
