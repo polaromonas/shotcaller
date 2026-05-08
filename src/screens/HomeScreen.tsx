@@ -106,6 +106,14 @@ export function HomeScreen() {
           />
         </View>
 
+        <Pressable
+          onPress={() => navigation.navigate('About')}
+          hitSlop={6}
+          style={styles.helpLink}
+        >
+          <Text style={styles.helpLinkLabel}>How does ShotCaller work?</Text>
+        </Pressable>
+
         {lastSession && (
           <Pressable
             style={({ pressed }) => [
@@ -228,4 +236,10 @@ const styles = StyleSheet.create({
   },
   resumeTitle: { fontSize: 18, fontWeight: '700', color: UI.text },
   resumeMeta: { fontSize: 13, color: UI.textMuted },
+  helpLink: { alignItems: 'center', marginTop: -8 },
+  helpLinkLabel: {
+    fontSize: 13,
+    color: UI.textMuted,
+    textDecorationLine: 'underline',
+  },
 });

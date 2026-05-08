@@ -1,12 +1,22 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MODE, UI } from '../theme/colors';
+import type { RootStackParamList } from '../navigation/types';
+
+type Nav = NativeStackNavigationProp<RootStackParamList, 'About'>;
 
 export function AboutScreen() {
+  const navigation = useNavigation<Nav>();
   return (
     <SafeAreaView style={styles.root} edges={['top']}>
       <View style={styles.header}>
+        <Pressable onPress={() => navigation.goBack()} hitSlop={10}>
+          <Text style={styles.back}>‹ Back</Text>
+        </Pressable>
         <Text style={styles.title}>About ShotCaller</Text>
+        <View style={styles.backSpacer} />
       </View>
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.tagline}>You call the shots.</Text>
@@ -69,12 +79,18 @@ function Section({
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: UI.bg },
   header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: UI.border,
   },
-  title: { fontSize: 22, fontWeight: '700', color: UI.text },
+  back: { fontSize: 16, color: UI.textMuted },
+  // Spacer to keep the title visually centered against the Back chevron.
+  backSpacer: { width: 48 },
+  title: { fontSize: 18, fontWeight: '700', color: UI.text },
   content: { padding: 20, gap: 18, paddingBottom: 32 },
   tagline: { fontSize: 18, fontWeight: '600', color: UI.text },
   body: { fontSize: 14, color: UI.text, lineHeight: 20 },

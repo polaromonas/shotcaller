@@ -5,7 +5,6 @@ export type YouStackParamList = {
   Sessions: undefined;
   CoursesList: undefined;
   LayoutDetail: { layoutId: number };
-  About: undefined;
 };
 
 export type RootStackParamList = {
@@ -21,4 +20,5 @@ export type RootStackParamList = {
   TournamentStart: undefined;
   TournamentThrow: { sessionId: number; layoutId: number };
   SessionDetail: { sessionId: number };
+  About: undefined;
 };

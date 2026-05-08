@@ -1,5 +1,4 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { AboutScreen } from '../screens/AboutScreen';
 import { CoursesScreen } from '../screens/CoursesScreen';
 import { LayoutDetailScreen } from '../screens/LayoutDetailScreen';
 import { MyDiscsScreen } from '../screens/MyDiscsScreen';
@@ -42,11 +41,6 @@ export function YouStack() {
         name="LayoutDetail"
         component={LayoutDetailScreen}
         options={{ title: 'Layout', headerBackTitle: 'Courses' }}
-      />
-      <Stack.Screen
-        name="About"
-        component={AboutScreen}
-        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

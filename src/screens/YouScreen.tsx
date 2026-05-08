@@ -3,43 +3,62 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { UI } from '../theme/colors';
-import type { YouStackParamList } from '../navigation/types';
+import type {
+  RootStackParamList,
+  YouStackParamList,
+} from '../navigation/types';
 
-type Nav = NativeStackNavigationProp<YouStackParamList, 'YouHome'>;
+type YouNav = NativeStackNavigationProp<YouStackParamList, 'YouHome'>;
 
-type Item = {
-  label: string;
-  description: string;
-  glyph: string;
-  route: keyof YouStackParamList;
-};
+// About lives on the root stack (so Home can also reach it directly), every
+// other tile lives in YouStack. Items declare which navigator they target.
+type Item =
+  | {
+      target: 'you';
+      label: string;
+      description: string;
+      glyph: string;
+      route: keyof YouStackParamList;
+    }
+  | {
+      target: 'root';
+      label: string;
+      description: string;
+      glyph: string;
+      route: keyof RootStackParamList;
+    };
 
 const ITEMS: Item[] = [
   {
+    target: 'you',
     label: 'My Discs',
     description: 'Your collection and bag',
     glyph: '◎',
     route: 'MyDiscs',
   },
   {
+    target: 'you',
     label: 'Sessions',
     description: 'Past practice and tournament rounds',
     glyph: '⌚',
     route: 'Sessions',
   },
   {
+    target: 'you',
     label: 'My Stats',
     description: 'Performance and activity',
     glyph: '◧',
     route: 'MyStats',
   },
   {
+    target: 'you',
     label: 'Courses',
     description: 'Browse and edit saved courses',
     glyph: '⛳',
     route: 'CoursesList',
   },
   {
+    target: 'root',
     label: 'About ShotCaller',
     description: 'How the app works',
     glyph: 'ⓘ',
@@ -48,7 +67,7 @@ const ITEMS: Item[] = [
 ];
 
 export function YouScreen() {
-  const navigation = useNavigation<Nav>();
+  const youNav = useNavigation<YouNav>();
   return (
     <SafeAreaView style={styles.root} edges={['top']}>
       <View style={styles.header}>
@@ -59,7 +78,15 @@ export function YouScreen() {
           <Pressable
             key={item.route}
             style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
-            onPress={() => navigation.navigate(item.route as never)}
+            onPress={() => {
+              if (item.target === 'root') {
+                youNav
+                  .getParent<NativeStackNavigationProp<RootStackParamList>>()
+                  ?.navigate(item.route as never);
+              } else {
+                youNav.navigate(item.route as never);
+              }
+            }}
           >
             <Text style={styles.glyph}>{item.glyph}</Text>
             <View style={styles.rowText}>
