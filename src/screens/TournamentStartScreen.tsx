@@ -19,7 +19,7 @@ import {
   listActiveSessionsByLayout,
   todayIso,
 } from '../db/sessions';
-import { MODE, UI } from '../theme/colors';
+import { MODE, MODE_TINT, UI } from '../theme/colors';
 import type { RootStackParamList } from '../navigation/types';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'TournamentStart'>;
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     borderColor: UI.border,
   },
   rowOn: {
-    backgroundColor: '#fff0f4',
+    backgroundColor: MODE_TINT.tournament,
     borderColor: MODE.tournament,
   },
   rowText: { flex: 1, minWidth: 0, gap: 2 },

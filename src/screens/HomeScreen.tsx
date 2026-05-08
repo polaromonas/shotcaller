@@ -9,7 +9,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { MODE, UI } from '../theme/colors';
+import { MODE, MODE_TINT, UI } from '../theme/colors';
 import {
   getMostRecentSession,
   listOngoingSessions,
@@ -55,7 +55,7 @@ export function HomeScreen() {
         {ongoing.map((s) => {
           const isTournament = s.mode === 'Tournament';
           const tint = isTournament ? MODE.tournament : MODE.practice;
-          const bg = isTournament ? '#fff0f4' : '#eef3ff';
+          const bg = isTournament ? MODE_TINT.tournament : MODE_TINT.practice;
           return (
             <Pressable
               key={s.id}

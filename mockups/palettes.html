@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ShotCaller — Palette Comparison</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --surface: #f6f7fb;
+      --border: #e3e5ee;
+      --text: #1a1c2a;
+      --text-muted: #555870;
+      --text-inverse: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #fafbfd;
+      color: var(--text);
+    }
+
+    h1 {
+      margin: 0 0 4px;
+      font-size: 22px;
+    }
+    .lead {
+      margin: 0 0 24px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 24px;
+    }
+
+    .palette {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+    }
+    .palette h2 {
+      margin: 0 0 4px;
+      font-size: 16px;
+    }
+    .palette .desc {
+      margin: 0 0 14px;
+      color: var(--text-muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .swatches {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 14px;
+    }
+    .swatch {
+      flex: 1;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: var(--text-inverse);
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    /* === Mode cards (Home) === */
+    .modes {
+      display: grid;
+      gap: 8px;
+    }
+    .mode-card {
+      padding: 16px;
+      border-radius: 14px;
+      color: var(--text-inverse);
+    }
+    .mode-card .label {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0 0 2px;
+    }
+    .mode-card .desc {
+      margin: 0;
+      font-size: 12px;
+      opacity: 0.9;
+      color: var(--text-inverse);
+    }
+
+    /* === Hole header with par chips === */
+    .hole-header {
+      margin-top: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+    .hole-title {
+      font-size: 13px;
+      font-weight: 700;
+      margin: 0 0 6px;
+    }
+    .par-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .par-chip {
+      width: 26px;
+      height: 26px;
+      border-radius: 13px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .par-chip.on {
+      color: var(--text-inverse);
+      border-color: transparent;
+    }
+    .dist {
+      margin-left: auto;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 3px 8px;
+      font-size: 12px;
+      color: var(--text);
+    }
+
+    /* === Plan card (game-plan tinted reference) === */
+    .plan-card {
+      margin-top: 12px;
+      border: 1px solid;
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+    .plan-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .plan-disc {
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .plan-shot {
+      font-size: 12px;
+      color: var(--text);
+    }
+
+    /* === Buttons === */
+    .row-btns {
+      margin-top: 12px;
+      display: flex;
+      gap: 8px;
+    }
+    .btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-inverse);
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <h1>ShotCaller — palette options</h1>
+  <p class="lead">
+    Same UI, four palettes for the three modes. Look at the mode cards, the
+    par chip, the plan card, and the buttons all together — that's where
+    mode identity shows up most.
+  </p>
+
+  <div class="grid">
+
+    <!-- ============ Palette 1: Mono warm ============ -->
+    <section class="palette" style="
+      --practice: #f4b676;
+      --gameplan: #e07a3e;
+      --tournament: #a64a1a;
+      --plan-bg: #fdf2e7;
+    ">
+      <h2>1 · Monochromatic warm</h2>
+      <p class="desc">
+        Sand → vivid orange → burnt brick. Intensity tracks stakes; one hue
+        family. Risk: still kind of "all orange" at a glance.
+      </p>
+      <div class="swatches">
+        <div class="swatch" style="background: var(--practice);">Practice</div>
+        <div class="swatch" style="background: var(--gameplan);">Plan</div>
+        <div class="swatch" style="background: var(--tournament);">Tournament</div>
+      </div>
+
+      <div class="modes">
+        <div class="mode-card" style="background: var(--practice);">
+          <p class="label">Practice round</p>
+          <p class="desc">Log throws and build data</p>
+        </div>
+        <div class="mode-card" style="background: var(--gameplan);">
+          <p class="label">Game plan</p>
+          <p class="desc">Pick your discs and shots</p>
+        </div>
+        <div class="mode-card" style="background: var(--tournament);">
+          <p class="label">Tournament round</p>
+          <p class="desc">Execute the plan</p>
+        </div>
+      </div>
+
+      <div class="hole-header">
+        <p class="hole-title">Hole 5 · 5 of 18</p>
+        <div class="par-row">
+          <span class="par-chip">2</span>
+          <span class="par-chip on" style="background: var(--practice);">3</span>
+          <span class="par-chip">4</span>
+          <span class="par-chip">5</span>
+          <span class="dist">350 ft</span>
+        </div>
+      </div>
+
+      <div class="plan-card" style="border-color: var(--gameplan); background: var(--plan-bg);">
+        <p class="plan-label" style="color: var(--gameplan);">Game plan</p>
+        <p class="plan-disc">Destroyer</p>
+        <p class="plan-shot">Backhand · Flat</p>
+      </div>
+
+      <div class="row-btns">
+        <div class="btn" style="background: var(--practice);">Log throw</div>
+        <div class="btn" style="background: var(--gameplan);">Lock in</div>
+        <div class="btn" style="background: var(--tournament);">Finish</div>
+      </div>
+    </section>
+
+    <!-- ============ Palette 2: Disc-golf earth ============ -->
+    <section class="palette" style="
+      --practice: #7a9e5c;
+      --gameplan: #3f6f5a;
+      --tournament: #c4663b;
+      --plan-bg: #ecf3e3;
+    ">
+      <h2>2 · Disc-golf earth</h2>
+      <p class="desc">
+        Sage → forest, with a terracotta accent for tournament. Grounded in
+        the sport's natural setting; the mode that matters most breaks the
+        green family.
+      </p>
+      <div class="swatches">
+        <div class="swatch" style="background: var(--practice);">Practice</div>
+        <div class="swatch" style="background: var(--gameplan);">Plan</div>
+        <div class="swatch" style="background: var(--tournament);">Tournament</div>
+      </div>
+
+      <div class="modes">
+        <div class="mode-card" style="background: var(--practice);">
+          <p class="label">Practice round</p>
+          <p class="desc">Log throws and build data</p>
+        </div>
+        <div class="mode-card" style="background: var(--gameplan);">
+          <p class="label">Game plan</p>
+          <p class="desc">Pick your discs and shots</p>
+        </div>
+        <div class="mode-card" style="background: var(--tournament);">
+          <p class="label">Tournament round</p>
+          <p class="desc">Execute the plan</p>
+        </div>
+      </div>
+
+      <div class="hole-header">
+        <p class="hole-title">Hole 5 · 5 of 18</p>
+        <div class="par-row">
+          <span class="par-chip">2</span>
+          <span class="par-chip on" style="background: var(--practice);">3</span>
+          <span class="par-chip">4</span>
+          <span class="par-chip">5</span>
+          <span class="dist">350 ft</span>
+        </div>
+      </div>
+
+      <div class="plan-card" style="border-color: var(--gameplan); background: var(--plan-bg);">
+        <p class="plan-label" style="color: var(--gameplan);">Game plan</p>
+        <p class="plan-disc">Destroyer</p>
+        <p class="plan-shot">Backhand · Flat</p>
+      </div>
+
+      <div class="row-btns">
+        <div class="btn" style="background: var(--practice);">Log throw</div>
+        <div class="btn" style="background: var(--gameplan);">Lock in</div>
+        <div class="btn" style="background: var(--tournament);">Finish</div>
+      </div>
+    </section>
+
+    <!-- ============ Palette 3: Cool → warm spectrum ============ -->
+    <section class="palette" style="
+      --practice: #5b8af5;
+      --gameplan: #7c6cd6;
+      --tournament: #e8576a;
+      --plan-bg: #efecfb;
+    ">
+      <h2>3 · Cool → warm spectrum</h2>
+      <p class="desc">
+        Blue → purple bridge → coral. Stakes rising along the spectrum.
+        Familiar (blue is current practice color); tournament reads
+        urgent.
+      </p>
+      <div class="swatches">
+        <div class="swatch" style="background: var(--practice);">Practice</div>
+        <div class="swatch" style="background: var(--gameplan);">Plan</div>
+        <div class="swatch" style="background: var(--tournament);">Tournament</div>
+      </div>
+
+      <div class="modes">
+        <div class="mode-card" style="background: var(--practice);">
+          <p class="label">Practice round</p>
+          <p class="desc">Log throws and build data</p>
+        </div>
+        <div class="mode-card" style="background: var(--gameplan);">
+          <p class="label">Game plan</p>
+          <p class="desc">Pick your discs and shots</p>
+        </div>
+        <div class="mode-card" style="background: var(--tournament);">
+          <p class="label">Tournament round</p>
+          <p class="desc">Execute the plan</p>
+        </div>
+      </div>
+
+      <div class="hole-header">
+        <p class="hole-title">Hole 5 · 5 of 18</p>
+        <div class="par-row">
+          <span class="par-chip">2</span>
+          <span class="par-chip on" style="background: var(--practice);">3</span>
+          <span class="par-chip">4</span>
+          <span class="par-chip">5</span>
+          <span class="dist">350 ft</span>
+        </div>
+      </div>
+
+      <div class="plan-card" style="border-color: var(--gameplan); background: var(--plan-bg);">
+        <p class="plan-label" style="color: var(--gameplan);">Game plan</p>
+        <p class="plan-disc">Destroyer</p>
+        <p class="plan-shot">Backhand · Flat</p>
+      </div>
+
+      <div class="row-btns">
+        <div class="btn" style="background: var(--practice);">Log throw</div>
+        <div class="btn" style="background: var(--gameplan);">Lock in</div>
+        <div class="btn" style="background: var(--tournament);">Finish</div>
+      </div>
+    </section>
+
+    <!-- ============ Palette 4: One family + accent ============ -->
+    <section class="palette" style="
+      --practice: #7a9e5c;
+      --gameplan: #3f6f5a;
+      --tournament: #dd6a3a;
+      --plan-bg: #e6efde;
+    ">
+      <h2>4 · One family + accent</h2>
+      <p class="desc">
+        Practice and Game plan share a sage→forest family ("preparation");
+        Tournament is a warm orange accent ("for real"). Mode hierarchy
+        feels intentional.
+      </p>
+      <div class="swatches">
+        <div class="swatch" style="background: var(--practice);">Practice</div>
+        <div class="swatch" style="background: var(--gameplan);">Plan</div>
+        <div class="swatch" style="background: var(--tournament);">Tournament</div>
+      </div>
+
+      <div class="modes">
+        <div class="mode-card" style="background: var(--practice);">
+          <p class="label">Practice round</p>
+          <p class="desc">Log throws and build data</p>
+        </div>
+        <div class="mode-card" style="background: var(--gameplan);">
+          <p class="label">Game plan</p>
+          <p class="desc">Pick your discs and shots</p>
+        </div>
+        <div class="mode-card" style="background: var(--tournament);">
+          <p class="label">Tournament round</p>
+          <p class="desc">Execute the plan</p>
+        </div>
+      </div>
+
+      <div class="hole-header">
+        <p class="hole-title">Hole 5 · 5 of 18</p>
+        <div class="par-row">
+          <span class="par-chip">2</span>
+          <span class="par-chip on" style="background: var(--practice);">3</span>
+          <span class="par-chip">4</span>
+          <span class="par-chip">5</span>
+          <span class="dist">350 ft</span>
+        </div>
+      </div>
+
+      <div class="plan-card" style="border-color: var(--gameplan); background: var(--plan-bg);">
+        <p class="plan-label" style="color: var(--gameplan);">Game plan</p>
+        <p class="plan-disc">Destroyer</p>
+        <p class="plan-shot">Backhand · Flat</p>
+      </div>
+
+      <div class="row-btns">
+        <div class="btn" style="background: var(--practice);">Log throw</div>
+        <div class="btn" style="background: var(--gameplan);">Lock in</div>
+        <div class="btn" style="background: var(--tournament);">Finish</div>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>

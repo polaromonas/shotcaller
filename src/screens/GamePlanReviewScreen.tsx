@@ -37,7 +37,7 @@ import {
   type ShotShape,
   type ThrowType,
 } from '../db/types';
-import { CONFIDENCE, MODE, UI } from '../theme/colors';
+import { CONFIDENCE, MODE, MODE_TINT, UI } from '../theme/colors';
 import {
   downloadTextFile,
   gamePlanFilename,
@@ -1007,7 +1007,7 @@ const styles = StyleSheet.create({
     borderColor: UI.border,
     maxWidth: 200,
   },
-  discPillOn: { backgroundColor: '#ecf7ee', borderColor: MODE.gamePlan },
+  discPillOn: { backgroundColor: MODE_TINT.gamePlan, borderColor: MODE.gamePlan },
   discSwatch: {
     width: 22,
     height: 22,

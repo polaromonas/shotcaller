@@ -42,7 +42,7 @@ import {
   type ShotShape,
   type ThrowType,
 } from '../db/types';
-import { MODE, UI } from '../theme/colors';
+import { MODE, MODE_TINT, UI } from '../theme/colors';
 import { confirmAction } from '../util/confirm';
 import type { RootStackParamList } from '../navigation/types';
 
@@ -775,7 +775,7 @@ const styles = StyleSheet.create({
   planCard: {
     padding: 14,
     borderRadius: 12,
-    backgroundColor: '#fff5f8',
+    backgroundColor: MODE_TINT.tournament,
     borderWidth: 1,
     borderColor: MODE.tournament,
     gap: 6,
@@ -825,7 +825,7 @@ const styles = StyleSheet.create({
     borderColor: UI.border,
     maxWidth: 200,
   },
-  discPillOn: { backgroundColor: '#fff0f4', borderColor: MODE.tournament },
+  discPillOn: { backgroundColor: MODE_TINT.tournament, borderColor: MODE.tournament },
   discSwatch: {
     width: 18,
     height: 18,

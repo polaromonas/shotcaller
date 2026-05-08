@@ -55,7 +55,7 @@ import {
   type ShotShape,
   type ThrowType,
 } from '../db/types';
-import { MODE, UI } from '../theme/colors';
+import { MODE, MODE_TINT, UI } from '../theme/colors';
 import type { RootStackParamList } from '../navigation/types';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'PracticeThrow'>;
@@ -1023,7 +1023,7 @@ const styles = StyleSheet.create({
     maxWidth: 200,
   },
   discPillInBag: { borderColor: UI.border },
-  discPillOn: { backgroundColor: '#eef3ff', borderColor: MODE.practice },
+  discPillOn: { backgroundColor: MODE_TINT.practice, borderColor: MODE.practice },
   discSwatch: {
     width: 18,
     height: 18,
@@ -1039,7 +1039,7 @@ const styles = StyleSheet.create({
   planCard: {
     padding: 12,
     borderRadius: 12,
-    backgroundColor: '#ecf7ee',
+    backgroundColor: MODE_TINT.gamePlan,
     borderWidth: 1,
     borderColor: MODE.gamePlan,
     gap: 6,

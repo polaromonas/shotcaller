@@ -1,7 +1,20 @@
+// Mode identity. Practice and Game plan share the green family ("preparation"
+// — Practice is the lighter, more open sage; Game plan is the deeper, more
+// committed forest). Tournament breaks the family with a warm orange — it's
+// the one that's for real, and the visual shift signals stakes.
 export const MODE = {
-  practice: '#5b8af5',
-  gamePlan: '#4a9e5c',
-  tournament: '#e8809a',
+  practice: '#7a9e5c',
+  gamePlan: '#3f6f5a',
+  tournament: '#dd6a3a',
+} as const;
+
+// Light-tinted backgrounds derived from each mode color, for selected pills,
+// resume cards, plan reference cards, etc. Soft enough to read as a hint, not
+// a button.
+export const MODE_TINT = {
+  practice: '#e6efde',
+  gamePlan: '#dfece6',
+  tournament: '#fbe6d6',
 } as const;
 
 export const INBAG_GREEN = '#3a9e5c';
