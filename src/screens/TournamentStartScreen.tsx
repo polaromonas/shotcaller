@@ -98,9 +98,15 @@ export function TournamentStartScreen() {
       <View style={styles.center}>
         <Text style={styles.emptyTitle}>No game plans yet</Text>
         <Text style={styles.emptyBody}>
-          Lock in a game plan for a layout from the Game plan screen before
-          starting a tournament round.
+          Tournament rounds load a saved plan and pre-select your disc and
+          shot per hole. Build a plan first, then come back here to play it.
         </Text>
+        <Pressable
+          style={styles.emptyCta}
+          onPress={() => navigation.replace('GamePlanStart')}
+        >
+          <Text style={styles.emptyCtaLabel}>Build a game plan</Text>
+        </Pressable>
       </View>
     );
   }
@@ -202,6 +208,18 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   emptyTitle: { fontSize: 18, fontWeight: '600', color: UI.text },
+  emptyCta: {
+    marginTop: 8,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    backgroundColor: MODE.gamePlan,
+    borderRadius: 12,
+  },
+  emptyCtaLabel: {
+    color: UI.textInverse,
+    fontSize: 15,
+    fontWeight: '700',
+  },
   emptyBody: {
     fontSize: 14,
     color: UI.textMuted,

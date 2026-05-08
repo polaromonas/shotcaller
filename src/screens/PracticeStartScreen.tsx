@@ -225,6 +225,11 @@ export function PracticeStartScreen() {
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
       >
+        <Text style={styles.intro}>
+          Log throws as you play. Par and distance fill in at each tee box;
+          your data builds the stats you'll see when you plan.
+        </Text>
+
         {noDiscs && (
           <View style={styles.empty}>
             <Text style={styles.emptyBody}>
@@ -369,6 +374,12 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: UI.bg },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   content: { padding: 16, gap: 18, paddingBottom: 40 },
+  intro: {
+    fontSize: 13,
+    color: UI.textMuted,
+    lineHeight: 18,
+    marginBottom: -4,
+  },
   empty: {
     padding: 16,
     backgroundColor: UI.surface,

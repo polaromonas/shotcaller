@@ -170,6 +170,11 @@ export function GamePlanStartScreen() {
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
       >
+        <Text style={styles.intro}>
+          Plan from your practice stats, or draft from scratch — pick a
+          course you've played and you'll set disc and shot for each hole.
+        </Text>
+
         <View style={styles.field}>
           <Text style={styles.label}>Course</Text>
           <TextInput
@@ -291,6 +296,12 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: UI.bg },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   content: { padding: 16, gap: 18, paddingBottom: 40 },
+  intro: {
+    fontSize: 13,
+    color: UI.textMuted,
+    lineHeight: 18,
+    marginBottom: -4,
+  },
   field: { gap: 8 },
   label: {
     fontSize: 13,
