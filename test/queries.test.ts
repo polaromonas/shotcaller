@@ -218,6 +218,7 @@ describe('game plan', () => {
         shotShape: 'Flat',
         notes: 'gap left',
         isManualOverride: true,
+        tagIds: [],
       },
     ]);
     const saved = await listSavedPlansForLayout(layoutId);
@@ -229,6 +230,7 @@ describe('game plan', () => {
       shot_shape: 'Flat',
       notes: 'gap left',
       is_manual_override: true,
+      tags: [],
     });
   });
 
@@ -420,6 +422,7 @@ describe('sessions', () => {
         shotShape: 'Flat',
         notes: null,
         isManualOverride: false,
+        tagIds: [],
       },
     ]);
 

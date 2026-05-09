@@ -4,6 +4,7 @@ export type YouStackParamList = {
   MyStats: undefined;
   Sessions: undefined;
   CoursesList: undefined;
+  CourseAdd: undefined;
   LayoutDetail: { layoutId: number };
 };
 

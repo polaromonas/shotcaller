@@ -10,16 +10,19 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import {
-  createCourse,
   createLayoutWithHoles,
+  deleteCourse,
+  deleteLayout,
+  getCourseImpact,
+  getLayoutImpact,
   listCoursesWithLayouts,
   type CourseWithLayouts,
   type Layout,
 } from '../db/courses';
-import { AddCourseSheet } from '../components/AddCourseSheet';
 import { AddLayoutSheet } from '../components/AddLayoutSheet';
+import { confirmAction } from '../util/confirm';
 import { UI } from '../theme/colors';
 import type { YouStackParamList } from '../navigation/types';
 
@@ -30,7 +33,6 @@ export function CoursesScreen() {
   const [courses, setCourses] = useState<CourseWithLayouts[] | null>(null);
   const [search, setSearch] = useState('');
   const [expandedId, setExpandedId] = useState<number | null>(null);
-  const [courseSheetOpen, setCourseSheetOpen] = useState(false);
   const [layoutSheetFor, setLayoutSheetFor] = useState<CourseWithLayouts | null>(
     null
   );
@@ -44,15 +46,14 @@ export function CoursesScreen() {
     void refresh();
   }, [refresh]);
 
-  const isSearching = useMemo(() => search.trim().length > 0, [search]);
-
-  const handleAddCourse = useCallback(
-    async (input: { name: string; location: string }) => {
-      await createCourse(input);
-      await refresh();
-    },
-    [refresh]
+  // Pick up newly added courses when returning from the Add Course wizard.
+  useFocusEffect(
+    useCallback(() => {
+      void refresh();
+    }, [refresh])
   );
+
+  const isSearching = useMemo(() => search.trim().length > 0, [search]);
 
   const handleAddLayout = useCallback(
     async (course: CourseWithLayouts, input: { name: string; holeCount: number }) => {
@@ -63,12 +64,92 @@ export function CoursesScreen() {
     [refresh]
   );
 
+  const handleDeleteCourse = useCallback(
+    async (course: CourseWithLayouts) => {
+      const impact = await getCourseImpact(course.id);
+      const lines: string[] = [];
+      if (impact.layouts > 0) {
+        lines.push(
+          `${impact.layouts} ${impact.layouts === 1 ? 'layout' : 'layouts'}`
+        );
+      }
+      if (impact.sessions > 0) {
+        lines.push(
+          `${impact.sessions} ${impact.sessions === 1 ? 'round' : 'rounds'}`
+        );
+      }
+      if (impact.throws > 0) {
+        lines.push(
+          `${impact.throws} ${impact.throws === 1 ? 'throw' : 'throws'}`
+        );
+      }
+      if (impact.plannedHoles > 0) {
+        lines.push(
+          `${impact.plannedHoles} planned ${
+            impact.plannedHoles === 1 ? 'hole' : 'holes'
+          }`
+        );
+      }
+      const tail =
+        lines.length > 0 ? ` This will also delete ${lines.join(', ')}.` : '';
+      confirmAction({
+        title: `Delete ${course.name}?`,
+        message: `${course.location}.${tail} This cannot be undone.`,
+        confirmLabel: 'Delete',
+        destructive: true,
+        onConfirm: async () => {
+          await deleteCourse(course.id);
+          setExpandedId((prev) => (prev === course.id ? null : prev));
+          await refresh();
+        },
+      });
+    },
+    [refresh]
+  );
+
+  const handleDeleteLayout = useCallback(
+    async (course: CourseWithLayouts, layout: Layout) => {
+      const impact = await getLayoutImpact(layout.id);
+      const lines: string[] = [];
+      if (impact.sessions > 0) {
+        lines.push(
+          `${impact.sessions} ${impact.sessions === 1 ? 'round' : 'rounds'}`
+        );
+      }
+      if (impact.throws > 0) {
+        lines.push(
+          `${impact.throws} ${impact.throws === 1 ? 'throw' : 'throws'}`
+        );
+      }
+      if (impact.plannedHoles > 0) {
+        lines.push(
+          `${impact.plannedHoles} planned ${
+            impact.plannedHoles === 1 ? 'hole' : 'holes'
+          }`
+        );
+      }
+      const tail =
+        lines.length > 0 ? ` This will also delete ${lines.join(', ')}.` : '';
+      confirmAction({
+        title: `Delete ${layout.name}?`,
+        message: `${course.name} · ${course.location}.${tail} This cannot be undone.`,
+        confirmLabel: 'Delete',
+        destructive: true,
+        onConfirm: async () => {
+          await deleteLayout(layout.id);
+          await refresh();
+        },
+      });
+    },
+    [refresh]
+  );
+
   return (
     <SafeAreaView style={styles.root} edges={['top']}>
       <View style={styles.header}>
         <Text style={styles.title}>Courses</Text>
         <Pressable
-          onPress={() => setCourseSheetOpen(true)}
+          onPress={() => navigation.navigate('CourseAdd')}
           style={styles.addBtn}
           hitSlop={8}
           accessibilityLabel="Add course"
@@ -107,7 +188,7 @@ export function CoursesScreen() {
               </Text>
               <Pressable
                 style={styles.emptyBtn}
-                onPress={() => setCourseSheetOpen(true)}
+                onPress={() => navigation.navigate('CourseAdd')}
               >
                 <Text style={styles.emptyBtnLabel}>Add your first course</Text>
               </Pressable>
@@ -129,16 +210,15 @@ export function CoursesScreen() {
                 navigation.navigate('LayoutDetail', { layoutId: layout.id })
               }
               onAddLayout={() => setLayoutSheetFor(item)}
+              onDeleteCourse={() => void handleDeleteCourse(item)}
+              onDeleteLayout={(layout) =>
+                void handleDeleteLayout(item, layout)
+              }
             />
           )}
         />
       )}
 
-      <AddCourseSheet
-        visible={courseSheetOpen}
-        onClose={() => setCourseSheetOpen(false)}
-        onSubmit={handleAddCourse}
-      />
       <AddLayoutSheet
         visible={layoutSheetFor !== null}
         courseName={layoutSheetFor?.name ?? ''}
@@ -159,6 +239,8 @@ type CourseRowProps = {
   onToggle: () => void;
   onPickLayout: (layout: Layout) => void;
   onAddLayout: () => void;
+  onDeleteCourse: () => void;
+  onDeleteLayout: (layout: Layout) => void;
 };
 
 function CourseRow({
@@ -167,6 +249,8 @@ function CourseRow({
   onToggle,
   onPickLayout,
   onAddLayout,
+  onDeleteCourse,
+  onDeleteLayout,
 }: CourseRowProps) {
   return (
     <View style={styles.courseWrap}>
@@ -185,18 +269,36 @@ function CourseRow({
       {expanded && (
         <View style={styles.layoutList}>
           {course.layouts.map((l) => (
-            <Pressable
-              key={l.id}
-              style={styles.layoutRow}
-              onPress={() => onPickLayout(l)}
-            >
-              <Text style={styles.layoutName}>{l.name}</Text>
-              <Text style={styles.layoutChevron}>›</Text>
-            </Pressable>
+            <View key={l.id} style={styles.layoutRow}>
+              <Pressable
+                style={styles.layoutRowMain}
+                onPress={() => onPickLayout(l)}
+              >
+                <Text style={styles.layoutName}>{l.name}</Text>
+                <Text style={styles.layoutChevron}>›</Text>
+              </Pressable>
+              <Pressable
+                style={styles.layoutDeleteBtn}
+                onPress={() => onDeleteLayout(l)}
+                hitSlop={6}
+                accessibilityLabel={`Delete layout ${l.name}`}
+              >
+                <Text style={styles.layoutDeleteLabel}>Delete</Text>
+              </Pressable>
+            </View>
           ))}
-          <Pressable style={styles.addLayoutBtn} onPress={onAddLayout}>
-            <Text style={styles.addLayoutLabel}>+ Add layout</Text>
-          </Pressable>
+          <View style={styles.expandedActions}>
+            <Pressable style={styles.addLayoutBtn} onPress={onAddLayout}>
+              <Text style={styles.addLayoutLabel}>+ Add layout</Text>
+            </Pressable>
+            <Pressable
+              style={styles.deleteCourseBtn}
+              onPress={onDeleteCourse}
+              accessibilityLabel={`Delete course ${course.name}`}
+            >
+              <Text style={styles.deleteCourseLabel}>Delete course</Text>
+            </Pressable>
+          </View>
         </View>
       )}
     </View>
@@ -281,16 +383,38 @@ const styles = StyleSheet.create({
   layoutRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingHorizontal: 20,
+    gap: 8,
+  },
+  layoutRowMain: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 10,
-    paddingHorizontal: 20,
   },
   layoutName: { fontSize: 15, color: UI.text },
   layoutChevron: { fontSize: 18, color: UI.textMuted },
+  layoutDeleteBtn: {
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+  },
+  layoutDeleteLabel: { fontSize: 12, fontWeight: '600', color: UI.danger },
+  expandedActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingTop: 4,
+  },
   addLayoutBtn: {
     paddingVertical: 10,
-    paddingHorizontal: 20,
     alignItems: 'flex-start',
   },
   addLayoutLabel: { fontSize: 14, fontWeight: '600', color: UI.textMuted },
+  deleteCourseBtn: {
+    paddingVertical: 10,
+    paddingHorizontal: 8,
+  },
+  deleteCourseLabel: { fontSize: 13, fontWeight: '600', color: UI.danger },
 });

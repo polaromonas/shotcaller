@@ -341,6 +341,14 @@ export function TournamentThrowScreen() {
             <ShotShapePicker value={shotShape} onChange={setShotShape} />
           </Section>
 
+          <Section title="Shot tags (optional)">
+            <ShotTagPicker
+              selectedIds={shotTagIds}
+              onToggle={toggleShotTag}
+              accent={MODE.tournament}
+            />
+          </Section>
+
           <Section title="Result">
             <ResultPicker value={result} onChange={setResult} />
           </Section>
@@ -368,14 +376,6 @@ export function TournamentThrowScreen() {
               onChangeText={setNotes}
               multiline
               placeholder="How it felt, wind, tree hit, etc."
-            />
-          </Section>
-
-          <Section title="Shot tags (optional)">
-            <ShotTagPicker
-              selectedIds={shotTagIds}
-              onToggle={toggleShotTag}
-              accent={MODE.tournament}
             />
           </Section>
 

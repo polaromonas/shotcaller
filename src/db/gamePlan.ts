@@ -1,5 +1,10 @@
 import { getDb } from './index';
 import type { Hole } from './courses';
+import {
+  listShotTagsForGamePlanShots,
+  setGamePlanShotTags,
+  type ShotTag,
+} from './shotTags';
 import type { DiscCategory, ResultKind, ShotShape, ThrowType } from './types';
 
 // Display rank: Basket is strictly better than C1, etc. Used for "best result
@@ -71,6 +76,7 @@ export type SavedPlan = {
   shot_shape: ShotShape;
   notes: string | null;
   is_manual_override: boolean;
+  tags: ShotTag[];
 };
 
 export type HoleRec = {
@@ -122,11 +128,15 @@ export async function loadGamePlanContext(
     'SELECT * FROM game_plan_shot WHERE layout_id = $id',
     { $id: layoutId }
   );
+  const tagsByPlan = await listShotTagsForGamePlanShots(
+    savedPlanRows.map((r) => r.id)
+  );
   const savedByHole = new Map<number, SavedPlan>();
   for (const row of savedPlanRows) {
     savedByHole.set(row.hole_id, {
       ...row,
       is_manual_override: row.is_manual_override === 1,
+      tags: tagsByPlan.get(row.id) ?? [],
     });
   }
 
@@ -234,6 +244,7 @@ export type HolePlanInput = {
   shotShape: ShotShape;
   notes: string | null;
   isManualOverride: boolean;
+  tagIds: number[];
 };
 
 export async function saveGamePlan(
@@ -242,6 +253,8 @@ export async function saveGamePlan(
 ): Promise<void> {
   const db = await getDb();
   await db.withTransactionAsync(async () => {
+    // ON DELETE CASCADE on game_plan_shot_tag.game_plan_shot_id clears tag
+    // rows when we wipe the plan rows below.
     await db.runAsync(
       'DELETE FROM game_plan_shot WHERE layout_id = $id',
       { $id: layoutId }
@@ -254,7 +267,7 @@ export async function saveGamePlan(
     );
     try {
       for (const p of plans) {
-        await stmt.executeAsync({
+        const result = await stmt.executeAsync({
           $layout_id: layoutId,
           $hole_id: p.holeId,
           $disc_id: p.discId,
@@ -263,6 +276,9 @@ export async function saveGamePlan(
           $notes: p.notes?.trim() || null,
           $is_manual_override: p.isManualOverride ? 1 : 0,
         });
+        if (p.tagIds.length > 0) {
+          await setGamePlanShotTags(result.lastInsertRowId, p.tagIds);
+        }
       }
     } finally {
       await stmt.finalizeAsync();
@@ -341,8 +357,10 @@ export async function listSavedPlansForLayout(
     'SELECT * FROM game_plan_shot WHERE layout_id = $id',
     { $id: layoutId }
   );
+  const tagsByPlan = await listShotTagsForGamePlanShots(rows.map((r) => r.id));
   return rows.map((r) => ({
     ...r,
     is_manual_override: r.is_manual_override === 1,
+    tags: tagsByPlan.get(r.id) ?? [],
   }));
 }

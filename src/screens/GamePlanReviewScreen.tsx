@@ -16,9 +16,11 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
+  createDisc,
   discDisplayName,
   listDiscs,
   type DiscWithTags,
+  type NewDiscInput,
 } from '../db/discs';
 import {
   loadGamePlanContext,
@@ -30,6 +32,7 @@ import {
 } from '../db/gamePlan';
 import { updateHole, type Hole } from '../db/courses';
 import {
+  DISC_CATEGORIES,
   OVERHAND_SHOT_SHAPES,
   SHOT_SHAPES,
   THROW_TYPES,
@@ -37,6 +40,8 @@ import {
   type ShotShape,
   type ThrowType,
 } from '../db/types';
+import { AddDiscSheet } from '../components/AddDiscSheet';
+import { ShotTagPicker } from '../components/ShotTagPicker';
 import { CONFIDENCE, MODE, MODE_TINT, UI } from '../theme/colors';
 import type { RootStackParamList } from '../navigation/types';
 
@@ -48,6 +53,7 @@ type HoleDraft = {
   throwType: ThrowType | null;
   shotShape: ShotShape | null;
   notes: string;
+  tagIds: Set<number>;
 };
 
 type Confidence = 'high' | 'low' | 'none';
@@ -88,6 +94,7 @@ function draftFromRec(rec: HoleRec, discs: DiscWithTags[]): HoleDraft {
       throwType: rec.savedPlan.throw_type,
       shotShape: rec.savedPlan.shot_shape,
       notes: rec.savedPlan.notes ?? '',
+      tagIds: new Set(rec.savedPlan.tags.map((t) => t.id)),
     };
   }
   // No saved plan and no app-recommended combo by design — the player picks
@@ -98,6 +105,7 @@ function draftFromRec(rec: HoleRec, discs: DiscWithTags[]): HoleDraft {
     throwType: 'Backhand',
     shotShape: 'Flat',
     notes: '',
+    tagIds: new Set(),
   };
 }
 
@@ -117,6 +125,16 @@ export function GamePlanReviewScreen() {
   // Tracks whether the player has touched any draft since the screen opened.
   // Drives the close-confirm so a clean close (no edits) doesn't nag.
   const [dirty, setDirty] = useState(false);
+  const [categoryFilter, setCategoryFilter] = useState<DiscCategory | 'All'>(
+    'All'
+  );
+  const [addDiscOpen, setAddDiscOpen] = useState(false);
+
+  const filteredDiscs = useMemo(() => {
+    if (!discs) return [];
+    if (categoryFilter === 'All') return discs;
+    return discs.filter((d) => d.category === categoryFilter);
+  }, [discs, categoryFilter]);
 
   useEffect(() => {
     (async () => {
@@ -165,6 +183,49 @@ export function GamePlanReviewScreen() {
       setDirty(true);
     },
     []
+  );
+
+  const handleCategoryChange = useCallback(
+    (cat: DiscCategory | 'All') => {
+      setCategoryFilter(cat);
+      // Mirror the practice screen: clear the current pick if it isn't in
+      // the new filter so the form doesn't quietly hold a hidden selection.
+      if (cat === 'All' || !discs || !currentRec) return;
+      const draft = drafts[currentRec.hole.id];
+      if (!draft || draft.discId === null) return;
+      const current = discs.find((d) => d.id === draft.discId);
+      if (!current || current.category !== cat) {
+        updateDraft(currentRec.hole.id, { discId: null });
+      }
+    },
+    [discs, drafts, updateDraft]
+  );
+
+  const handleSubmitNewDisc = useCallback(
+    async (input: NewDiscInput) => {
+      // Inline-add path mirrors the practice screen: bag the new disc and
+      // pre-select it on the current hole.
+      const newId = await createDisc({ ...input, in_bag: true });
+      const refreshed = await listDiscs();
+      setDiscs(refreshed);
+      if (currentRec) {
+        updateDraft(currentRec.hole.id, { discId: newId });
+      }
+    },
+    [currentRec, updateDraft]
+  );
+
+  const toggleShotTag = useCallback(
+    (tagId: number) => {
+      if (!currentRec) return;
+      const draft = drafts[currentRec.hole.id];
+      if (!draft) return;
+      const next = new Set(draft.tagIds);
+      if (next.has(tagId)) next.delete(tagId);
+      else next.add(tagId);
+      updateDraft(currentRec.hole.id, { tagIds: next });
+    },
+    [currentRec, drafts, updateDraft]
   );
 
   const handlePatchHole = useCallback(
@@ -244,6 +305,7 @@ export function GamePlanReviewScreen() {
           shotShape: d.shotShape,
           notes: d.notes,
           isManualOverride: true,
+          tagIds: Array.from(d.tagIds),
         });
       }
       try {
@@ -291,6 +353,7 @@ export function GamePlanReviewScreen() {
           notes: d.notes,
           // Plan rows are always the player's intentional pick now.
           isManualOverride: true,
+          tagIds: Array.from(d.tagIds),
         });
       }
       await saveGamePlan(layoutId, plans);
@@ -441,10 +504,15 @@ export function GamePlanReviewScreen() {
           </Section>
 
           <Section title="Disc">
+            <CategoryChips
+              value={categoryFilter}
+              onChange={handleCategoryChange}
+            />
             <DiscPicker
-              discs={discs}
+              discs={filteredDiscs}
               selectedId={draft.discId}
               onSelect={(id) => updateDraft(rec.hole.id, { discId: id })}
+              onAddNew={() => setAddDiscOpen(true)}
             />
           </Section>
 
@@ -463,6 +531,14 @@ export function GamePlanReviewScreen() {
             <ShotShapePicker
               value={draft.shotShape}
               onChange={(v) => updateDraft(rec.hole.id, { shotShape: v })}
+            />
+          </Section>
+
+          <Section title="Shot tags (optional)">
+            <ShotTagPicker
+              selectedIds={draft.tagIds}
+              onToggle={toggleShotTag}
+              accent={MODE.gamePlan}
             />
           </Section>
 
@@ -504,6 +580,12 @@ export function GamePlanReviewScreen() {
           )}
         </View>
       </KeyboardAvoidingView>
+
+      <AddDiscSheet
+        visible={addDiscOpen}
+        onClose={() => setAddDiscOpen(false)}
+        onSubmit={handleSubmitNewDisc}
+      />
     </SafeAreaView>
   );
 }
@@ -708,22 +790,51 @@ function CombosTable({ combos }: { combos: ComboBreakdown[] }) {
   );
 }
 
+const CATEGORY_FILTERS: ('All' | DiscCategory)[] = ['All', ...DISC_CATEGORIES];
+
+function CategoryChips({
+  value,
+  onChange,
+}: {
+  value: DiscCategory | 'All';
+  onChange: (next: DiscCategory | 'All') => void;
+}) {
+  return (
+    <View style={styles.categoryChips}>
+      {CATEGORY_FILTERS.map((c) => {
+        const on = c === value;
+        return (
+          <Pressable
+            key={c}
+            onPress={() => !on && onChange(c)}
+            style={[styles.categoryChip, on && styles.categoryChipOn]}
+          >
+            <Text
+              style={[
+                styles.categoryChipLabel,
+                on && styles.categoryChipLabelOn,
+              ]}
+            >
+              {c}
+            </Text>
+          </Pressable>
+        );
+      })}
+    </View>
+  );
+}
+
 function DiscPicker({
   discs,
   selectedId,
   onSelect,
+  onAddNew,
 }: {
   discs: DiscWithTags[];
   selectedId: number | null;
   onSelect: (id: number) => void;
+  onAddNew: () => void;
 }) {
-  if (discs.length === 0) {
-    return (
-      <Text style={styles.pickerEmpty}>
-        Add discs in the My Discs tab first.
-      </Text>
-    );
-  }
   return (
     <ScrollView
       horizontal
@@ -753,6 +864,14 @@ function DiscPicker({
           </Pressable>
         );
       })}
+      <Pressable
+        onPress={onAddNew}
+        style={[styles.discPill, styles.addDiscPill]}
+        accessibilityLabel="Add a new disc"
+      >
+        <Text style={styles.addDiscGlyph}>＋</Text>
+        <Text style={styles.addDiscLabel}>Add</Text>
+      </Pressable>
     </ScrollView>
   );
 }
@@ -1038,6 +1157,49 @@ const styles = StyleSheet.create({
   discModelOn: { color: MODE.gamePlan },
   discMfr: { fontSize: 11, color: UI.textMuted },
   pickerEmpty: { fontSize: 14, color: UI.textMuted },
+  categoryChips: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+    marginBottom: 8,
+  },
+  categoryChip: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 12,
+    backgroundColor: UI.surface,
+    borderWidth: 1,
+    borderColor: UI.border,
+  },
+  categoryChipOn: {
+    backgroundColor: MODE.gamePlan,
+    borderColor: MODE.gamePlan,
+  },
+  categoryChipLabel: { fontSize: 12, fontWeight: '700', color: UI.textMuted },
+  categoryChipLabelOn: { color: UI.textInverse },
+  addDiscPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 14,
+    backgroundColor: UI.bg,
+    borderStyle: 'dashed',
+    borderColor: MODE.gamePlan,
+    maxWidth: undefined,
+  },
+  addDiscGlyph: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: MODE.gamePlan,
+    lineHeight: 20,
+  },
+  addDiscLabel: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: MODE.gamePlan,
+    letterSpacing: 0.3,
+    textTransform: 'uppercase',
+  },
 
   segmented: {
     flexDirection: 'row',

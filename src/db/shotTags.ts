@@ -47,6 +47,55 @@ export async function setThrowShotTags(
   }
 }
 
+export async function setGamePlanShotTags(
+  planId: number,
+  shotTagIds: number[]
+): Promise<void> {
+  const db = await getDb();
+  await db.runAsync(
+    'DELETE FROM game_plan_shot_tag WHERE game_plan_shot_id = $id',
+    { $id: planId }
+  );
+  if (shotTagIds.length === 0) return;
+  const stmt = await db.prepareAsync(
+    'INSERT INTO game_plan_shot_tag (game_plan_shot_id, shot_tag_id) VALUES ($plan_id, $tag_id)'
+  );
+  try {
+    for (const tagId of shotTagIds) {
+      await stmt.executeAsync({ $plan_id: planId, $tag_id: tagId });
+    }
+  } finally {
+    await stmt.finalizeAsync();
+  }
+}
+
+export async function listShotTagsForGamePlanShots(
+  planIds: number[]
+): Promise<Map<number, ShotTag[]>> {
+  const out = new Map<number, ShotTag[]>();
+  if (planIds.length === 0) return out;
+  const db = await getDb();
+  const placeholders = planIds.map(() => '?').join(', ');
+  const rows = await db.getAllAsync<{
+    plan_id: number;
+    id: number;
+    name: string;
+  }>(
+    `SELECT gpst.game_plan_shot_id AS plan_id, st.id, st.name
+       FROM game_plan_shot_tag gpst
+       JOIN shot_tag st ON st.id = gpst.shot_tag_id
+      WHERE gpst.game_plan_shot_id IN (${placeholders})
+      ORDER BY st.name ASC`,
+    planIds
+  );
+  for (const r of rows) {
+    const list = out.get(r.plan_id) ?? [];
+    list.push({ id: r.id, name: r.name });
+    out.set(r.plan_id, list);
+  }
+  return out;
+}
+
 // Bulk-fetch tags for a set of throws, keyed by throw_id. Avoids N queries
 // when rendering history lists.
 export async function listShotTagsForThrows(

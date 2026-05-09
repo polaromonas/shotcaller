@@ -107,9 +107,111 @@ export async function findOrCreateLayout(input: {
   });
 }
 
+export type DeleteImpact = {
+  sessions: number;
+  throws: number;
+  plannedHoles: number;
+};
+
+// Sessions, throws, and plan rows that would disappear if this layout were
+// hard-deleted. Used to surface a clear confirmation before destroying data.
+export async function getLayoutImpact(
+  layoutId: number
+): Promise<DeleteImpact> {
+  const db = await getDb();
+  const row = await db.getFirstAsync<{
+    sessions: number;
+    throws: number;
+    planned_holes: number;
+  }>(
+    `SELECT
+        (SELECT COUNT(*) FROM practice_session ps WHERE ps.layout_id = $id) AS sessions,
+        (SELECT COUNT(*) FROM throw t
+           JOIN hole h ON h.id = t.hole_id
+          WHERE h.layout_id = $id) AS throws,
+        (SELECT COUNT(*) FROM game_plan_shot g WHERE g.layout_id = $id) AS planned_holes
+    `,
+    { $id: layoutId }
+  );
+  return {
+    sessions: row?.sessions ?? 0,
+    throws: row?.throws ?? 0,
+    plannedHoles: row?.planned_holes ?? 0,
+  };
+}
+
+export async function getCourseImpact(
+  courseId: number
+): Promise<DeleteImpact & { layouts: number }> {
+  const db = await getDb();
+  const row = await db.getFirstAsync<{
+    layouts: number;
+    sessions: number;
+    throws: number;
+    planned_holes: number;
+  }>(
+    `SELECT
+        (SELECT COUNT(*) FROM layout l WHERE l.course_id = $id) AS layouts,
+        (SELECT COUNT(*) FROM practice_session ps
+           JOIN layout l ON l.id = ps.layout_id
+          WHERE l.course_id = $id) AS sessions,
+        (SELECT COUNT(*) FROM throw t
+           JOIN hole h ON h.id = t.hole_id
+           JOIN layout l ON l.id = h.layout_id
+          WHERE l.course_id = $id) AS throws,
+        (SELECT COUNT(*) FROM game_plan_shot g
+           JOIN layout l ON l.id = g.layout_id
+          WHERE l.course_id = $id) AS planned_holes
+    `,
+    { $id: courseId }
+  );
+  return {
+    layouts: row?.layouts ?? 0,
+    sessions: row?.sessions ?? 0,
+    throws: row?.throws ?? 0,
+    plannedHoles: row?.planned_holes ?? 0,
+  };
+}
+
+// Hard delete: tear down sessions (and their throws via CASCADE), the saved
+// game plan, holes, and the layout itself. The schema's RESTRICTs on
+// throw.hole_id and practice_session.layout_id make a naive DELETE FROM
+// layout fail; we sequence the wipe explicitly inside one transaction.
+export async function deleteLayout(layoutId: number): Promise<void> {
+  const db = await getDb();
+  await db.withTransactionAsync(async () => {
+    await deleteLayoutInTxn(db, layoutId);
+  });
+}
+
+async function deleteLayoutInTxn(
+  db: Awaited<ReturnType<typeof getDb>>,
+  layoutId: number
+): Promise<void> {
+  await db.runAsync(
+    'DELETE FROM practice_session WHERE layout_id = $id',
+    { $id: layoutId }
+  );
+  await db.runAsync(
+    'DELETE FROM game_plan_shot WHERE layout_id = $id',
+    { $id: layoutId }
+  );
+  await db.runAsync('DELETE FROM hole WHERE layout_id = $id', { $id: layoutId });
+  await db.runAsync('DELETE FROM layout WHERE id = $id', { $id: layoutId });
+}
+
 export async function deleteCourse(courseId: number): Promise<void> {
   const db = await getDb();
-  await db.runAsync('DELETE FROM course WHERE id = $id', { $id: courseId });
+  await db.withTransactionAsync(async () => {
+    const layouts = await db.getAllAsync<{ id: number }>(
+      'SELECT id FROM layout WHERE course_id = $id',
+      { $id: courseId }
+    );
+    for (const l of layouts) {
+      await deleteLayoutInTxn(db, l.id);
+    }
+    await db.runAsync('DELETE FROM course WHERE id = $id', { $id: courseId });
+  });
 }
 
 export async function createLayoutWithHoles(input: {
@@ -152,11 +254,6 @@ export async function createLayoutWithHoles(input: {
     }
   });
   return layoutId;
-}
-
-export async function deleteLayout(layoutId: number): Promise<void> {
-  const db = await getDb();
-  await db.runAsync('DELETE FROM layout WHERE id = $id', { $id: layoutId });
 }
 
 export async function getLayout(layoutId: number): Promise<Layout | null> {

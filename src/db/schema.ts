@@ -128,4 +128,11 @@ CREATE TABLE IF NOT EXISTS throw_tag (
   PRIMARY KEY (throw_id, shot_tag_id)
 );
 CREATE INDEX IF NOT EXISTS idx_throw_tag_throw ON throw_tag(throw_id);
+
+CREATE TABLE IF NOT EXISTS game_plan_shot_tag (
+  game_plan_shot_id INTEGER NOT NULL REFERENCES game_plan_shot(id) ON DELETE CASCADE,
+  shot_tag_id INTEGER NOT NULL REFERENCES shot_tag(id) ON DELETE CASCADE,
+  PRIMARY KEY (game_plan_shot_id, shot_tag_id)
+);
+CREATE INDEX IF NOT EXISTS idx_game_plan_shot_tag_plan ON game_plan_shot_tag(game_plan_shot_id);
 `;

@@ -14,12 +14,15 @@ import type { RouteProp } from '@react-navigation/native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
+  deleteLayout,
   getLayout,
+  getLayoutImpact,
   listHoles,
   updateHole,
   type Hole,
   type Layout,
 } from '../db/courses';
+import { confirmAction } from '../util/confirm';
 import { INBAG_GREEN, UI } from '../theme/colors';
 import type { YouStackParamList } from '../navigation/types';
 
@@ -73,6 +76,41 @@ export function LayoutDetailScreen() {
     );
   }
 
+  const handleDelete = async () => {
+    if (!layout) return;
+    const impact = await getLayoutImpact(layout.id);
+    const lines: string[] = [];
+    if (impact.sessions > 0) {
+      lines.push(
+        `${impact.sessions} ${impact.sessions === 1 ? 'round' : 'rounds'}`
+      );
+    }
+    if (impact.throws > 0) {
+      lines.push(
+        `${impact.throws} ${impact.throws === 1 ? 'throw' : 'throws'}`
+      );
+    }
+    if (impact.plannedHoles > 0) {
+      lines.push(
+        `${impact.plannedHoles} planned ${
+          impact.plannedHoles === 1 ? 'hole' : 'holes'
+        }`
+      );
+    }
+    const tail =
+      lines.length > 0 ? `This will also delete ${lines.join(', ')}. ` : '';
+    confirmAction({
+      title: `Delete ${layout.name}?`,
+      message: `${tail}This cannot be undone.`,
+      confirmLabel: 'Delete',
+      destructive: true,
+      onConfirm: async () => {
+        await deleteLayout(layout.id);
+        navigation.goBack();
+      },
+    });
+  };
+
   return (
     <KeyboardAvoidingView
       style={styles.root}
@@ -85,6 +123,13 @@ export function LayoutDetailScreen() {
         {holes.map((h) => (
           <HoleRow key={h.id} hole={h} onUpdate={handleUpdate} />
         ))}
+        <Pressable
+          style={styles.deleteBtn}
+          onPress={() => void handleDelete()}
+          accessibilityLabel={`Delete layout ${layout.name}`}
+        >
+          <Text style={styles.deleteLabel}>Delete this layout</Text>
+        </Pressable>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -228,4 +273,14 @@ const styles = StyleSheet.create({
     borderColor: UI.border,
   },
   distSuffix: { fontSize: 13, color: UI.textMuted, width: 20 },
+  deleteBtn: {
+    marginTop: 16,
+    paddingVertical: 12,
+    borderRadius: 12,
+    alignItems: 'center',
+    backgroundColor: UI.surface,
+    borderWidth: 1,
+    borderColor: UI.danger,
+  },
+  deleteLabel: { fontSize: 14, fontWeight: '600', color: UI.danger },
 });
