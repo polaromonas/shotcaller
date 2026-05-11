@@ -8,6 +8,7 @@ export type PracticeSession = {
   mode: SessionMode;
   notes: string | null;
   completed_at: string | null;
+  name: string | null;
 };
 
 export type PracticeSessionWithContext = PracticeSession & {
@@ -105,6 +106,18 @@ export async function markSessionCompleted(sessionId: number): Promise<void> {
   await db.runAsync(
     `UPDATE practice_session SET completed_at = $now WHERE id = $id`,
     { $now: new Date().toISOString(), $id: sessionId }
+  );
+}
+
+export async function setSessionName(
+  sessionId: number,
+  name: string | null
+): Promise<void> {
+  const db = await getDb();
+  const trimmed = name?.trim();
+  await db.runAsync(
+    `UPDATE practice_session SET name = $name WHERE id = $id`,
+    { $name: trimmed && trimmed.length > 0 ? trimmed : null, $id: sessionId }
   );
 }
 

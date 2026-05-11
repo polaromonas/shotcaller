@@ -127,9 +127,14 @@ export function SessionDetailScreen() {
 
       <ScrollView contentContainerStyle={styles.content}>
         <View>
-          <Text style={styles.title} numberOfLines={1}>
-            {session.course_name} · {session.layout_name}
+          <Text style={styles.title} numberOfLines={2}>
+            {session.name ?? `${session.course_name} · ${session.layout_name}`}
           </Text>
+          {session.name && (
+            <Text style={styles.subtitle}>
+              {session.course_name} · {session.layout_name}
+            </Text>
+          )}
           <Text style={styles.subtitle}>
             {session.session_date} ·{' '}
             {isOngoing ? 'Ongoing' : 'Finished'}

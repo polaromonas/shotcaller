@@ -150,12 +150,17 @@ function SessionRow({ session, onPress, onDelete, onOpen }: RowProps) {
         <View style={styles.body}>
           <View style={styles.headerRow}>
             <Text style={styles.titleText} numberOfLines={1}>
-              {session.course_name} · {session.layout_name}
+              {session.name ?? `${session.course_name} · ${session.layout_name}`}
             </Text>
             <Text style={[styles.modeTag, { color: tint }]}>
               {isTournament ? 'Tournament' : 'Practice'}
             </Text>
           </View>
+          {session.name && (
+            <Text style={styles.meta} numberOfLines={1}>
+              {session.course_name} · {session.layout_name}
+            </Text>
+          )}
           <Text style={styles.meta} numberOfLines={1}>
             {session.session_date} · {session.throw_count}{' '}
             {session.throw_count === 1 ? 'throw' : 'throws'}

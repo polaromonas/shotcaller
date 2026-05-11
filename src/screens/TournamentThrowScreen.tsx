@@ -19,7 +19,8 @@ import {
   listDiscs,
   type DiscWithTags,
 } from '../db/discs';
-import { markSessionCompleted } from '../db/sessions';
+import { getSession, markSessionCompleted, setSessionName } from '../db/sessions';
+import { FinishSessionSheet } from '../components/FinishSessionSheet';
 import { ShotTagPicker } from '../components/ShotTagPicker';
 import { getLayout, listHoles, type Hole, type Layout } from '../db/courses';
 import { getDb } from '../db';
@@ -79,6 +80,8 @@ export function TournamentThrowScreen() {
   const [throwsForHole, setThrowsForHole] = useState<ThrowWithDisc[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [finishOpen, setFinishOpen] = useState(false);
+  const [existingName, setExistingName] = useState<string | null>(null);
 
   const currentHole = holes && holes.length > 0 ? holes[currentIdx] : null;
   const currentPlan = currentHole ? plansByHole.get(currentHole.id) ?? null : null;
@@ -239,17 +242,20 @@ export function TournamentThrowScreen() {
     });
   };
 
-  const handleFinish = () => {
-    confirmAction({
-      title: 'Finish tournament round?',
-      message:
-        'This marks the round as done. You can still review the throws from Stats, but the round won’t show as ongoing.',
-      confirmLabel: 'Finish',
-      onConfirm: async () => {
-        await markSessionCompleted(sessionId);
-        navigation.popToTop();
-      },
-    });
+  const handleFinish = async () => {
+    // Look up any name already on the session (set earlier via this same
+    // sheet, or in the future via SessionDetail) so reopening doesn't
+    // overwrite it on submit.
+    const s = await getSession(sessionId);
+    setExistingName(s?.name ?? null);
+    setFinishOpen(true);
+  };
+
+  const handleConfirmFinish = async (name: string) => {
+    await setSessionName(sessionId, name);
+    await markSessionCompleted(sessionId);
+    setFinishOpen(false);
+    navigation.popToTop();
   };
 
   if (!layout || !holes || !discs) {
@@ -290,7 +296,7 @@ export function TournamentThrowScreen() {
           </Text>
         </View>
         <Pressable
-          onPress={handleFinish}
+          onPress={() => void handleFinish()}
           hitSlop={10}
           style={styles.finishBtn}
           accessibilityLabel="Finish tournament round"
@@ -298,6 +304,14 @@ export function TournamentThrowScreen() {
           <Text style={styles.finishLabel}>Finish</Text>
         </Pressable>
       </View>
+
+      <FinishSessionSheet
+        visible={finishOpen}
+        mode="Tournament"
+        initialName={existingName}
+        onCancel={() => setFinishOpen(false)}
+        onFinish={handleConfirmFinish}
+      />
 
       <HoleNav
         hole={currentHole!}

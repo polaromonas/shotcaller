@@ -182,8 +182,14 @@ export function HomeScreen() {
               <Text style={styles.lastSessionChev}>›</Text>
             </View>
             <Text style={styles.lastSessionTitle}>
-              {lastSession.course_name} · {lastSession.layout_name}
+              {lastSession.name ??
+                `${lastSession.course_name} · ${lastSession.layout_name}`}
             </Text>
+            {lastSession.name && (
+              <Text style={styles.lastSessionMeta}>
+                {lastSession.course_name} · {lastSession.layout_name}
+              </Text>
+            )}
             <Text style={styles.lastSessionMeta}>
               {lastSession.session_date} · {lastSession.throw_count}{' '}
               {lastSession.throw_count === 1 ? 'throw' : 'throws'} logged

@@ -64,30 +64,7 @@ function confidenceFromTotal(total: number): Confidence {
   return 'none';
 }
 
-function categoryForDistance(distanceFt: number): DiscCategory | null {
-  if (distanceFt <= 0) return null;
-  if (distanceFt >= 300) return 'DD';
-  if (distanceFt >= 200) return 'FWD';
-  if (distanceFt >= 100) return 'MID';
-  return 'P&A';
-}
-
-function fallbackDiscId(
-  distanceFt: number,
-  discs: DiscWithTags[]
-): number | null {
-  const inBag = discs.filter((d) => d.in_bag);
-  const pool = inBag.length > 0 ? inBag : discs;
-  if (pool.length === 0) return null;
-  const wanted = categoryForDistance(distanceFt);
-  if (wanted) {
-    const match = pool.find((d) => d.category === wanted);
-    if (match) return match.id;
-  }
-  return pool[0].id;
-}
-
-function draftFromRec(rec: HoleRec, discs: DiscWithTags[]): HoleDraft {
+function draftFromRec(rec: HoleRec): HoleDraft {
   if (rec.savedPlan) {
     return {
       discId: rec.savedPlan.disc_id,
@@ -97,13 +74,12 @@ function draftFromRec(rec: HoleRec, discs: DiscWithTags[]): HoleDraft {
       tagIds: new Set(rec.savedPlan.tags.map((t) => t.id)),
     };
   }
-  // No saved plan and no app-recommended combo by design — the player picks
-  // from the disc list. The distance-bucket fallback is just a UI default
-  // (something to start on rather than an empty picker), not a suggestion.
+  // No defaults — the player explicitly picks every field. Saving a hole
+  // requires all three to be set.
   return {
-    discId: fallbackDiscId(rec.hole.distance_ft, discs),
-    throwType: 'Backhand',
-    shotShape: 'Flat',
+    discId: null,
+    throwType: null,
+    shotShape: null,
     notes: '',
     tagIds: new Set(),
   };
@@ -122,9 +98,6 @@ export function GamePlanReviewScreen() {
   );
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  // Tracks whether the player has touched any draft since the screen opened.
-  // Drives the close-confirm so a clean close (no edits) doesn't nag.
-  const [dirty, setDirty] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState<DiscCategory | 'All'>(
     'All'
   );
@@ -147,7 +120,7 @@ export function GamePlanReviewScreen() {
       if (loaded) {
         const seeded: Record<number, HoleDraft> = {};
         for (const rec of loaded.holes) {
-          seeded[rec.hole.id] = draftFromRec(rec, ds);
+          seeded[rec.hole.id] = draftFromRec(rec);
         }
         setDrafts(seeded);
       }
@@ -180,7 +153,6 @@ export function GamePlanReviewScreen() {
         if (!existing) return prev;
         return { ...prev, [holeId]: { ...existing, ...changes } };
       });
-      setDirty(true);
     },
     []
   );
@@ -277,47 +249,78 @@ export function GamePlanReviewScreen() {
     }
   }, [ctx, startHoleIdx, layoutId, navigation]);
 
-  // Save whatever complete drafts the player has and exit. Holes the player
-  // never finished filling in are skipped (planned_holes < hole_count surfaces
-  // them later as a "Resume game plan" card on Home). No discard prompt — the
-  // intent is that planning work always persists.
+  // Single source of truth for persistence: writes every complete draft to
+  // the DB (delete + insert). Idempotent, so it's safe to call on every
+  // navigation event — that's how we keep the Next button, the top arrows,
+  // the close ×, and Done in sync. `showProgress` toggles the disabled-button
+  // state for the explicit user-initiated Done flow; auto-saves during
+  // navigation stay silent so the UI doesn't churn.
+  const persistDrafts = useCallback(
+    async (opts?: { showProgress?: boolean }): Promise<boolean> => {
+      if (!ctx) return false;
+      if (opts?.showProgress) setSubmitting(true);
+      setError(null);
+      try {
+        const plans: HolePlanInput[] = [];
+        for (const rec of ctx.holes) {
+          const d = drafts[rec.hole.id];
+          if (
+            !d ||
+            d.discId === null ||
+            d.throwType === null ||
+            d.shotShape === null
+          ) {
+            continue;
+          }
+          plans.push({
+            holeId: rec.hole.id,
+            discId: d.discId,
+            throwType: d.throwType,
+            shotShape: d.shotShape,
+            notes: d.notes,
+            isManualOverride: true,
+            tagIds: Array.from(d.tagIds),
+          });
+        }
+        await saveGamePlan(layoutId, plans);
+        return true;
+      } catch (e) {
+        setError(e instanceof Error ? e.message : 'Failed to save plan');
+        return false;
+      } finally {
+        if (opts?.showProgress) setSubmitting(false);
+      }
+    },
+    [ctx, drafts, layoutId]
+  );
+
+  // Every hole-change goes through here so the Next button and the top
+  // arrows behave identically: save first, then navigate.
+  const goToHole = useCallback(
+    async (targetIdx: number) => {
+      if (!ctx) return;
+      if (targetIdx < 0 || targetIdx >= ctx.holes.length) return;
+      if (targetIdx === currentIdx) return;
+      await persistDrafts();
+      setCurrentIdx(targetIdx);
+    },
+    [ctx, currentIdx, persistDrafts]
+  );
+
   const savePartialAndExit = async () => {
     if (!ctx) {
       navigation.popToTop();
       return;
     }
-    if (dirty) {
-      const plans: HolePlanInput[] = [];
-      for (const rec of ctx.holes) {
-        const d = drafts[rec.hole.id];
-        if (
-          !d ||
-          d.discId === null ||
-          d.throwType === null ||
-          d.shotShape === null
-        ) {
-          continue;
-        }
-        plans.push({
-          holeId: rec.hole.id,
-          discId: d.discId,
-          throwType: d.throwType,
-          shotShape: d.shotShape,
-          notes: d.notes,
-          isManualOverride: true,
-          tagIds: Array.from(d.tagIds),
-        });
-      }
-      try {
-        await saveGamePlan(layoutId, plans);
-      } catch (e) {
-        // Surface the failure but still let the player back out — better than
-        // trapping them on the screen.
-        notify({
-          title: 'Saving plan failed',
-          message: e instanceof Error ? e.message : String(e),
-        });
-      }
+    try {
+      await persistDrafts();
+    } catch (e) {
+      // Surface the failure but still let the player back out — better than
+      // trapping them on the screen.
+      notify({
+        title: 'Saving plan failed',
+        message: e instanceof Error ? e.message : String(e),
+      });
     }
     navigation.popToTop();
   };
@@ -326,56 +329,9 @@ export function GamePlanReviewScreen() {
     void savePartialAndExit();
   };
 
-  // Save whatever complete drafts the player has so far. Used by both Next
-  // (no navigation effect — drafts already in memory) and Done (which then
-  // pushes to the summary). Skips holes the player hasn't fully filled in.
-  const persistDrafts = async (): Promise<boolean> => {
-    if (!ctx) return false;
-    setSubmitting(true);
-    setError(null);
-    try {
-      const plans: HolePlanInput[] = [];
-      for (const rec of ctx.holes) {
-        const d = drafts[rec.hole.id];
-        if (
-          !d ||
-          d.discId === null ||
-          d.throwType === null ||
-          d.shotShape === null
-        ) {
-          continue;
-        }
-        plans.push({
-          holeId: rec.hole.id,
-          discId: d.discId,
-          throwType: d.throwType,
-          shotShape: d.shotShape,
-          notes: d.notes,
-          // Plan rows are always the player's intentional pick now.
-          isManualOverride: true,
-          tagIds: Array.from(d.tagIds),
-        });
-      }
-      await saveGamePlan(layoutId, plans);
-      return true;
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to save plan');
-      return false;
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const handleNext = () => {
-    if (!ctx) return;
-    if (currentIdx < ctx.holes.length - 1) {
-      setCurrentIdx(currentIdx + 1);
-    }
-  };
-
   const handleDone = async () => {
     if (!ctx) return;
-    const ok = await persistDrafts();
+    const ok = await persistDrafts({ showProgress: true });
     if (!ok) return;
     navigation.replace('GamePlanSummary', { layoutId });
   };
@@ -425,7 +381,7 @@ export function GamePlanReviewScreen() {
 
       <View style={styles.holeNav}>
         <Pressable
-          onPress={() => setCurrentIdx((i) => Math.max(0, i - 1))}
+          onPress={() => void goToHole(currentIdx - 1)}
           disabled={currentIdx === 0}
           style={[styles.holeNavBtn, currentIdx === 0 && styles.holeNavBtnDisabled]}
           hitSlop={8}
@@ -442,9 +398,7 @@ export function GamePlanReviewScreen() {
           }
         />
         <Pressable
-          onPress={() =>
-            setCurrentIdx((i) => Math.min(ctx.holes.length - 1, i + 1))
-          }
+          onPress={() => void goToHole(currentIdx + 1)}
           disabled={currentIdx === ctx.holes.length - 1}
           style={[
             styles.holeNavBtn,
@@ -563,7 +517,7 @@ export function GamePlanReviewScreen() {
             <Pressable
               style={[styles.lockBtn, submitting && styles.lockBtnDisabled]}
               disabled={submitting}
-              onPress={handleNext}
+              onPress={() => void goToHole(currentIdx + 1)}
             >
               <Text style={styles.lockLabel}>Next →</Text>
             </Pressable>

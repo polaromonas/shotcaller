@@ -22,7 +22,8 @@ import {
   type DiscWithTags,
   type NewDiscInput,
 } from '../db/discs';
-import { markSessionCompleted } from '../db/sessions';
+import { getSession, markSessionCompleted, setSessionName } from '../db/sessions';
+import { FinishSessionSheet } from '../components/FinishSessionSheet';
 import {
   listSavedPlansForLayout,
   type SavedPlan,
@@ -39,7 +40,6 @@ import {
 import { getDb } from '../db';
 import {
   deleteThrow,
-  getMostRecentDiscIdForHole,
   listThrowsForHole,
   logThrow,
   type ThrowWithDisc,
@@ -88,6 +88,8 @@ export function PracticeThrowScreen() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [addDiscOpen, setAddDiscOpen] = useState(false);
+  const [finishOpen, setFinishOpen] = useState(false);
+  const [existingName, setExistingName] = useState<string | null>(null);
   const [plansByHole, setPlansByHole] = useState<Map<number, SavedPlan>>(
     new Map()
   );
@@ -148,28 +150,11 @@ export function PracticeThrowScreen() {
     if (currentIdx >= holes.length) setCurrentIdx(holes.length - 1);
   }, [holes, currentIdx]);
 
-  // Per-hole disc memory: when the player lands on a hole, pre-select the
-  // most recently thrown disc on that hole (across all sessions). Falls back
-  // to first in-bag disc on holes with no history. Intentionally NOT depending
-  // on `discs` — adding a new disc mid-round shouldn't override the user's
-  // just-picked selection (handleSubmitNewDisc sets discId itself).
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // No disc pre-selection — the player explicitly picks each throw. Felt
+  // misleading when the prior auto-selection looked like a logged choice.
   useEffect(() => {
-    if (!discs || !currentHole) return;
-    let cancelled = false;
-    (async () => {
-      const lastDiscId = await getMostRecentDiscIdForHole(currentHole.id);
-      if (cancelled) return;
-      if (lastDiscId !== null && discs.some((d) => d.id === lastDiscId)) {
-        setDiscId(lastDiscId);
-        return;
-      }
-      const firstInBag = discs.find((d) => d.in_bag);
-      setDiscId(firstInBag ? firstInBag.id : null);
-    })();
-    return () => {
-      cancelled = true;
-    };
+    if (!currentHole) return;
+    setDiscId(null);
   }, [currentHole?.id]);
 
   // Thumber/Tomahawk forces throw_type = Overhand.
@@ -311,17 +296,17 @@ export function PracticeThrowScreen() {
     });
   };
 
-  const handleFinish = () => {
-    confirmAction({
-      title: 'Finish practice round?',
-      message:
-        'This marks the round as done. You can still review the throws from Stats, but the round won’t show as ongoing.',
-      confirmLabel: 'Finish',
-      onConfirm: async () => {
-        await markSessionCompleted(sessionId);
-        navigation.popToTop();
-      },
-    });
+  const handleFinish = async () => {
+    const s = await getSession(sessionId);
+    setExistingName(s?.name ?? null);
+    setFinishOpen(true);
+  };
+
+  const handleConfirmFinish = async (name: string) => {
+    await setSessionName(sessionId, name);
+    await markSessionCompleted(sessionId);
+    setFinishOpen(false);
+    navigation.popToTop();
   };
 
   if (!layout || !holes || !discs) {
@@ -362,7 +347,7 @@ export function PracticeThrowScreen() {
           </Text>
         </View>
         <Pressable
-          onPress={handleFinish}
+          onPress={() => void handleFinish()}
           hitSlop={10}
           style={styles.finishBtn}
           accessibilityLabel="Finish practice round"
@@ -532,6 +517,14 @@ export function PracticeThrowScreen() {
         visible={addDiscOpen}
         onClose={() => setAddDiscOpen(false)}
         onSubmit={handleSubmitNewDisc}
+      />
+
+      <FinishSessionSheet
+        visible={finishOpen}
+        mode="Practice"
+        initialName={existingName}
+        onCancel={() => setFinishOpen(false)}
+        onFinish={handleConfirmFinish}
       />
     </SafeAreaView>
   );

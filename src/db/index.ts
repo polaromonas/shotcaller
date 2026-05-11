@@ -71,6 +71,18 @@ async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
     );
   }
 
+  // practice_session.name: optional title set when the player finishes the
+  // round. Free-text, nullable so old rows stay valid.
+  const sessionCols3 = await db.getAllAsync<{ name: string }>(
+    "PRAGMA table_info('practice_session')"
+  );
+  if (
+    sessionCols3.length > 0 &&
+    !sessionCols3.some((c) => c.name === 'name')
+  ) {
+    await db.execAsync('ALTER TABLE practice_session ADD COLUMN name TEXT');
+  }
+
   // Prune legacy shot-tag defaults if the table exists and the rows aren't
   // referenced by any throw_tag (so user-actually-used tags with the same
   // name survive). Idempotent and cheap.
