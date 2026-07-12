@@ -30,7 +30,7 @@
       "expo-sqlite"
     ],
     "experiments": {
-      "baseUrl": "/shotcaller"
+      "baseUrl": "/shotcaller-v2"
     }
   }
 }

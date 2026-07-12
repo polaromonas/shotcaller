@@ -1,273 +1,245 @@
-# ShotCaller — App Design & Development Handoff
+# ShotCaller V2 — App Design & Development Handoff
 
-Disc golf tournament preparation app. Read this entire file before writing any code.
+Disc golf **game-planning** app. Read this entire file before writing any code.
+This document supersedes the V1 handoff. Where an older file disagrees with this
+one, **this file wins.**
+
+> Companion doc: **`V2_DESIGN_HANDOFF.md`** is the UI/design brief (for Claude
+> Design). This file is the product + engineering source of truth.
 
 ---
 
 ## 1. App Overview
 
-**App name:** ShotCaller  
-**Tagline:** You call the shots.  
-**Platform:** iOS and Android (React Native + Expo)
+**App name:** ShotCaller
+**Tagline:** You call the shots.
+**Platform:** iOS and Android via React Native + Expo (native is the primary
+target). A web build exists as a **demo/preview channel** only.
 
-ShotCaller helps disc golfers prepare for tournaments. Players build their disc collection, log practice rounds with detailed throw data, and automatically generate a hole-by-hole game plan before competition.
+ShotCaller V2 helps disc golfers **write and read a hole-by-hole game plan.** You
+author a plan at home (calm, deliberate); you read it on the course, glanceably,
+one hand, in sunlight, while walking.
+
+**What ShotCaller is NOT:**
+- **Not a scorekeeping app.** Players keep score in **UDisc** or the **PDGA** app.
+  ShotCaller runs *alongside* those as a **second screen**. It never tracks score,
+  strokes, or round results.
+- **Not a stats/analytics app.** No throw logging, no per-hole statistics, no
+  "best disc" recommendation engine. (V1 had all of this. It's cut — see §7.)
+
+**The bar to clear:** the real competition is the **Notes app** and a **spreadsheet**.
+Serious players already type plans into Apple Notes or a Google Sheet. ShotCaller
+only earns its place by being **more disc-golf-native and easier** than that. Every
+feature is measured against: *"Is this actually better than a note?"*
 
 ### Tech stack
-- **React Native with Expo** — single codebase for iOS and Android
-- **Expo SQLite** — on-device database, fully offline
-- **TypeScript** — required throughout
-- **Supabase** — backend/auth/cloud sync (future feature, not v1)
+- **React Native + Expo (SDK 54)** — single codebase, iOS + Android + web.
+- **Expo SQLite** — on-device, fully offline. No account, no network in MVP.
+- **TypeScript**, `strict: true`.
+- **Supabase** — future sync/auth only. **Do not add it in MVP.**
 
 ---
 
-## 2. The Three Round Modes
+## 2. The Two Modes
 
-The app has three distinct modes. They share the same throw-logging screen but behave differently.
+V2 has exactly two modes (V1 had three). Each has a signature **color that is
+identity, not decoration** — it appears on badges, selected controls, and primary
+actions so the player always knows which mode they're in. The two colors are
+**finalized by design** (see `V2_DESIGN_HANDOFF.md`); the V1 three-color palette is
+retired.
 
-| Mode | Purpose | Key difference |
-|------|---------|----------------|
-| Practice round | Log throws and build data | No recommendations shown. Pure data collection. |
-| Game plan | Pre-round hole-by-hole planning | Review app recommendations, override if needed, lock in. |
-| Tournament round | Execute the plan and track results | Read-only game plan at top. Disc and shot pre-selected from plan. |
+| Mode | Purpose | Where used |
+|------|---------|-----------|
+| **Plan** | Author the plan for each Course → Layout → Hole. Calm, deliberate, thumb-friendly. | At home / off the course. |
+| **Play** | Read the plan on the tee: one hole per screen, glanceable in under 2 seconds. A **caddie card**, not a form. | On the course, one-handed, in sun. |
+
+Unlike V1, these are **not one shared screen** — Plan (authoring) and Play
+(reading) are designed for two very different moments and should not share density
+or interaction patterns.
 
 ---
 
 ## 3. Data Model
 
-Use SQLite on-device via Expo SQLite. Scaffold all tables before building any screens.
+Single on-device SQLite DB via Expo SQLite (`getDb()` in `src/db/index.ts`).
+Enum string literals are defined once in `src/db/types.ts` and reused in both the
+schema `CHECK` constraints and TypeScript types — **never duplicate enum literals.**
 
-### DISC
-Stores the player's full disc collection (not just what's currently in the bag).
+### Kept from V1 (unchanged foundation)
 
-| Column | Type | Notes |
-|--------|------|-------|
-| id | integer PK | Auto-increment |
-| manufacturer | string | e.g. "Innova", "Discraft" |
-| model | string | e.g. "Destroyer", "Buzzz" |
-| color | string | Hex color code from swatch picker |
-| category | enum | DD \| FWD \| MID \| P&A |
-| in_bag | boolean | Default false. True = currently in tournament bag |
-| speed | float (nullable) | Optional flight number |
-| glide | float (nullable) | Optional flight number |
-| turn | float (nullable) | Optional flight number |
-| fade | float (nullable) | Optional flight number |
-
-### TAG
-User-created labels to distinguish discs. Pre-seed with common tags on first launch: Flippy, Overstable, Understable, Stable, Beat-in, Gamer, New, Roller disc.
+**DISC** — the player's full collection.
 
 | Column | Type | Notes |
 |--------|------|-------|
 | id | integer PK | |
-| name | string | e.g. "Flippy", "Gamer", "Beat-in" |
+| manufacturer | string | e.g. "Innova" |
+| model | string | e.g. "Destroyer" |
+| nickname | string (nullable) | When set, used as the disc's **primary display name** everywhere |
+| color | string | Hex from swatch picker |
+| category | enum | `DD` \| `FWD` \| `MID` \| `P&A` |
+| in_bag | boolean | Default false. True = currently in the bag |
+| speed / glide / turn / fade | float (nullable) | Optional flight numbers |
+| plastic | string (nullable) | Optional |
 
-### DISC_TAG
-Join table linking discs to tags. One disc can have many tags.
+**TAG / DISC_TAG** — disc characterization labels (Flippy, Overstable, Gamer, …),
+seeded on first launch. Many-to-many via `disc_tag`. *(These describe discs, not
+shots — kept.)*
 
-| Column | Type | Notes |
-|--------|------|-------|
-| disc_id | integer FK | References DISC.id |
-| tag_id | integer FK | References TAG.id |
+**COURSE** — `id`, `name`, `location`.
 
-### COURSE
+**LAYOUT** — `id`, `course_id` FK, `name` (e.g. "Short", "Long", "Tournament").
+**Holes belong to a layout, not directly to a course.**
 
-| Column | Type | Notes |
-|--------|------|-------|
-| id | integer PK | |
-| name | string | e.g. "Hawk Run DGC" |
-| location | string | City, State |
+**HOLE** — `id`, `layout_id` FK, `hole_number`, `par` (2–5), `distance_ft`.
+`UNIQUE(layout_id, hole_number)`.
 
-### LAYOUT
-A course can have multiple layouts (e.g. Short, Long, Tournament). **Holes belong to a LAYOUT, not directly to a course.**
+### New / reworked for V2
 
-| Column | Type | Notes |
-|--------|------|-------|
-| id | integer PK | |
-| course_id | integer FK | References COURSE.id |
-| name | string | e.g. "Tournament", "Short", "Long tees" |
-
-### HOLE
-Belongs to a LAYOUT, not directly to a COURSE.
+**HOLE_PLAN** — the heart of V2. One plan per hole. Replaces V1's
+`game_plan_shot` (and drops its recommendation-era `is_manual_override`).
 
 | Column | Type | Notes |
 |--------|------|-------|
 | id | integer PK | |
-| layout_id | integer FK | References LAYOUT.id |
-| hole_number | integer | 1–18 (or 1–9 for 9-hole layouts) |
-| par | integer | 2, 3, 4, or 5 |
-| distance_ft | integer | Tee to basket in feet |
+| layout_id | integer FK | References LAYOUT.id (denormalized for easy querying) |
+| hole_id | integer FK | References HOLE.id. `UNIQUE(hole_id)` — one plan per hole |
+| disc_id | integer FK **(nullable)** | The disc to throw. Nullable to allow progressive authoring |
+| throw_type | enum **(nullable)** | `Backhand` \| `Forehand` \| `Overhand` |
+| shot_shape | enum **(nullable)** | See §4. Thumber/Tomahawk coupling applies |
+| aim_note | text (nullable) | **Free text** — where to aim / what the disc should do. The heart of the plan in MVP |
+| updated_at | text | ISO timestamp; drives "most recent" ordering and resume |
 
-### PRACTICE_SESSION
+**Progressive authoring is intentional.** All plan fields are nullable so a player
+can jot what they know ("aim right of the tall oak") before committing a disc —
+this is what makes it feel like a *better note*, not a rigid form. A hole counts as
+"planned" if it has **any** content.
 
-| Column | Type | Notes |
-|--------|------|-------|
-| id | integer PK | |
-| layout_id | integer FK | References LAYOUT.id |
-| session_date | date | ISO date string |
-| notes | string (nullable) | Optional session-level notes |
+**APP_SETTINGS** (single row, `id = 1`) — carries `disc_sort` (from V1) plus V2
+Play-mode resume state: **`last_play_layout_id`** and **`last_play_hole_number`**,
+so Play mode reopens exactly where the player left off after they bounce back from
+UDisc.
 
-### THROW
-The core data table. Every throw in every practice session is logged here.
-
-| Column | Type | Notes |
-|--------|------|-------|
-| id | integer PK | |
-| session_id | integer FK | References PRACTICE_SESSION.id |
-| hole_id | integer FK | References HOLE.id |
-| disc_id | integer FK | References DISC.id |
-| throw_type | enum | Backhand \| Forehand \| Overhand |
-| shot_shape | enum | See enums section |
-| result | enum | Basket \| C1 \| C2 \| Fairway \| Rough \| OB |
-| distance_from_basket_ft | integer (nullable) | In feet. Null for OB or Basket |
-| notes | string (nullable) | Optional free-text note per throw |
-
-### GAME_PLAN_SHOT
-Generated after practice sessions. One row per hole, representing the recommended or player-adjusted shot for the tournament.
-
-| Column | Type | Notes |
-|--------|------|-------|
-| id | integer PK | |
-| session_id | integer FK | References PRACTICE_SESSION.id |
-| hole_id | integer FK | References HOLE.id |
-| disc_id | integer FK | References DISC.id |
-| throw_type | enum | Backhand \| Forehand \| Overhand |
-| shot_shape | enum | See enums section |
-| notes | string (nullable) | Player notes surfaced in game plan review |
-| is_manual_override | boolean | True if player overrode the app recommendation |
+### Reserved for later (do NOT build in MVP; do not paint the schema into a corner)
+- **Tee-pad photo + aim-line annotation** (post-MVP hero feature): will add a
+  nullable `tee_photo_uri` (and later annotation data) to `HOLE_PLAN`. Leave room.
+- **Plan B / conditional alternative** (fast-follow): will add a `condition` text
+  column and relax `UNIQUE(hole_id)` to allow a second (secondary) plan per hole.
+  Keep MVP strictly one plan per hole, but don't assume it forever.
 
 ---
 
 ## 4. Enums
 
-Use these fixed lists everywhere. Never allow free-text entry for these fields.
+Fixed lists. **Never** allow free-text for these fields. Defined in `src/db/types.ts`.
 
 ### throw_type
-- `Backhand`
-- `Forehand`
-- `Overhand`
+`Backhand` · `Forehand` · `Overhand`
 
 ### shot_shape
-- `Hyzer`
-- `Flat`
-- `Anhyzer`
-- `Flex`
-- `Turnover`
-- `Roller`
-- `Spike hyzer`
-- `Thumber` — **auto-sets throw_type to Overhand**
-- `Tomahawk` — **auto-sets throw_type to Overhand**
+`Hyzer` · `Flat` · `Anhyzer` · `Flex` · `Turnover` · `Roller` · `Spike hyzer` ·
+`Thumber` · `Tomahawk`
 
-> When user selects Thumber or Tomahawk, automatically set throw_type = Overhand and disable the throw_type selector. Re-enable if they switch to a different shot shape.
-
-### result
-- `Basket`
-- `C1` — within ~10m of basket
-- `C2` — within ~20m of basket
-- `Fairway`
-- `Rough` — off fairway, inbounds
-- `OB` — out of bounds
+> **Thumber/Tomahawk coupling:** selecting `Thumber` or `Tomahawk` auto-sets
+> `throw_type = Overhand` and disables the throw_type selector. Switching to any
+> other shape re-enables it. Enforce this in the **form layer**, not just visually.
 
 ### disc category
-- `DD` — Distance Driver
-- `FWD` — Fairway Driver
-- `MID` — Midrange
-- `P&A` — Putt & Approach
+`DD` (Distance Driver) · `FWD` (Fairway Driver) · `MID` (Midrange) ·
+`P&A` (Putt & Approach)
+
+> **Removed:** the V1 `result` enum (Basket/C1/C2/Fairway/Rough/OB) and
+> `session mode` — both belonged to throw logging, which V2 does not do.
 
 ---
 
 ## 5. Screen Inventory
 
-Build in this order — each screen depends on the previous.
+Freedom in structure (see design brief), but MVP needs at least these surfaces:
 
-| # | Screen | Nav location | Key notes |
-|---|--------|-------------|-----------|
-| 1 | Home | Bottom nav — Home | Entry point. Routes to 3 modes. Shows last practice session stats. |
-| 2 | My Discs | Bottom nav — My discs | Full collection + in-bag toggle. Swipe left to delete. Add via bottom sheet. |
-| 3 | Courses | Bottom nav — Courses | Search + manual add. Tap course to expand layouts. Select layout to start. |
-| 4 | Practice round — Throw screen | Via Home → Practice round | No recommendations. Pure logging. Notes field per throw. |
-| 5 | Game plan review | Via Home → Game plan | Hole-by-hole. Shows recommendation, stats, notes. Override controls. Lock in button. |
-| 6 | Tournament round — Throw screen | Via Home → Tournament round | Game plan card (read-only) + practice notes at top. Pre-selects planned disc/shot. |
+| Screen | Purpose |
+|--------|---------|
+| **Home** | Fast entry to Plan / Play; resume the last thing worked on / played. |
+| **Courses** | Courses list; each has one or more **Layouts**. Create/edit courses & layouts. Sort active/recent first. |
+| **Layout → Holes** | Holes under a layout, showing at a glance which holes are planned vs. blank. |
+| **Plan a Hole** (Plan mode) | Author the hole plan: disc (tap-pick), throw type, shot shape (chips), aim note (the one free-text field), par/distance editable. |
+| **Play a Layout** (Play mode) | The **caddie card**: one hole per screen, disc name in the largest type, `throw + shape` as one compact phrase, aim note below; swipe/large tap to advance; sunlight-first light theme; resumes on last hole. |
+| **My Bag / Discs** | The disc collection; source list when picking a disc in a plan. Sort in-bag/recent first. |
+| **About** | Short "how it works" explainer. |
 
-### Bottom navigation tabs
-- Home
-- My discs
-- Courses
-- Stats (future screen — include tab now, build later)
+There is **no** Stats tab in V2.
 
 ---
 
 ## 6. Key UX Rules
 
-### Color language
-Use these colors consistently across all three modes. Players must always know which mode they are in.
-
-| Mode | Color | Used on |
-|------|-------|---------|
-| Practice | Blue `#5b8af5` | Mode badge, selected pills, Log button |
-| Game plan | Green `#4a9e5c` | Mode badge, confirm buttons |
-| Tournament | Pink `#e8809a` | Mode badge, selected pills, Log button |
-
-### Throw type auto-set
-When user selects Thumber or Tomahawk as shot shape, automatically set `throw_type = Overhand` and disable (grey out) the throw type selector. Re-enable if they switch to a different shot shape.
-
-### Disc selector pre-selection (Tournament round)
-Pre-select the disc and shot shape from the game plan. Player only needs to tap Log throw if they execute as planned. Changing disc or shot shape is allowed but requires a deliberate tap.
-
-### In-bag button
-The bag button on disc cards uses solid green (`#3a9e5c`, white text) when the disc is in the bag. Gray background when not in the bag. No other indicator needed — the button color is sufficient.
-
-### Swipe to delete
-Disc cards support swipe-left to reveal a red Delete button, consistent with iOS Mail behavior. Swiping a new card automatically closes any previously open card.
-
-### No data warning
-When generating a game plan recommendation for a hole with zero practice throws, show an amber warning banner:  
-> "No practice data for this hole. Recommendation is a best guess based on hole distance and par."
-
-### Offline first
-All data is stored locally in SQLite. The app must be fully functional with no internet connection. Cloud sync is a future feature.
+- **Mode color is identity.** Two modes, two signature colors (from design), on
+  badges / selected pills / primary buttons. Never reuse them for unrelated UI.
+- **Play mode = caddie card.** One hole per screen; disc name is the biggest thing
+  on screen; advance by swipe or a giant tap target (never a dropdown/scroll);
+  high-contrast light theme by default for sunlight; **reopen on the last hole
+  played.** Bar: glanceable in under 2 seconds, one-handed. If it takes two taps to
+  answer "what am I throwing and where," a laminated index card beats us.
+- **Thumber/Tomahawk → Overhand** coupling (see §4), enforced in the form layer.
+- **Sort "active" items first.** In-bag discs and the current/most-recent layout go
+  to the top of their lists.
+- **Confirm destructive actions.** Deleting a course, layout, plan, or disc gets a
+  confirmation step.
+- **Progressive authoring.** Partial plans are valid and expected — don't force all
+  fields before a hole can be saved.
+- **Offline-first.** Fully functional with no connection. No UI implies login/sync.
 
 ---
 
-## 7. Recommendation Logic
+## 7. What changed from V1 (migration notes)
 
-The game plan recommendation algorithm looks at all throws on a given hole across all practice sessions and finds the disc + throw_type + shot_shape combination with the best outcomes.
+The V2 repo was seeded from V1's final code, so a lot of V1 exists and must be
+**removed**, not extended.
 
-### "Best" is defined as:
-1. Most throws resulting in Fairway, C2, C1, or Basket (in that priority order)
-2. Fewest OB results
-3. If tied, prefer the combination with more total throws (more data = more confidence)
+**Kept:** `disc`, `tag`, `disc_tag`, `course`, `layout`, `hole`, `app_settings`
+(the `disc_sort` preference), the Add Disc / bag / My Discs flows, Courses &
+Layouts management, the fixed throw/shape enums with Thumber coupling, and the
+mode-color-as-identity principle.
 
-### Confidence display
-Show confidence level based on throw count on that hole:
-- **4+ throws** — high confidence (●●●●, green `#4a9e5c`)
-- **2–3 throws** — low confidence (●●○○, amber `#c4a84a`)
-- **0–1 throws** — no data (○○○○, gray `#555870`) — show warning banner
+**Removed entirely** (tables, screens, and DB helpers):
+- **Practice logging:** `practice_session`, `throw`, `throw_tag`, `shot_tag`,
+  `game_plan_shot_tag`, and the Practice throw screens/flows.
+- **Stats + recommendation engine:** `src/db/stats.ts`, the combo breakdown, the
+  confidence tiers, the "best disc" logic, the Stats screen.
+- **Tournament mode:** the third mode and its throw screen.
+- **`game_plan_shot`** is replaced by **`hole_plan`** (see §3).
 
-### Stats shown in game plan review
-For each hole, show these stats from practice data:
-- **Throws** — total practice throws logged
-- **Fairway %** — percentage of throws landing Fairway, C2, C1, or Basket
-- **Best** — best single result achieved (Basket > C1 > C2 > Fairway > Rough > OB)
-- **Notes** — all notes from practice throws on that hole, shown as a list
+**DB migration approach:** V2 has no shipped users, so **bump the DB filename** and
+define a fresh V2 `SCHEMA_SQL` containing only the kept + reworked tables. Do not
+try to migrate V1 practice data forward — there's nothing to preserve. (No
+migration framework exists; if the schema changes again before ship, bump the
+filename or add a migration step — don't silently mutate an existing DB.)
 
 ---
 
 ## 8. Suggested Build Order
 
-1. Project setup — Expo + SQLite + TypeScript, scaffold all tables
-2. My Discs screen — add, tag, bag toggle, swipe delete
-3. Courses screen — manual add, layout creation
-4. Practice round throw screen — the core logging flow
-5. Game plan review screen — recommendation engine + override
-6. Tournament round throw screen — read-only plan + logging
-7. Home screen — wire all three modes together
-8. Polish — offline handling, edge cases, empty states
+1. **Strip V1.** Delete practice/throw/stats/tournament tables, screens, and db
+   helpers. Get the app compiling with only Home, Courses, Layouts, My Bag.
+2. **Schema V2.** New DB filename; `hole_plan` table; `app_settings` resume fields.
+3. **Plan a Hole** — the authoring card (disc pick, throw/shape chips, aim note,
+   par/distance). Progressive save.
+4. **Layout → Holes** — planned-vs-blank overview.
+5. **Play a Layout** — the caddie card + swipe navigation + resume. Spend the most
+   care here; it's make-or-break.
+6. **Home** — wire Plan/Play entry + resume last.
+7. **Polish** — empty states, sunlight legibility pass, confirm-destructive, offline
+   edge cases.
+
+Don't skip ahead — Play is meaningless until Plan authoring writes real `hole_plan`
+rows.
 
 ---
 
-## 9. First Prompt for Claude Code
-
-Use this to start your first session:
-
-```
-Please read SHOTCALLER_HANDOFF.md before we start. Then set up a new React Native Expo project with Expo SQLite and scaffold all the database tables exactly as defined in the data model section. Use TypeScript. Name the project "shotcaller". Once the project is created and the tables are scaffolded, confirm the setup is working by showing me the database initialization code.
-```
+## 9. Out of scope for MVP
+- Tee-pad **photo + aim-line annotation** — post-MVP **hero** feature. Design
+  reserves a slot; schema leaves room (§3). Don't build the drawing canvas yet.
+- Per-hole **Plan B** (conditional alternative, e.g. "if headwind, forehand
+  roller") — **fast-follow** right after MVP. One plan per hole for now.
+- **Scorekeeping, stats, practice logging, recommendations** — cut from V2 for
+  good. UDisc/PDGA keep score; ShotCaller never does.
+- **Supabase / accounts / cloud sync** — future, not MVP.

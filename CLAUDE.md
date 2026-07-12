@@ -2,53 +2,126 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+> **This is ShotCaller V2.** V2 is a focused **game-planning** app with two modes,
+> **Plan** and **Play**. It is a deliberate pivot away from V1 (which did practice
+> logging, per-hole stats, a recommendation engine, and a third Tournament mode —
+> all removed). If you find V1-era code (throw logging, stats, tournament), it is
+> being torn out, not extended. See "What V1 left behind" below.
+
 ## Source of truth
 
-`SHOTCALLER_HANDOFF.md` at the repo root is the authoritative design document. Read it before writing code. If this file and the handoff disagree, the handoff wins — update CLAUDE.md to match.
+`SHOTCALLER_HANDOFF.md` at the repo root is the authoritative product + engineering
+document. `V2_DESIGN_HANDOFF.md` is the UI/design brief. Read both before writing
+code. If a doc and this file disagree, the handoff wins — update CLAUDE.md to match.
 
 ## Stack
 
-- React Native + Expo SDK 54 (single codebase, iOS + Android)
+- React Native + Expo SDK 54 (single codebase). **Native iOS/Android is the primary
+  target**; the web build is a demo/preview channel only.
 - TypeScript, `strict: true`
-- Expo SQLite for on-device storage — **offline-first, no network dependency in v1**
-- Supabase is planned for future sync/auth; do **not** add it in v1
+- Expo SQLite for on-device storage — **offline-first, no network dependency in MVP**
+- Supabase is planned for future sync/auth; do **not** add it in MVP
 
 ## Commands
 
 - `npm run ios` — launch in iOS simulator
 - `npm run android` — launch on Android emulator/device
-- `npm run web` — launch the web build (useful for quick smoke tests)
+- `npm run web` — web build (quick smoke tests / demos)
 - `npm start` — Expo dev server with a QR code for device
 - `npx tsc --noEmit` — type-check the project
-- `npx expo install <pkg>` — add a native module (picks the version matching the current Expo SDK); prefer this over `npm install` for anything native
+- `npx expo install <pkg>` — add a native module at the SDK-matched version; prefer
+  this over `npm install` for anything native
 
-No test runner or linter is wired up yet. Add one deliberately when first needed rather than pre-emptively.
+No test runner or linter is wired up yet. Add one deliberately when first needed.
 
 ## Database
 
-- Single on-device SQLite file, opened lazily via `getDb()` in `src/db/index.ts`. The first call runs `SCHEMA_SQL` (idempotent `CREATE TABLE IF NOT EXISTS`) and seeds the 8 default tags from `DEFAULT_TAGS`.
-- Schema lives in `src/db/schema.ts` and uses SQL `CHECK` constraints to enforce every enum from the handoff. Enum values themselves are defined once in `src/db/types.ts` and reused in both the schema DDL and TypeScript types — **do not duplicate enum string literals elsewhere**.
-- `resetDb()` exists for dev use; it deletes the DB file and clears the cached handle. Don't ship a path that calls it from the UI.
-- There is no migration framework yet. When the schema changes before v1 ships, either bump the DB filename or add a migration step — don't silently mutate existing DBs.
+- Single on-device SQLite file, opened lazily via `getDb()` in `src/db/index.ts`.
+  First call runs `SCHEMA_SQL` (idempotent `CREATE TABLE IF NOT EXISTS`) and seeds
+  the default disc tags from `DEFAULT_TAGS`.
+- Schema lives in `src/db/schema.ts`; SQL `CHECK` constraints enforce every enum.
+  Enum values are defined once in `src/db/types.ts` and reused in both the DDL and
+  the TypeScript types — **do not duplicate enum string literals elsewhere.**
+- **V2 uses a fresh DB filename.** V2 was seeded from V1 code, so the practice/stats
+  tables must not carry forward. Bump the DB filename and define a V2-only
+  `SCHEMA_SQL`. There are no V1 users and no practice data worth migrating.
+- `resetDb()` exists for dev use; it deletes the DB file and clears the cached
+  handle. Don't ship a path that calls it from the UI.
+- No migration framework yet. If the schema changes again before ship, bump the
+  filename or add a migration step — don't silently mutate an existing DB.
 
 ## Architecture notes worth knowing before editing
 
-**Three modes, one throw screen.** Practice, Game Plan, and Tournament share the same throw-logging UI but differ in behavior (recommendations shown, disc pre-selection, read/write vs read-only plan header). When modifying the throw screen, always consider all three modes — do not special-case one without checking the others.
+**Two modes, two different screens.** Plan (authoring) and Play (reading) are NOT
+one shared screen — that was V1. Plan is calm, thumb-friendly, dense-is-ok. Play is
+a glanceable caddie card. Don't let Play inherit Plan's density or interaction
+patterns.
 
-**Mode color is identity, not decoration.** Blue `#5b8af5` = Practice, Green `#4a9e5c` = Game Plan, Pink `#e8809a` = Tournament. The color appears on mode badges, selected pills, and primary action buttons so the player always knows which mode they're in. Don't reuse these colors for unrelated UI.
+**Play mode is a caddie card, not a form.** One hole per screen; the disc name is
+the largest thing on screen; throw type + shot shape render as one compact phrase
+(e.g. "FH Flex"); the aim note sits below. Advance holes by swipe or a giant tap
+target — never a dropdown or scroll-to-find. High-contrast **light** theme by
+default (sunlight is the enemy), even if the rest of the app is darker. Play must
+**reopen on the last hole played** (`app_settings.last_play_layout_id` /
+`last_play_hole_number`) because players constantly background the app for UDisc.
+The bar: answer "what am I throwing and where?" in under 2 seconds, one-handed.
 
-**HOLE belongs to LAYOUT, not COURSE.** A course has many layouts (Short/Long/Tournament); holes live under a layout. Practice sessions and game plans reference `layout_id`, never `course_id` directly. This is easy to get wrong in queries and joins.
+**Mode color is identity, not decoration.** Two modes, two signature colors
+(finalized in `V2_DESIGN_HANDOFF.md`) on badges, selected pills, and primary
+buttons. The V1 three-color palette (Blue/Green/Pink) is retired. Don't reuse mode
+colors for unrelated UI.
 
-**Game plans attach to LAYOUTS, not practice sessions.** The handoff's data model has `GAME_PLAN_SHOT.session_id`; we deliberately changed it to `layout_id`. A tournament is played on a layout, and a player may practice the same layout across many sessions — a per-session plan would fragment the history and force picking "which session's plan is the plan." The hole-stats and combo breakdown both key on `hole_id` (which implies a layout), so layout-scoped plans line up naturally. `db/index.ts` has a one-time migration that drops the old `game_plan_shot` if it was created with the pre-change schema.
+**HOLE belongs to LAYOUT, not COURSE.** A course has many layouts (Short / Long /
+Tournament); holes live under a layout. Plans reference `layout_id` / `hole_id`,
+never `course_id` directly. Easy to get wrong in joins.
 
-**No recommendation engine — stats only.** The app does not surface a "best disc" pick. The Game Plan review screen shows a per-hole **breakdown table** of every (disc, throw_type, shot_shape) combo the player has thrown on that hole, with throw count, result distribution, and an `avg_score`. The player decides. Sort order is by total throw count desc — "most-tried first" — never by score. The per-throw scoring weight (Basket = 5, C1 = 5, C2 = 4, Fairway = 3, Rough = 2, OB = **−1**) is just disc-golf math: an OB throw really is worse than a Rough throw because of the penalty stroke. It's available as a column on each combo so the player can compare at a glance, not as a ranking signal. Aces aren't weighted above C1 because aces are luck-dependent. "Best result achieved" stats still use a strict display rank (Basket > C1 > ...) so players see when they have aced a hole — that's a fact, not a suggestion.
+**Plans attach to LAYOUTS/holes.** `hole_plan` is one row per hole
+(`UNIQUE(hole_id)`), carrying the disc, throw type, shot shape, and a free-text
+`aim_note`. It replaces V1's `game_plan_shot` and drops the recommendation-era
+`is_manual_override`.
 
-**Enums are fixed lists.** `throw_type`, `shot_shape`, `result`, and disc `category` must never accept free-text. See the handoff's §4 for exact values.
+**Progressive authoring is intentional.** Every `hole_plan` field is nullable. A
+player can jot an aim note before committing a disc; a hole is "planned" if it has
+any content. This is what makes it feel like a better *note*, not a rigid form.
+Don't add NOT NULL guards that force a full plan before saving.
 
-**Thumber/Tomahawk coupling.** Selecting `Thumber` or `Tomahawk` as `shot_shape` must auto-set `throw_type = Overhand` and disable the throw_type selector. Switching away re-enables it. Enforce this in the form layer, not just visually.
+**No scorekeeping, no stats, no recommendation engine.** V2 sits alongside
+UDisc/PDGA and never tracks score, strokes, results, or throw-by-throw data. There
+is no "best disc" suggestion and no stats screen. If a request smells like ranking
+or analytics, check it against the handoff before building.
 
-**Confidence display.** Throw count drives a confidence tier shown on each hole: 4+ throws = high, 2–3 = low, 0–1 = none. Holes with 0–1 throws render an amber "no practice data" banner so the player knows they're drafting on intuition rather than logged data. The tier is purely informational — there's no auto-anything based on it.
+**Enums are fixed lists.** `throw_type`, `shot_shape`, and disc `category` never
+accept free text. The **only** free-text field in a plan is `aim_note`. (The V1
+`result` and `session mode` enums are gone — they belonged to throw logging.)
+
+**Thumber/Tomahawk coupling.** Selecting `Thumber` or `Tomahawk` as `shot_shape`
+must auto-set `throw_type = Overhand` and disable the throw_type selector.
+Switching away re-enables it. Enforce in the **form layer**, not just visually.
+
+**Keep destructive actions confirmed; sort active items first.** Deleting a course,
+layout, plan, or disc gets a confirmation. In-bag discs and the current/most-recent
+layout sort to the top of their lists.
+
+## What V1 left behind (remove, don't extend)
+
+The repo was copied from V1's final state. These are being **deleted**: the
+`practice_session`, `throw`, `throw_tag`, `shot_tag`, `game_plan_shot_tag` tables;
+`src/db/stats.ts` and the combo breakdown / confidence tiers; the Practice and
+Tournament throw screens and their start screens; the Stats screen and tab. If you
+touch a file that imports these, you're probably in code that should be removed —
+confirm against §7 of the handoff before adding to it.
+
+## Reserved extension points (design around, don't build in MVP)
+
+- **Tee-pad photo + aim-line annotation** — the post-MVP hero feature. Will add a
+  nullable `tee_photo_uri` (then annotation data) to `hole_plan`. Leave room in the
+  Plan card layout and the schema; don't build the drawing canvas yet.
+- **Plan B (conditional alternative)** — fast-follow. Will add a `condition` column
+  and relax `UNIQUE(hole_id)` to allow a secondary plan per hole. One plan per hole
+  for MVP, but don't assume it's forever.
 
 ## Build order
 
-Follow the handoff's §8 sequence: DB scaffold → My Discs → Courses → Practice throw screen → Game Plan review → Tournament throw screen → Home → polish. Each step assumes the previous. Don't skip ahead — the Game Plan screen is meaningless without practice data flowing in.
+Follow the handoff's §8: strip V1 → V2 schema → Plan a Hole → Layout→Holes overview
+→ Play (caddie card) → Home → polish. Each step assumes the previous. Play is
+meaningless until Plan authoring writes real `hole_plan` rows.
