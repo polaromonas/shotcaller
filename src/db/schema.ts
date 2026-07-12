@@ -1,10 +1,20 @@
-import { DISC_CATEGORIES, DISC_SORTS } from './types';
+import {
+  DISC_CATEGORIES,
+  DISC_SORTS,
+  SHOT_SHAPES,
+  THROW_TYPES,
+} from './types';
 
 const quote = (values: readonly string[]) =>
   values.map((v) => `'${v.replace(/'/g, "''")}'`).join(', ');
 
 const DISC_CATEGORY_CHECK = `category IN (${quote(DISC_CATEGORIES)})`;
 const DISC_SORT_CHECK = `disc_sort IN (${quote(DISC_SORTS)})`;
+// hole_plan enums are nullable (progressive authoring). A SQL CHECK passes on
+// NULL — `NULL IN (...)` is NULL, not false — so these constants work as-is for
+// the nullable columns.
+const THROW_TYPE_CHECK = `throw_type IN (${quote(THROW_TYPES)})`;
+const SHOT_SHAPE_CHECK = `shot_shape IN (${quote(SHOT_SHAPES)})`;
 
 // V2 schema. Practice logging, throws, stats, and the old game_plan_shot were
 // removed in the V2 strip; the hole plan table lands in the next step. This is
@@ -60,6 +70,23 @@ CREATE TABLE IF NOT EXISTS hole (
   UNIQUE (layout_id, hole_number)
 );
 CREATE INDEX IF NOT EXISTS idx_hole_layout ON hole(layout_id);
+
+-- One plan per hole (UNIQUE hole_id). Every plan field is nullable so a player
+-- can jot part of a plan (e.g. an aim note) before committing a disc — a hole
+-- counts as "planned" if a row exists. disc_id is ON DELETE SET NULL so
+-- deleting a disc clears it from any plans while the rest of each plan stays.
+CREATE TABLE IF NOT EXISTS hole_plan (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  layout_id  INTEGER NOT NULL REFERENCES layout(id) ON DELETE CASCADE,
+  hole_id    INTEGER NOT NULL REFERENCES hole(id)   ON DELETE CASCADE,
+  disc_id    INTEGER REFERENCES disc(id) ON DELETE SET NULL,
+  throw_type TEXT CHECK (${THROW_TYPE_CHECK}),
+  shot_shape TEXT CHECK (${SHOT_SHAPE_CHECK}),
+  aim_note   TEXT,
+  updated_at TEXT NOT NULL,
+  UNIQUE (hole_id)
+);
+CREATE INDEX IF NOT EXISTS idx_hole_plan_layout ON hole_plan(layout_id);
 
 CREATE TABLE IF NOT EXISTS app_settings (
   id INTEGER PRIMARY KEY CHECK (id = 1),

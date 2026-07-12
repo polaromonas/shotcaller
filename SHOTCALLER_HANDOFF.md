@@ -127,7 +127,7 @@ shots — kept. Not surfaced in the canonical MVP screens; low priority.)*
 | id | integer PK | |
 | layout_id | integer FK | References LAYOUT.id (denormalized for easy querying) |
 | hole_id | integer FK | References HOLE.id. `UNIQUE(hole_id)` — one plan per hole |
-| disc_id | integer FK **(nullable)** | The disc to throw. Nullable to allow progressive authoring |
+| disc_id | integer FK **(nullable)** | The disc to throw. Nullable for progressive authoring; **ON DELETE SET NULL** so deleting a disc clears it from plans (design 8b) while the rest of the plan survives |
 | throw_type | enum **(nullable)** | `Backhand` \| `Forehand` \| `Overhand` |
 | shot_shape | enum **(nullable)** | See §4. Thumber/Tomahawk coupling applies |
 | aim_note | text (nullable) | **Free text** — where to aim / what the disc should do. The heart of the plan in MVP |

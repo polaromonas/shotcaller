@@ -12,6 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import type { SwipeableMethods } from 'react-native-gesture-handler/ReanimatedSwipeable';
 import { AddDiscSheet } from '../components/AddDiscSheet';
 import { DiscCard } from '../components/DiscCard';
+import { countPlansUsingDisc } from '../db/plans';
 import {
   createDisc,
   deleteDisc,
@@ -127,9 +128,14 @@ export function MyDiscsScreen() {
 
   const handleDelete = useCallback(
     async (disc: DiscWithTags) => {
+      const plans = await countPlansUsingDisc(disc.id);
+      const planNote =
+        plans > 0
+          ? ` ${plans} hole ${plans === 1 ? 'plan uses' : 'plans use'} this disc — deleting clears it from ${plans === 1 ? 'that plan' : 'those plans'}, but the rest of each plan stays.`
+          : '';
       confirmAction({
         title: `Delete ${disc.nickname ?? disc.model}?`,
-        message: `Remove ${disc.model} from your collection. This cannot be undone.`,
+        message: `Remove ${disc.model} from your collection.${planNote} This cannot be undone.`,
         confirmLabel: 'Delete',
         destructive: true,
         onConfirm: async () => {

@@ -1,4 +1,5 @@
 import { getDb } from './index';
+import { countPlannedHoles } from './plans';
 
 export type Course = {
   id: number;
@@ -113,8 +114,7 @@ export type DeleteImpact = {
 };
 
 // What disappears if this layout is hard-deleted: its holes and its saved hole
-// plans. Surfaced in the delete confirmation. `plannedHoles` is 0 until the V2
-// `hole_plan` table lands (next step); wire it up then.
+// plans. Surfaced in the delete confirmation.
 export async function getLayoutImpact(
   layoutId: number
 ): Promise<DeleteImpact> {
@@ -123,7 +123,8 @@ export async function getLayoutImpact(
     'SELECT COUNT(*) AS holes FROM hole WHERE layout_id = $id',
     { $id: layoutId }
   );
-  return { holes: row?.holes ?? 0, plannedHoles: 0 };
+  const plannedHoles = await countPlannedHoles(layoutId);
+  return { holes: row?.holes ?? 0, plannedHoles };
 }
 
 // Hard delete a layout. Its holes cascade via the layout FK (ON DELETE

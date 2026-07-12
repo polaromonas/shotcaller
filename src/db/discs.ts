@@ -206,8 +206,8 @@ export async function setInBag(discId: number, inBag: boolean): Promise<void> {
 
 export async function deleteDisc(discId: number): Promise<void> {
   const db = await getDb();
-  // disc_tag rows cascade via the disc FK. Once the V2 hole_plan table exists,
-  // deleting a disc will also need to clear it from any plans that reference it
-  // (design 8b) — wire that in then.
+  // disc_tag rows cascade via the disc FK; hole_plan.disc_id is ON DELETE SET
+  // NULL, so any plans using this disc keep the rest of their plan and just
+  // lose the disc (design 8b). Both happen automatically with foreign_keys ON.
   await db.runAsync('DELETE FROM disc WHERE id = $id', { $id: discId });
 }
