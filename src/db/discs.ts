@@ -38,6 +38,26 @@ export function discDisplayName(d: {
   return d.model;
 }
 
+// Secondary line under the display name (V2 disc display rule). Plastic type is
+// shown (a mold is bagged in different plastics); manufacturer never is.
+// - nicknamed    → "{plastic} {model} · {category}"  e.g. "Star Firebird · FWD"
+// - not nicknamed → "{plastic} · {category}" or "{category}" (model is already
+//   the big name — never repeat it).
+export function discSubline(d: {
+  nickname: string | null;
+  model: string;
+  plastic: string | null;
+  category: DiscCategory;
+}): string {
+  const plastic = d.plastic && d.plastic.trim().length > 0 ? d.plastic.trim() : null;
+  const nicknamed = !!(d.nickname && d.nickname.trim().length > 0);
+  if (nicknamed) {
+    const mold = plastic ? `${plastic} ${d.model}` : d.model;
+    return `${mold} · ${d.category}`;
+  }
+  return plastic ? `${plastic} · ${d.category}` : d.category;
+}
+
 export type NewDiscInput = {
   manufacturer: string;
   model: string;

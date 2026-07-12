@@ -5,6 +5,18 @@ import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import {
+  useFonts,
+  Barlow_400Regular,
+  Barlow_500Medium,
+  Barlow_600SemiBold,
+  Barlow_700Bold,
+} from '@expo-google-fonts/barlow';
+import {
+  BarlowCondensed_600SemiBold,
+  BarlowCondensed_700Bold,
+  BarlowCondensed_800ExtraBold,
+} from '@expo-google-fonts/barlow-condensed';
 import { getDb } from './src/db';
 import { RootStack } from './src/navigation/RootStack';
 import { UI } from './src/theme/colors';
@@ -16,6 +28,15 @@ type InitState =
 
 export default function App() {
   const [state, setState] = useState<InitState>({ status: 'loading' });
+  const [fontsLoaded] = useFonts({
+    Barlow_400Regular,
+    Barlow_500Medium,
+    Barlow_600SemiBold,
+    Barlow_700Bold,
+    BarlowCondensed_600SemiBold,
+    BarlowCondensed_700Bold,
+    BarlowCondensed_800ExtraBold,
+  });
 
   useEffect(() => {
     (async () => {
@@ -34,16 +55,16 @@ export default function App() {
   return (
     <GestureHandlerRootView style={styles.root}>
       <SafeAreaProvider>
-        {state.status === 'ready' ? (
+        {state.status === 'ready' && fontsLoaded ? (
           <NavigationContainer>
             <RootStack />
           </NavigationContainer>
         ) : (
           <View style={styles.splash}>
-            {state.status === 'loading' ? (
-              <ActivityIndicator />
-            ) : (
+            {state.status === 'error' ? (
               <Text style={styles.err}>DB error: {state.message}</Text>
+            ) : (
+              <ActivityIndicator />
             )}
           </View>
         )}

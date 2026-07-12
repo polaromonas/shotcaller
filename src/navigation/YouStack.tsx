@@ -3,6 +3,7 @@ import { CourseAddScreen } from '../screens/CourseAddScreen';
 import { CoursesScreen } from '../screens/CoursesScreen';
 import { LayoutDetailScreen } from '../screens/LayoutDetailScreen';
 import { MyDiscsScreen } from '../screens/MyDiscsScreen';
+import { PlanHoleScreen } from '../screens/PlanHoleScreen';
 import { YouScreen } from '../screens/YouScreen';
 import type { YouStackParamList } from './types';
 
@@ -35,6 +36,11 @@ export function YouStack() {
         name="LayoutDetail"
         component={LayoutDetailScreen}
         options={{ title: 'Layout', headerBackTitle: 'Courses' }}
+      />
+      <Stack.Screen
+        name="PlanHole"
+        component={PlanHoleScreen}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

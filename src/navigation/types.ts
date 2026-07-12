@@ -4,6 +4,7 @@ export type YouStackParamList = {
   CoursesList: undefined;
   CourseAdd: undefined;
   LayoutDetail: { layoutId: number };
+  PlanHole: { layoutId: number; holeId: number };
 };
 
 export type RootStackParamList = {

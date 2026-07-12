@@ -23,7 +23,7 @@ import {
   type Layout,
 } from '../db/courses';
 import { confirmAction } from '../util/confirm';
-import { INBAG_GREEN, UI } from '../theme/colors';
+import { INBAG_GREEN, MODE, UI } from '../theme/colors';
 import type { YouStackParamList } from '../navigation/types';
 
 type Nav = NativeStackNavigationProp<YouStackParamList, 'LayoutDetail'>;
@@ -108,10 +108,17 @@ export function LayoutDetailScreen() {
     >
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.hint}>
-          Set par and distance for each hole. Changes save as you type.
+          Set par and distance for each hole, then tap Plan to write the shot.
         </Text>
         {holes.map((h) => (
-          <HoleRow key={h.id} hole={h} onUpdate={handleUpdate} />
+          <HoleRow
+            key={h.id}
+            hole={h}
+            onUpdate={handleUpdate}
+            onPlan={() =>
+              navigation.navigate('PlanHole', { layoutId, holeId: h.id })
+            }
+          />
         ))}
         <Pressable
           style={styles.deleteBtn}
@@ -131,9 +138,10 @@ type HoleRowProps = {
     hole: Hole,
     changes: Partial<Pick<Hole, 'par' | 'distance_ft'>>
   ) => void;
+  onPlan: () => void;
 };
 
-function HoleRow({ hole, onUpdate }: HoleRowProps) {
+function HoleRow({ hole, onUpdate, onPlan }: HoleRowProps) {
   const [distanceText, setDistanceText] = useState(
     hole.distance_ft > 0 ? String(hole.distance_ft) : ''
   );
@@ -191,6 +199,9 @@ function HoleRow({ hole, onUpdate }: HoleRowProps) {
           />
           <Text style={styles.distSuffix}>ft</Text>
         </View>
+        <Pressable style={styles.planBtn} onPress={onPlan}>
+          <Text style={styles.planLabel}>Plan this hole ›</Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -263,6 +274,15 @@ const styles = StyleSheet.create({
     borderColor: UI.border,
   },
   distSuffix: { fontSize: 13, color: UI.textMuted, width: 20 },
+  planBtn: {
+    marginTop: 4,
+    alignSelf: 'flex-start',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    backgroundColor: MODE.plan,
+  },
+  planLabel: { fontSize: 13, fontWeight: '700', color: '#fff' },
   deleteBtn: {
     marginTop: 16,
     paddingVertical: 12,
