@@ -1,8 +1,6 @@
 export type YouStackParamList = {
   YouHome: undefined;
   MyDiscs: undefined;
-  MyStats: undefined;
-  Sessions: undefined;
   CoursesList: undefined;
   CourseAdd: undefined;
   LayoutDetail: { layoutId: number };
@@ -10,17 +8,5 @@ export type YouStackParamList = {
 
 export type RootStackParamList = {
   Tabs: undefined;
-  PracticeStart: undefined;
-  PracticeThrow: {
-    sessionId: number;
-    layoutId: number;
-    initialHoleIdx?: number;
-  };
-  GamePlanStart: undefined;
-  GamePlanReview: { layoutId: number; startHoleIdx?: number };
-  GamePlanSummary: { layoutId: number };
-  TournamentStart: undefined;
-  TournamentThrow: { sessionId: number; layoutId: number };
-  SessionDetail: { sessionId: number };
   About: undefined;
 };

@@ -1,22 +1,14 @@
-import {
-  DISC_CATEGORIES,
-  DISC_SORTS,
-  RESULTS,
-  SESSION_MODES,
-  SHOT_SHAPES,
-  THROW_TYPES,
-} from './types';
+import { DISC_CATEGORIES, DISC_SORTS } from './types';
 
 const quote = (values: readonly string[]) =>
   values.map((v) => `'${v.replace(/'/g, "''")}'`).join(', ');
 
 const DISC_CATEGORY_CHECK = `category IN (${quote(DISC_CATEGORIES)})`;
-const THROW_TYPE_CHECK = `throw_type IN (${quote(THROW_TYPES)})`;
-const SHOT_SHAPE_CHECK = `shot_shape IN (${quote(SHOT_SHAPES)})`;
-const RESULT_CHECK = `result IN (${quote(RESULTS)})`;
-const SESSION_MODE_CHECK = `mode IN (${quote(SESSION_MODES)})`;
 const DISC_SORT_CHECK = `disc_sort IN (${quote(DISC_SORTS)})`;
 
+// V2 schema. Practice logging, throws, stats, and the old game_plan_shot were
+// removed in the V2 strip; the hole plan table lands in the next step. This is
+// the disc/course/layout/hole foundation the V2 Plan/Play modes build on.
 export const SCHEMA_SQL = `
 PRAGMA foreign_keys = ON;
 
@@ -69,71 +61,9 @@ CREATE TABLE IF NOT EXISTS hole (
 );
 CREATE INDEX IF NOT EXISTS idx_hole_layout ON hole(layout_id);
 
-CREATE TABLE IF NOT EXISTS practice_session (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  layout_id INTEGER NOT NULL REFERENCES layout(id) ON DELETE RESTRICT,
-  session_date TEXT NOT NULL,
-  mode TEXT NOT NULL DEFAULT 'Practice' CHECK (${SESSION_MODE_CHECK}),
-  notes TEXT,
-  completed_at TEXT,
-  name TEXT
-);
-CREATE INDEX IF NOT EXISTS idx_practice_session_layout ON practice_session(layout_id);
-
-CREATE TABLE IF NOT EXISTS throw (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  session_id INTEGER NOT NULL REFERENCES practice_session(id) ON DELETE CASCADE,
-  hole_id    INTEGER NOT NULL REFERENCES hole(id)             ON DELETE RESTRICT,
-  disc_id    INTEGER NOT NULL REFERENCES disc(id)             ON DELETE RESTRICT,
-  throw_type TEXT NOT NULL CHECK (${THROW_TYPE_CHECK}),
-  shot_shape TEXT NOT NULL CHECK (${SHOT_SHAPE_CHECK}),
-  result     TEXT NOT NULL CHECK (${RESULT_CHECK}),
-  distance_from_basket_ft INTEGER,
-  notes TEXT,
-  CHECK (
-    (result IN ('OB', 'Basket') AND distance_from_basket_ft IS NULL)
-    OR (result NOT IN ('OB', 'Basket'))
-  )
-);
-CREATE INDEX IF NOT EXISTS idx_throw_session ON throw(session_id);
-CREATE INDEX IF NOT EXISTS idx_throw_hole ON throw(hole_id);
-CREATE INDEX IF NOT EXISTS idx_throw_disc ON throw(disc_id);
-
-CREATE TABLE IF NOT EXISTS game_plan_shot (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  layout_id  INTEGER NOT NULL REFERENCES layout(id) ON DELETE CASCADE,
-  hole_id    INTEGER NOT NULL REFERENCES hole(id)   ON DELETE RESTRICT,
-  disc_id    INTEGER NOT NULL REFERENCES disc(id)   ON DELETE RESTRICT,
-  throw_type TEXT NOT NULL CHECK (${THROW_TYPE_CHECK}),
-  shot_shape TEXT NOT NULL CHECK (${SHOT_SHAPE_CHECK}),
-  notes TEXT,
-  is_manual_override INTEGER NOT NULL DEFAULT 0 CHECK (is_manual_override IN (0, 1)),
-  UNIQUE (layout_id, hole_id)
-);
-CREATE INDEX IF NOT EXISTS idx_game_plan_shot_layout ON game_plan_shot(layout_id);
-
 CREATE TABLE IF NOT EXISTS app_settings (
   id INTEGER PRIMARY KEY CHECK (id = 1),
   disc_sort TEXT NOT NULL DEFAULT 'bag-order' CHECK (${DISC_SORT_CHECK})
 );
 INSERT OR IGNORE INTO app_settings (id, disc_sort) VALUES (1, 'bag-order');
-
-CREATE TABLE IF NOT EXISTS shot_tag (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT NOT NULL UNIQUE
-);
-
-CREATE TABLE IF NOT EXISTS throw_tag (
-  throw_id INTEGER NOT NULL REFERENCES throw(id) ON DELETE CASCADE,
-  shot_tag_id INTEGER NOT NULL REFERENCES shot_tag(id) ON DELETE CASCADE,
-  PRIMARY KEY (throw_id, shot_tag_id)
-);
-CREATE INDEX IF NOT EXISTS idx_throw_tag_throw ON throw_tag(throw_id);
-
-CREATE TABLE IF NOT EXISTS game_plan_shot_tag (
-  game_plan_shot_id INTEGER NOT NULL REFERENCES game_plan_shot(id) ON DELETE CASCADE,
-  shot_tag_id INTEGER NOT NULL REFERENCES shot_tag(id) ON DELETE CASCADE,
-  PRIMARY KEY (game_plan_shot_id, shot_tag_id)
-);
-CREATE INDEX IF NOT EXISTS idx_game_plan_shot_tag_plan ON game_plan_shot_tag(game_plan_shot_id);
 `;

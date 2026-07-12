@@ -13,9 +13,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import {
   createLayoutWithHoles,
-  deleteCourse,
   deleteLayout,
-  getCourseImpact,
   getLayoutImpact,
   listCoursesWithLayouts,
   type CourseWithLayouts,
@@ -64,67 +62,14 @@ export function CoursesScreen() {
     [refresh]
   );
 
-  const handleDeleteCourse = useCallback(
-    async (course: CourseWithLayouts) => {
-      const impact = await getCourseImpact(course.id);
-      const lines: string[] = [];
-      if (impact.layouts > 0) {
-        lines.push(
-          `${impact.layouts} ${impact.layouts === 1 ? 'layout' : 'layouts'}`
-        );
-      }
-      if (impact.sessions > 0) {
-        lines.push(
-          `${impact.sessions} ${impact.sessions === 1 ? 'round' : 'rounds'}`
-        );
-      }
-      if (impact.throws > 0) {
-        lines.push(
-          `${impact.throws} ${impact.throws === 1 ? 'throw' : 'throws'}`
-        );
-      }
-      if (impact.plannedHoles > 0) {
-        lines.push(
-          `${impact.plannedHoles} planned ${
-            impact.plannedHoles === 1 ? 'hole' : 'holes'
-          }`
-        );
-      }
-      const tail =
-        lines.length > 0 ? ` This will also delete ${lines.join(', ')}.` : '';
-      confirmAction({
-        title: `Delete ${course.name}?`,
-        message: `${course.location}.${tail} This cannot be undone.`,
-        confirmLabel: 'Delete',
-        destructive: true,
-        onConfirm: async () => {
-          await deleteCourse(course.id);
-          setExpandedId((prev) => (prev === course.id ? null : prev));
-          await refresh();
-        },
-      });
-    },
-    [refresh]
-  );
-
   const handleDeleteLayout = useCallback(
     async (course: CourseWithLayouts, layout: Layout) => {
       const impact = await getLayoutImpact(layout.id);
       const lines: string[] = [];
-      if (impact.sessions > 0) {
-        lines.push(
-          `${impact.sessions} ${impact.sessions === 1 ? 'round' : 'rounds'}`
-        );
-      }
-      if (impact.throws > 0) {
-        lines.push(
-          `${impact.throws} ${impact.throws === 1 ? 'throw' : 'throws'}`
-        );
-      }
       if (impact.plannedHoles > 0) {
         lines.push(
-          `${impact.plannedHoles} planned ${
-            impact.plannedHoles === 1 ? 'hole' : 'holes'
+          `${impact.plannedHoles} hole ${
+            impact.plannedHoles === 1 ? 'plan' : 'plans'
           }`
         );
       }
@@ -210,7 +155,6 @@ export function CoursesScreen() {
                 navigation.navigate('LayoutDetail', { layoutId: layout.id })
               }
               onAddLayout={() => setLayoutSheetFor(item)}
-              onDeleteCourse={() => void handleDeleteCourse(item)}
               onDeleteLayout={(layout) =>
                 void handleDeleteLayout(item, layout)
               }
@@ -239,7 +183,6 @@ type CourseRowProps = {
   onToggle: () => void;
   onPickLayout: (layout: Layout) => void;
   onAddLayout: () => void;
-  onDeleteCourse: () => void;
   onDeleteLayout: (layout: Layout) => void;
 };
 
@@ -249,7 +192,6 @@ function CourseRow({
   onToggle,
   onPickLayout,
   onAddLayout,
-  onDeleteCourse,
   onDeleteLayout,
 }: CourseRowProps) {
   return (
@@ -290,13 +232,6 @@ function CourseRow({
           <View style={styles.expandedActions}>
             <Pressable style={styles.addLayoutBtn} onPress={onAddLayout}>
               <Text style={styles.addLayoutLabel}>+ Add layout</Text>
-            </Pressable>
-            <Pressable
-              style={styles.deleteCourseBtn}
-              onPress={onDeleteCourse}
-              accessibilityLabel={`Delete course ${course.name}`}
-            >
-              <Text style={styles.deleteCourseLabel}>Delete course</Text>
             </Pressable>
           </View>
         </View>
@@ -412,9 +347,4 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   addLayoutLabel: { fontSize: 14, fontWeight: '600', color: UI.textMuted },
-  deleteCourseBtn: {
-    paddingVertical: 10,
-    paddingHorizontal: 8,
-  },
-  deleteCourseLabel: { fontSize: 13, fontWeight: '600', color: UI.danger },
 });

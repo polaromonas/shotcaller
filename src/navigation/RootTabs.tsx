@@ -1,54 +1,24 @@
-import {
-  createBottomTabNavigator,
-  type BottomTabBarButtonProps,
-} from '@react-navigation/bottom-tabs';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { StyleSheet, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { HomeScreen } from '../screens/HomeScreen';
 import { YouStack } from './YouStack';
-import { MODE, UI } from '../theme/colors';
-import type { RootStackParamList } from './types';
+import { UI } from '../theme/colors';
 
 const Tab = createBottomTabNavigator();
 
 type TabIconProps = {
   name: React.ComponentProps<typeof Ionicons>['name'];
   focused: boolean;
-  tint?: string;
 };
 
-function TabIcon({ name, focused, tint }: TabIconProps) {
-  const color = tint ?? (focused ? UI.text : UI.textMuted);
+function TabIcon({ name, focused }: TabIconProps) {
+  const color = focused ? UI.text : UI.textMuted;
   return (
     <View style={styles.iconWrap}>
       <Ionicons name={name} size={24} color={color} />
     </View>
   );
-}
-
-// Center "Practice" tab navigates onto the root stack instead of switching
-// tabs. Same shape as the other tabs — practice color and center position
-// carry the visual emphasis.
-function PracticeTabButton(props: BottomTabBarButtonProps) {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel="Practice round"
-      onPress={() => navigation.navigate('PracticeStart')}
-      style={[styles.tabBtn, props.style]}
-    >
-      <TabIcon name="disc" focused tint={MODE.practice} />
-      <Text style={[styles.tabLabel, { color: MODE.practice }]}>Practice</Text>
-    </Pressable>
-  );
-}
-
-function PracticeStub() {
-  return null;
 }
 
 export function RootTabs() {
@@ -73,14 +43,6 @@ export function RootTabs() {
         }}
       />
       <Tab.Screen
-        name="Practice"
-        component={PracticeStub}
-        options={{
-          tabBarLabel: () => null,
-          tabBarButton: (props) => <PracticeTabButton {...props} />,
-        }}
-      />
-      <Tab.Screen
         name="More"
         component={YouStack}
         options={{
@@ -98,12 +60,6 @@ export function RootTabs() {
 
 const styles = StyleSheet.create({
   iconWrap: { alignItems: 'center', justifyContent: 'center' },
-  tabBtn: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 4,
-  },
   tabLabel: {
     fontSize: 10,
     fontWeight: '600',

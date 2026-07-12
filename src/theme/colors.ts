@@ -1,29 +1,21 @@
-// Mode identity. Practice and Game plan share the green family ("preparation"
-// — Practice is the lighter, more open sage; Game plan is the deeper, more
-// committed forest). Tournament breaks the family with a warm orange — it's
-// the one that's for real, and the visual shift signals stakes.
+// Mode identity (V2). Two modes, two signature colors — PLAN indigo for
+// authoring surfaces, PLAY teal for the on-course caddie card. Applied to
+// badges, selected pills/segments, and primary buttons; never reused for
+// unrelated UI. (V1's three-color practice/gamePlan/tournament palette is gone.)
 export const MODE = {
-  practice: '#7a9e5c',
-  gamePlan: '#3f6f5a',
-  tournament: '#dd6a3a',
+  plan: '#5B4FC7',
+  play: '#0E8C8C',
 } as const;
 
 // Light-tinted backgrounds derived from each mode color, for selected pills,
 // resume cards, plan reference cards, etc. Soft enough to read as a hint, not
 // a button.
 export const MODE_TINT = {
-  practice: '#e6efde',
-  gamePlan: '#dfece6',
-  tournament: '#fbe6d6',
+  plan: '#e6e3f7',
+  play: '#d5ecec',
 } as const;
 
 export const INBAG_GREEN = '#3a9e5c';
-
-export const CONFIDENCE = {
-  high: '#4a9e5c',
-  low: '#c4a84a',
-  none: '#555870',
-} as const;
 
 export const UI = {
   bg: '#ffffff',

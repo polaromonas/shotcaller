@@ -13,10 +13,8 @@ import type { SwipeableMethods } from 'react-native-gesture-handler/ReanimatedSw
 import { AddDiscSheet } from '../components/AddDiscSheet';
 import { DiscCard } from '../components/DiscCard';
 import {
-  countDiscDependents,
   createDisc,
   deleteDisc,
-  deleteDiscCascade,
   listDiscs,
   setInBag,
   updateDisc,
@@ -129,33 +127,9 @@ export function MyDiscsScreen() {
 
   const handleDelete = useCallback(
     async (disc: DiscWithTags) => {
-      const deps = await countDiscDependents(disc.id);
-      if (deps.throws > 0 || deps.planShots > 0) {
-        const parts: string[] = [];
-        if (deps.throws > 0) {
-          parts.push(`${deps.throws} ${deps.throws === 1 ? 'throw' : 'throws'}`);
-        }
-        if (deps.planShots > 0) {
-          parts.push(
-            `${deps.planShots} game plan ${deps.planShots === 1 ? 'shot' : 'shots'}`
-          );
-        }
-        confirmAction({
-          title: `Delete ${disc.model}?`,
-          message: `${parts.join(' and ')} reference this disc and will be deleted with it. This cannot be undone.`,
-          confirmLabel: 'Delete anyway',
-          destructive: true,
-          onConfirm: async () => {
-            await deleteDiscCascade(disc.id);
-            openRow.current = null;
-            await refresh();
-          },
-        });
-        return;
-      }
       confirmAction({
-        title: `Delete ${disc.model}?`,
-        message: `Remove ${disc.manufacturer} ${disc.model} from your collection. This cannot be undone.`,
+        title: `Delete ${disc.nickname ?? disc.model}?`,
+        message: `Remove ${disc.model} from your collection. This cannot be undone.`,
         confirmLabel: 'Delete',
         destructive: true,
         onConfirm: async () => {

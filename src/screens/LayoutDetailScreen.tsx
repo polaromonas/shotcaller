@@ -80,20 +80,10 @@ export function LayoutDetailScreen() {
     if (!layout) return;
     const impact = await getLayoutImpact(layout.id);
     const lines: string[] = [];
-    if (impact.sessions > 0) {
-      lines.push(
-        `${impact.sessions} ${impact.sessions === 1 ? 'round' : 'rounds'}`
-      );
-    }
-    if (impact.throws > 0) {
-      lines.push(
-        `${impact.throws} ${impact.throws === 1 ? 'throw' : 'throws'}`
-      );
-    }
     if (impact.plannedHoles > 0) {
       lines.push(
-        `${impact.plannedHoles} planned ${
-          impact.plannedHoles === 1 ? 'hole' : 'holes'
+        `${impact.plannedHoles} hole ${
+          impact.plannedHoles === 1 ? 'plan' : 'plans'
         }`
       );
     }

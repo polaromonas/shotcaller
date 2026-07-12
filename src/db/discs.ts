@@ -206,39 +206,8 @@ export async function setInBag(discId: number, inBag: boolean): Promise<void> {
 
 export async function deleteDisc(discId: number): Promise<void> {
   const db = await getDb();
+  // disc_tag rows cascade via the disc FK. Once the V2 hole_plan table exists,
+  // deleting a disc will also need to clear it from any plans that reference it
+  // (design 8b) — wire that in then.
   await db.runAsync('DELETE FROM disc WHERE id = $id', { $id: discId });
-}
-
-export async function deleteDiscCascade(discId: number): Promise<void> {
-  const db = await getDb();
-  await db.withTransactionAsync(async () => {
-    await db.runAsync('DELETE FROM throw WHERE disc_id = $id', { $id: discId });
-    await db.runAsync('DELETE FROM game_plan_shot WHERE disc_id = $id', {
-      $id: discId,
-    });
-    await db.runAsync('DELETE FROM disc WHERE id = $id', { $id: discId });
-  });
-}
-
-export type DiscDependents = {
-  throws: number;
-  planShots: number;
-};
-
-export async function countDiscDependents(
-  discId: number
-): Promise<DiscDependents> {
-  const db = await getDb();
-  const throwsRow = await db.getFirstAsync<{ count: number }>(
-    'SELECT COUNT(*) AS count FROM throw WHERE disc_id = $id',
-    { $id: discId }
-  );
-  const plansRow = await db.getFirstAsync<{ count: number }>(
-    'SELECT COUNT(*) AS count FROM game_plan_shot WHERE disc_id = $id',
-    { $id: discId }
-  );
-  return {
-    throws: throwsRow?.count ?? 0,
-    planShots: plansRow?.count ?? 0,
-  };
 }

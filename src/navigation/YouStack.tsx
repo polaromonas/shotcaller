@@ -3,8 +3,6 @@ import { CourseAddScreen } from '../screens/CourseAddScreen';
 import { CoursesScreen } from '../screens/CoursesScreen';
 import { LayoutDetailScreen } from '../screens/LayoutDetailScreen';
 import { MyDiscsScreen } from '../screens/MyDiscsScreen';
-import { SessionsScreen } from '../screens/SessionsScreen';
-import { StatsScreen } from '../screens/StatsScreen';
 import { YouScreen } from '../screens/YouScreen';
 import type { YouStackParamList } from './types';
 
@@ -21,16 +19,6 @@ export function YouStack() {
       <Stack.Screen
         name="MyDiscs"
         component={MyDiscsScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="MyStats"
-        component={StatsScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Sessions"
-        component={SessionsScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen

@@ -38,20 +38,6 @@ const ITEMS: Item[] = [
   },
   {
     target: 'you',
-    label: 'Sessions',
-    description: 'Past practice and tournament rounds',
-    glyph: '⌚',
-    route: 'Sessions',
-  },
-  {
-    target: 'you',
-    label: 'My Stats',
-    description: 'Performance and activity',
-    glyph: '◧',
-    route: 'MyStats',
-  },
-  {
-    target: 'you',
     label: 'Courses',
     description: 'Browse and edit saved courses',
     glyph: '⛳',

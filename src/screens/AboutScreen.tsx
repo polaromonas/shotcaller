@@ -21,35 +21,28 @@ export function AboutScreen() {
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.tagline}>You call the shots.</Text>
         <Text style={styles.body}>
-          ShotCaller helps you prep for disc golf tournaments by turning
-          your practice rounds into a hole-by-hole game plan you can lean
-          on when it counts.
+          ShotCaller is a game-planning app for disc golf. It doesn't keep
+          score — UDisc or the PDGA app does that. It's the second screen you
+          glance at on the tee: what disc, what shape, where to aim.
         </Text>
 
         <Section
-          color={MODE.practice}
-          label="Practice round"
-          body="Walk up to a course, pick (or create) the layout, and log throws as you play. Par and distance are filled in at each tee box. Leave any time — your round is saved and shows up as a Resume card on Home."
+          color={MODE.plan}
+          label="Plan"
+          body="At home, build a hole-by-hole plan for a course layout: the disc, the throw, the shot shape, and a note on where to aim. Jot what you know — a partial plan is fine."
         />
 
         <Section
-          color={MODE.gamePlan}
-          label="Game plan"
-          body="After enough practice on a layout, ShotCaller ranks your most reliable disc + throw type + shot shape per hole and surfaces it as a recommendation. Override anything you want, then lock it in. Export to a printable text file if you want to bring it to the course."
-        />
-
-        <Section
-          color={MODE.tournament}
-          label="Tournament round"
-          body="Each hole shows the locked-in plan as a read-only card with the disc and shot shape pre-selected. One tap logs a throw if you executed as planned. Override per throw without modifying the plan."
+          color={MODE.play}
+          label="Play"
+          body="On the course, read your plan one hole at a time — big, glanceable, sunlight-ready. Swipe to the next tee. It reopens right where you left off when you come back from your scorekeeping app."
         />
 
         <View style={styles.privacyCard}>
           <Text style={styles.privacyLabel}>Your data stays here</Text>
           <Text style={styles.privacyBody}>
-            Everything — discs, courses, throws, plans — lives on this
-            device only. No account, no upload, no server. Game plans
-            can be exported to text as a hedge against losing the data.
+            Everything — discs, courses, plans — lives on this device only.
+            No account, no upload, no server.
           </Text>
         </View>
       </ScrollView>
