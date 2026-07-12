@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><meta name="design_doc_mode" content="canvas"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&amp;family=Barlow+Condensed:wght@600;700;800&amp;display=swap" rel="stylesheet"><style>body{margin:0;background:#EDEDE9;font-family:Barlow,system-ui,sans-serif}a{color:#0E8C8C}a:hover{color:#0A6B6B}.dv-turn{padding:40px 44px 32px;border-bottom:1px solid rgba(0,0,0,.08);scroll-margin-top:16px}.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 20px}.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}.dv-tname{font:600 13px/1.2 Barlow,sans-serif;color:#1a1a1a}.dv-opts{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none}.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 11px/1.3 Barlow,sans-serif;color:rgba(0,0,0,.55)}.dv-card{max-width:100%;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:26px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden}.dv-opt:target .dv-oid{background:#2a78d6;color:#fff}.dv-next{margin:22px 0 0;font:12px/1.5 Barlow,sans-serif;color:rgba(0,0,0,.5)}.dv-h{font:600 12px/1.2 Barlow,sans-serif;color:rgba(0,0,0,.45);text-transform:uppercase;letter-spacing:.08em;flex-basis:100%;margin:24px 0 12px}</style></helmet>
+
+<section class="dv-turn" id="t10">
+<div class="dv-thd"><a class="dv-tid" href="#t10">10</a><span class="dv-tname">Consistency pass — settled spec manifest + the two screens that needed updating</span></div>
+
+<div style="max-width:760px;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:20px 24px;margin:0 0 24px;font-size:13px;line-height:1.7;color:#333">
+  <div style="font-weight:700;font-size:14px;margin-bottom:6px;color:#111">Canonical screen per surface (for handoff)</div>
+  Home <a class="dv-oid" href="#1d">1d</a> · Courses <a class="dv-oid" href="#1e">1e</a> · Layout→holes <a class="dv-oid" href="#1f">1f</a> · <b>Plan a hole <a class="dv-oid" href="#10a">10a</a></b> · Disc picker <a class="dv-oid" href="#5a">5a</a> · <b>Play card <a class="dv-oid" href="#9b">9b</a></b> · <b>Plan B expanded <a class="dv-oid" href="#10b">10b</a></b> · Play layout picker <a class="dv-oid" href="#6a">6a</a> · My Bag <a class="dv-oid" href="#9a">9a</a> · Add disc <a class="dv-oid" href="#7a">7a</a> · Delete layout <a class="dv-oid" href="#8a">8a</a> · Delete disc <a class="dv-oid" href="#8b">8b</a> · About <a class="dv-oid" href="#1i">1i</a><br>
+  <span style="color:rgba(0,0,0,.55)">Sample-data note: bag is 22 discs everywhere (Home's tile copy follows). Display-name rule: nickname if set, else model; subline = model · category, or category alone when no nickname.</span>
+</div>
+
+<div class="dv-opts">
+
+<!-- 10a plan a hole updated -->
+<div class="dv-opt" id="10a"><div class="dv-olabel"><a class="dv-oid" href="#10a">10a</a>Plan a hole — replaces <a class="dv-oid" href="#1g">1g</a>: color dots on disc chips, 22-disc bag</div>
+<div class="dv-card" style="width:390px">
+<div data-screen-label="Plan a hole v2" style="width:390px;height:844px;background:#101216;display:flex;flex-direction:column;color:#EDEEF2;padding:24px 20px 20px;box-sizing:border-box">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <span style="font:600 15px Barlow,sans-serif;color:#8B909B">‹ Long Layout</span>
+    <span style="background:#5B4FC7;color:#fff;font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.1em;padding:6px 10px;border-radius:6px">PLAN</span>
+  </div>
+  <div style="display:flex;align-items:baseline;gap:12px;margin-top:12px">
+    <span style="font:800 44px/1 'Barlow Condensed',sans-serif">HOLE 7</span>
+    <span style="font:600 15px Barlow,sans-serif;color:#8B909B;white-space:nowrap">Par <b style="color:#EDEEF2">3</b> · <b style="color:#EDEEF2">285</b> ft ✎</span>
+  </div>
+  <div style="margin-top:16px">
+    <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B">DISC — FROM YOUR BAG</div>
+    <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+      <span style="background:#5B4FC7;color:#fff;font:700 15px Barlow,sans-serif;padding:9px 14px 9px 10px;border-radius:999px;display:inline-flex;align-items:center;gap:8px"><span style="width:16px;height:16px;border-radius:50%;background:#D8342C;border:2px solid rgba(255,255,255,.35)"></span>Raskolnikov</span>
+      <span style="background:#171A20;border:1px solid #232733;font:600 15px Barlow,sans-serif;padding:9px 14px 9px 10px;border-radius:999px;display:inline-flex;align-items:center;gap:8px"><span style="width:16px;height:16px;border-radius:50%;background:#E87A2C;border:2px solid rgba(255,255,255,.25)"></span>Hex</span>
+      <span style="background:#171A20;border:1px solid #232733;font:600 15px Barlow,sans-serif;padding:9px 14px 9px 10px;border-radius:999px;display:inline-flex;align-items:center;gap:8px"><span style="width:16px;height:16px;border-radius:50%;background:#2D8CC9;border:2px solid rgba(255,255,255,.25)"></span>Zone</span>
+      <span style="background:#171A20;border:1px solid #232733;font:600 15px Barlow,sans-serif;padding:9px 14px 9px 10px;border-radius:999px;display:inline-flex;align-items:center;gap:8px"><span style="width:16px;height:16px;border-radius:50%;background:#3A3F4A;border:2px solid rgba(255,255,255,.25)"></span>Judge</span>
+      <span style="background:transparent;border:1px dashed #3a4050;color:#8B909B;font:600 15px Barlow,sans-serif;padding:9px 14px;border-radius:999px">All 22 discs…</span>
+    </div>
+  </div>
+  <div style="margin-top:16px">
+    <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B">THROW</div>
+    <div style="display:flex;background:#171A20;border:1px solid #232733;border-radius:12px;padding:4px;margin-top:8px">
+      <span style="flex:1;text-align:center;font:600 15px Barlow,sans-serif;padding:10px 0;color:#8B909B">Backhand</span>
+      <span style="flex:1;text-align:center;font:700 15px Barlow,sans-serif;padding:10px 0;background:#5B4FC7;border-radius:9px;color:#fff">Forehand</span>
+      <span style="flex:1;text-align:center;font:600 15px Barlow,sans-serif;padding:10px 0;color:#8B909B">Overhand</span>
+    </div>
+  </div>
+  <div style="margin-top:16px">
+    <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B">SHAPE</div>
+    <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+      <span style="background:#171A20;border:1px solid #232733;font:600 14px Barlow,sans-serif;padding:8px 13px;border-radius:999px">Hyzer</span>
+      <span style="background:#171A20;border:1px solid #232733;font:600 14px Barlow,sans-serif;padding:8px 13px;border-radius:999px">Flat</span>
+      <span style="background:#171A20;border:1px solid #232733;font:600 14px Barlow,sans-serif;padding:8px 13px;border-radius:999px">Anhyzer</span>
+      <span style="background:#5B4FC7;color:#fff;font:700 14px Barlow,sans-serif;padding:8px 13px;border-radius:999px">Flex</span>
+      <span style="background:#171A20;border:1px solid #232733;font:600 14px Barlow,sans-serif;padding:8px 13px;border-radius:999px">Turnover</span>
+      <span style="background:#171A20;border:1px solid #232733;font:600 14px Barlow,sans-serif;padding:8px 13px;border-radius:999px">Roller</span>
+      <span style="background:#171A20;border:1px solid #232733;font:600 14px Barlow,sans-serif;padding:8px 13px;border-radius:999px">Spike hyzer</span>
+      <span style="background:#171A20;border:1px solid #232733;font:600 14px Barlow,sans-serif;padding:8px 13px;border-radius:999px">Thumber ⇒OH</span>
+      <span style="background:#171A20;border:1px solid #232733;font:600 14px Barlow,sans-serif;padding:8px 13px;border-radius:999px">Tomahawk ⇒OH</span>
+    </div>
+  </div>
+  <div style="margin-top:16px;flex:1;display:flex;flex-direction:column">
+    <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B">AIM — WHAT WOULD YOUR CADDIE SAY?</div>
+    <div style="flex:1;background:#171A20;border:1px solid #232733;border-radius:12px;padding:14px;margin-top:8px;font:600 17px/1.45 Barlow,sans-serif;color:#EDEEF2">Right edge of the gap, let it fade back to the basket. OB left — don't flip it.</div>
+  </div>
+  <div style="display:flex;gap:10px;margin-top:14px;align-items:stretch">
+    <div style="flex:1;border:1px dashed #3a4050;border-radius:12px;padding:12px;text-align:center;font:600 13px Barlow,sans-serif;color:#8B909B">📷 Add tee photo<br><span style="font-size:11px">coming soon</span></div>
+    <div style="flex:2;background:#5B4FC7;border-radius:12px;display:flex;align-items:center;justify-content:center;font:800 22px 'Barlow Condensed',sans-serif;letter-spacing:.08em;color:#fff">SAVE · NEXT HOLE ›</div>
+  </div>
+</div>
+</div></div>
+
+<!-- 10b plan b expanded updated -->
+<div class="dv-opt" id="10b"><div class="dv-olabel"><a class="dv-oid" href="#10b">10b</a>Plan B expanded — replaces <a class="dv-oid" href="#3a">3a</a>: color dots on both plans</div>
+<div class="dv-card" style="width:390px">
+<div data-screen-label="Plan B open v2" style="width:390px;height:844px;background:#F6F7F4;display:flex;flex-direction:column;color:#101312">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0">
+    <span style="background:#0E8C8C;color:#fff;font:700 13px/1 'Barlow Condensed',sans-serif;letter-spacing:.12em;padding:6px 10px;border-radius:6px">PLAY</span>
+    <span style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.12em;color:#9aa29e">MAPLE HILL · LONG</span>
+    <span style="font:600 14px Barlow,sans-serif;color:#5c6663">✕</span>
+  </div>
+  <div style="padding:22px 24px 0">
+    <div style="display:flex;align-items:baseline;gap:14px">
+      <span style="font:800 58px/0.9 'Barlow Condensed',sans-serif">7</span>
+      <span style="font:600 17px Barlow,sans-serif;color:#5c6663">PAR 3 · 285 FT</span>
+    </div>
+  </div>
+  <div style="margin:18px 20px 0;background:#fff;border:2px solid #e0e3de;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;opacity:.75">
+    <span style="background:#e0e3de;color:#5c6663;font:800 14px 'Barlow Condensed',sans-serif;letter-spacing:.1em;padding:5px 9px;border-radius:6px;flex:none">PLAN A</span>
+    <span style="width:18px;height:18px;border-radius:50%;background:#D8342C;border:2px solid rgba(0,0,0,.12);flex:none"></span>
+    <span style="font:700 17px Barlow,sans-serif;color:#101312;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Raskolnikov · FH Flex</span>
+    <span style="font:800 20px 'Barlow Condensed',sans-serif;color:#9aa29e">⌄</span>
+  </div>
+  <div style="flex:1;margin:12px 20px 10px;background:#101312;color:#fff;border-radius:18px;padding:24px 24px 20px;display:flex;flex-direction:column;box-shadow:0 10px 28px rgba(16,19,18,.25)">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <span style="background:#FDF1D7;color:#6b5a1e;font:800 14px 'Barlow Condensed',sans-serif;letter-spacing:.12em;padding:6px 10px;border-radius:6px">PLAN B</span>
+      <span style="font:800 17px 'Barlow Condensed',sans-serif;letter-spacing:.12em;color:#FDF1D7">INTO THE WIND</span>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:18px">
+      <div>
+        <div style="font:800 62px/0.95 'Barlow Condensed',sans-serif;letter-spacing:.01em">ZONE</div>
+        <div style="display:flex;align-items:center;gap:9px;margin-top:8px">
+          <span style="width:24px;height:24px;border-radius:50%;background:#2D8CC9;border:2px solid rgba(255,255,255,.3);flex:none"></span>
+          <span style="font:600 16px Barlow,sans-serif;color:#9aa29e">P&amp;A</span>
+        </div>
+      </div>
+      <div style="display:inline-flex;align-self:flex-start;background:#0E8C8C;color:#fff;font:700 26px/1 'Barlow Condensed',sans-serif;letter-spacing:.06em;padding:12px 18px;border-radius:10px">FH ROLLER</div>
+      <div style="font:600 25px/1.35 Barlow,sans-serif;color:#fff;text-wrap:pretty">Stand it up on the right line, low under the wind. Dies right at the end — aim left of the pole.</div>
+    </div>
+    <div style="text-align:center;font:800 20px 'Barlow Condensed',sans-serif;color:#5c6663">⌄</div>
+  </div>
+  <div style="display:flex;gap:10px;padding:0 20px 14px">
+    <div style="flex:0 0 84px;height:96px;border-radius:14px;border:2px solid #d4d8d3;display:flex;align-items:center;justify-content:center;font:700 24px 'Barlow Condensed',sans-serif;color:#8a938f">‹ 6</div>
+    <div style="flex:1;height:96px;border-radius:14px;background:#101312;color:#fff;display:flex;align-items:center;justify-content:center;gap:12px;font:800 30px 'Barlow Condensed',sans-serif;letter-spacing:.05em">HOLE 8 <span style="font-size:26px">›</span></div>
+  </div>
+  <div style="text-align:center;font:600 12px Barlow,sans-serif;color:#9aa29e;padding-bottom:14px">or swipe anywhere</div>
+</div>
+</div></div>
+</div>
+<p class="dv-next">Try next: "create/edit layout screens" · "empty states (first launch, empty bag)" · "export this spec as a handoff doc"</p>
+</section>
+
+<section class="dv-turn" id="t9">
+<div class="dv-thd"><a class="dv-tid" href="#t9">9</a><span class="dv-tname">Disc-color dots carried through — My Bag (<a class="dv-oid" href="#1h">1h</a>) and the Play card (<a class="dv-oid" href="#2a">2a</a>)</span></div>
+<div class="dv-opts">
+
+<!-- 9a bag with dots -->
+<div class="dv-opt" id="9a"><div class="dv-olabel"><a class="dv-oid" href="#9a">9a</a>My Bag — dot leads every row, same as the picker</div>
+<div class="dv-card" style="width:390px">
+<div data-screen-label="My Bag dots" style="width:390px;height:844px;background:#101216;display:flex;flex-direction:column;color:#EDEEF2;padding:26px 20px 20px;box-sizing:border-box">
+  <span style="font:600 15px Barlow,sans-serif;color:#8B909B">‹ Home</span>
+  <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:14px">
+    <div style="font:800 34px 'Barlow Condensed',sans-serif;letter-spacing:.03em">MY BAG</div>
+    <span style="font:600 13px Barlow,sans-serif;color:#8B909B">22 in bag · 3 shelved</span>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;margin-top:16px;flex:1">
+    <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B;margin-top:4px">DD — DISTANCE DRIVERS</div>
+    <div style="background:#171A20;border:1px solid #232733;border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px">
+      <span style="width:22px;height:22px;border-radius:50%;background:#E8443A;border:2px solid rgba(255,255,255,.25);flex:none"></span>
+      <span style="font:700 17px Barlow,sans-serif;flex:1">Big D <span style="font-weight:600;color:#8B909B">· Destroyer</span></span>
+      <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.06em;color:#8B909B">12 / 5 / -1 / 3</span>
+    </div>
+    <div style="background:#171A20;border:1px solid #232733;border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px">
+      <span style="width:22px;height:22px;border-radius:50%;background:#F5F1E8;border:2px solid rgba(255,255,255,.25);flex:none"></span>
+      <span style="font:700 17px Barlow,sans-serif;flex:1">Wraith</span>
+      <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.06em;color:#8B909B">11 / 5 / -1 / 3</span>
+    </div>
+    <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B;margin-top:10px">FWD — FAIRWAY DRIVERS</div>
+    <div style="background:#171A20;border:1px solid #232733;border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px">
+      <span style="width:22px;height:22px;border-radius:50%;background:#D8342C;border:2px solid rgba(255,255,255,.25);flex:none"></span>
+      <span style="font:700 17px Barlow,sans-serif;flex:1">Raskolnikov <span style="font-weight:600;color:#8B909B">· Firebird</span></span>
+      <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.06em;color:#8B909B">9 / 3 / 0 / 4</span>
+    </div>
+    <div style="background:#171A20;border:1px solid #232733;border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px">
+      <span style="width:22px;height:22px;border-radius:50%;background:#F2C230;border:2px solid rgba(255,255,255,.25);flex:none"></span>
+      <span style="font:700 17px Barlow,sans-serif;flex:1">Leopard3</span>
+      <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.06em;color:#8B909B">7 / 5 / -2 / 1</span>
+    </div>
+    <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B;margin-top:10px">MID — MIDRANGES</div>
+    <div style="background:#171A20;border:1px solid #232733;border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px">
+      <span style="width:22px;height:22px;border-radius:50%;background:#E87A2C;border:2px solid rgba(255,255,255,.25);flex:none"></span>
+      <span style="font:700 17px Barlow,sans-serif;flex:1">Hex</span>
+      <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.06em;color:#8B909B">5 / 5 / -1 / 1</span>
+    </div>
+    <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B;margin-top:10px">P&amp;A — PUTT &amp; APPROACH</div>
+    <div style="background:#171A20;border:1px solid #232733;border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px">
+      <span style="width:22px;height:22px;border-radius:50%;background:#2D8CC9;border:2px solid rgba(255,255,255,.25);flex:none"></span>
+      <span style="font:700 17px Barlow,sans-serif;flex:1">Zone</span>
+      <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.06em;color:#8B909B">4 / 3 / 0 / 3</span>
+    </div>
+    <div style="background:#171A20;border:1px solid #232733;border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px">
+      <span style="width:22px;height:22px;border-radius:50%;background:#3A3F4A;border:2px solid rgba(255,255,255,.25);flex:none"></span>
+      <span style="font:700 17px Barlow,sans-serif;flex:1">Judge</span>
+      <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.06em;color:#8B909B">2 / 4 / 0 / 1</span>
+    </div>
+  </div>
+  <div style="background:#171A20;border:1px solid #232733;border-radius:14px;padding:16px;text-align:center;font:800 19px 'Barlow Condensed',sans-serif;letter-spacing:.08em">+ ADD DISC</div>
+</div>
+</div></div>
+
+<!-- 9b play card with dot -->
+<div class="dv-opt" id="9b"><div class="dv-olabel"><a class="dv-oid" href="#9b">9b</a>Play card — dot beside the disc subline: "grab the red one"</div>
+<div class="dv-card" style="width:390px">
+<div data-screen-label="Play with dot" style="width:390px;height:844px;background:#F6F7F4;display:flex;flex-direction:column;color:#101312">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0">
+    <span style="background:#0E8C8C;color:#fff;font:700 13px/1 'Barlow Condensed',sans-serif;letter-spacing:.12em;padding:6px 10px;border-radius:6px">PLAY</span>
+    <span style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.12em;color:#9aa29e">MAPLE HILL · LONG</span>
+    <span style="font:600 14px Barlow,sans-serif;color:#5c6663">✕</span>
+  </div>
+  <div style="padding:22px 24px 0">
+    <div style="display:flex;align-items:baseline;gap:14px">
+      <span style="font:800 58px/0.9 'Barlow Condensed',sans-serif">7</span>
+      <span style="font:600 17px Barlow,sans-serif;color:#5c6663">PAR 3 · 285 FT</span>
+    </div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 24px;gap:18px">
+    <div>
+      <div style="font:800 62px/0.95 'Barlow Condensed',sans-serif;letter-spacing:.01em">RASKOLNIKOV</div>
+      <div style="display:flex;align-items:center;gap:9px;margin-top:8px">
+        <span style="width:24px;height:24px;border-radius:50%;background:#D8342C;border:2px solid rgba(0,0,0,.12);flex:none"></span>
+        <span style="font:600 16px Barlow,sans-serif;color:#5c6663">Firebird · FWD</span>
+      </div>
+    </div>
+    <div style="display:inline-flex;align-self:flex-start;background:#0E8C8C;color:#fff;font:700 26px/1 'Barlow Condensed',sans-serif;letter-spacing:.06em;padding:12px 18px;border-radius:10px">FH FLEX</div>
+    <div style="font:600 27px/1.3 Barlow,sans-serif;color:#101312;text-wrap:pretty">Right edge of the gap, let it fade back to the basket. OB left — don't flip it.</div>
+  </div>
+  <div style="margin:0 20px 10px;background:#fff;border:2px solid #d4d8d3;border-radius:14px;padding:12px 16px;display:flex;align-items:center;gap:12px">
+    <span style="background:#101312;color:#fff;font:800 14px 'Barlow Condensed',sans-serif;letter-spacing:.1em;padding:5px 9px;border-radius:6px;flex:none">PLAN B</span>
+    <span style="width:18px;height:18px;border-radius:50%;background:#2D8CC9;border:2px solid rgba(0,0,0,.12);flex:none"></span>
+    <span style="font:600 15px Barlow,sans-serif;color:#5c6663;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Into the wind → Zone, FH roller</span>
+    <span style="font:800 20px 'Barlow Condensed',sans-serif;color:#9aa29e">⌃</span>
+  </div>
+  <div style="display:flex;gap:10px;padding:0 20px 14px">
+    <div style="flex:0 0 84px;height:96px;border-radius:14px;border:2px solid #d4d8d3;display:flex;align-items:center;justify-content:center;font:700 24px 'Barlow Condensed',sans-serif;color:#8a938f">‹ 6</div>
+    <div style="flex:1;height:96px;border-radius:14px;background:#101312;color:#fff;display:flex;align-items:center;justify-content:center;gap:12px;font:800 30px 'Barlow Condensed',sans-serif;letter-spacing:.05em">HOLE 8 <span style="font-size:26px">›</span></div>
+  </div>
+  <div style="text-align:center;font:600 12px Barlow,sans-serif;color:#9aa29e;padding-bottom:14px">or swipe anywhere</div>
+</div>
+</div></div>
+</div>
+<p class="dv-next">Try next: "make the Play dot bigger / put it before the disc name" · "consistency pass + final settled spec row" · "create/edit layout screens"</p>
+</section>
+
+<section class="dv-turn" id="t8">
+<div class="dv-thd"><a class="dv-tid" href="#t8">8</a><span class="dv-tname">Confirm-delete — one pattern for layouts, plans, discs (courses aren't deletable)</span></div>
+<div class="dv-opts">
+
+<!-- 8a delete course -->
+<div class="dv-opt" id="8a"><div class="dv-olabel"><a class="dv-oid" href="#8a">8a</a>Delete a layout — sheet spells out the cascade, red only on the destructive act</div>
+<div class="dv-card" style="width:390px">
+<div data-screen-label="Confirm delete course" style="width:390px;height:844px;background:#101216;display:flex;flex-direction:column;color:#EDEEF2;position:relative;overflow:hidden">
+  <div style="padding:26px 20px 0;opacity:.35;filter:blur(1px)">
+    <span style="font:600 15px Barlow,sans-serif;color:#8B909B">‹ Home</span>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:14px">
+      <div style="font:800 34px 'Barlow Condensed',sans-serif;letter-spacing:.03em">COURSES</div>
+      <span style="background:#5B4FC7;color:#fff;font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.1em;padding:6px 10px;border-radius:6px">PLAN</span>
+    </div>
+    <div style="background:#171A20;border:1px solid #232733;border-radius:16px;padding:16px 18px;margin-top:18px">
+      <div style="font:700 20px Barlow,sans-serif">Maple Hill</div>
+    </div>
+  </div>
+  <div style="position:absolute;left:0;right:0;bottom:0;background:#171A20;border:1px solid #232733;border-radius:22px 22px 0 0;box-shadow:0 -12px 32px rgba(0,0,0,.6);padding:14px 20px 22px;box-sizing:border-box">
+    <div style="width:44px;height:5px;border-radius:3px;background:#3a4050;margin:0 auto"></div>
+    <div style="font:800 26px 'Barlow Condensed',sans-serif;letter-spacing:.04em;margin-top:16px">DELETE LONG LAYOUT?</div>
+    <div style="font:600 15px/1.5 Barlow,sans-serif;color:#B7BBC6;margin-top:8px">This deletes the layout from Maple Hill, including its <b style="color:#EDEEF2">16 hole plans</b>. The course and its other layouts stay. There's no undo.</div>
+    <div style="background:#C7362B;color:#fff;border-radius:14px;padding:16px;text-align:center;font:800 20px 'Barlow Condensed',sans-serif;letter-spacing:.08em;margin-top:16px">DELETE LAYOUT + 16 PLANS</div>
+    <div style="background:transparent;border:1px solid #3a4050;border-radius:14px;padding:16px;text-align:center;font:700 17px Barlow,sans-serif;margin-top:10px">Keep it</div>
+  </div>
+</div>
+</div></div>
+
+<!-- 8b delete disc -->
+<div class="dv-opt" id="8b"><div class="dv-olabel"><a class="dv-oid" href="#8b">8b</a>Delete a disc that plans reference — offer shelving as the safe out</div>
+<div class="dv-card" style="width:390px">
+<div data-screen-label="Confirm delete disc" style="width:390px;height:844px;background:#101216;display:flex;flex-direction:column;color:#EDEEF2;position:relative;overflow:hidden">
+  <div style="padding:26px 20px 0;opacity:.35;filter:blur(1px)">
+    <span style="font:600 15px Barlow,sans-serif;color:#8B909B">‹ Home</span>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:14px">
+      <div style="font:800 34px 'Barlow Condensed',sans-serif;letter-spacing:.03em">MY BAG</div>
+    </div>
+    <div style="background:#171A20;border:1px solid #232733;border-radius:12px;padding:12px 14px;margin-top:16px;display:flex;align-items:center;gap:12px">
+      <span style="width:22px;height:22px;border-radius:50%;background:#D8342C;border:2px solid rgba(255,255,255,.25)"></span>
+      <span style="font:700 17px Barlow,sans-serif">Raskolnikov</span>
+    </div>
+  </div>
+  <div style="position:absolute;left:0;right:0;bottom:0;background:#171A20;border:1px solid #232733;border-radius:22px 22px 0 0;box-shadow:0 -12px 32px rgba(0,0,0,.6);padding:14px 20px 22px;box-sizing:border-box">
+    <div style="width:44px;height:5px;border-radius:3px;background:#3a4050;margin:0 auto"></div>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:16px">
+      <span style="width:22px;height:22px;border-radius:50%;background:#D8342C;border:2px solid rgba(255,255,255,.25);flex:none"></span>
+      <span style="font:800 26px 'Barlow Condensed',sans-serif;letter-spacing:.04em">DELETE RASKOLNIKOV?</span>
+    </div>
+    <div style="font:600 15px/1.5 Barlow,sans-serif;color:#B7BBC6;margin-top:8px"><b style="color:#EDEEF2">12 hole plans</b> use this disc. Deleting clears the disc from those plans — the rest of each plan stays.</div>
+    <div style="background:#101216;border:1px solid #3a4050;border-radius:14px;padding:16px;text-align:center;font:800 20px 'Barlow Condensed',sans-serif;letter-spacing:.08em;margin-top:16px">SHELVE INSTEAD — KEEP PLANS INTACT</div>
+    <div style="background:#C7362B;color:#fff;border-radius:14px;padding:16px;text-align:center;font:800 20px 'Barlow Condensed',sans-serif;letter-spacing:.08em;margin-top:10px">DELETE FROM 12 PLANS</div>
+    <div style="background:transparent;border:1px solid #3a4050;border-radius:14px;padding:16px;text-align:center;font:700 17px Barlow,sans-serif;margin-top:10px">Cancel</div>
+  </div>
+</div>
+</div></div>
+</div>
+<p class="dv-next">Try next: "carry disc-color dots into My Bag (<a class="dv-oid" href="#1h">1h</a>) and the Play card" · "make the delete button require a hold" · "wrap up: which options are final?"</p>
+</section>
+
+<section class="dv-turn" id="t7">
+<div class="dv-thd"><a class="dv-tid" href="#t7">7</a><span class="dv-tname">Add a disc — from My Bag (<a class="dv-oid" href="#1h">1h</a>); neutral surface, no mode color</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="7a"><div class="dv-olabel"><a class="dv-oid" href="#7a">7a</a>One card: name, category, flight, color dot, in-bag toggle</div>
+<div class="dv-card" style="width:390px">
+<div data-screen-label="Add disc" style="width:390px;height:844px;background:#101216;display:flex;flex-direction:column;color:#EDEEF2;padding:24px 20px 20px;box-sizing:border-box">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <span style="font:600 15px Barlow,sans-serif;color:#8B909B">‹ My Bag</span>
+    <span style="font:600 14px Barlow,sans-serif;color:#8B909B">Cancel</span>
+  </div>
+  <div style="font:800 34px 'Barlow Condensed',sans-serif;letter-spacing:.03em;margin-top:14px">ADD DISC</div>
+  <div style="margin-top:18px">
+    <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B">MODEL</div>
+    <div style="background:#171A20;border:1px solid #232733;border-radius:12px;padding:14px;margin-top:8px;font:600 17px Barlow,sans-serif">Firebird</div>
+  </div>
+  <div style="margin-top:14px">
+    <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B">NICKNAME <span style="color:#5c6270">— OPTIONAL, SHOWN EVERYWHERE IF SET</span></div>
+    <div style="background:#171A20;border:1px solid #232733;border-radius:12px;padding:14px;margin-top:8px;font:600 17px Barlow,sans-serif">Raskolnikov</div>
+  </div>
+  <div style="margin-top:14px">
+    <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B">CATEGORY</div>
+    <div style="display:flex;background:#171A20;border:1px solid #232733;border-radius:12px;padding:4px;margin-top:8px">
+      <span style="flex:1;text-align:center;font:600 15px Barlow,sans-serif;padding:10px 0;color:#8B909B">DD</span>
+      <span style="flex:1;text-align:center;font:700 15px Barlow,sans-serif;padding:10px 0;background:#EDEEF2;border-radius:9px;color:#101216">FWD</span>
+      <span style="flex:1;text-align:center;font:600 15px Barlow,sans-serif;padding:10px 0;color:#8B909B">MID</span>
+      <span style="flex:1;text-align:center;font:600 15px Barlow,sans-serif;padding:10px 0;color:#8B909B">P&amp;A</span>
+    </div>
+  </div>
+  <div style="margin-top:14px">
+    <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B">FLIGHT — SPEED / GLIDE / TURN / FADE</div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <div style="flex:1;background:#171A20;border:1px solid #232733;border-radius:12px;padding:10px 0;text-align:center"><div style="font:800 24px 'Barlow Condensed',sans-serif">9</div><div style="font:600 11px Barlow,sans-serif;color:#5c6270">SPEED</div></div>
+      <div style="flex:1;background:#171A20;border:1px solid #232733;border-radius:12px;padding:10px 0;text-align:center"><div style="font:800 24px 'Barlow Condensed',sans-serif">3</div><div style="font:600 11px Barlow,sans-serif;color:#5c6270">GLIDE</div></div>
+      <div style="flex:1;background:#171A20;border:1px solid #232733;border-radius:12px;padding:10px 0;text-align:center"><div style="font:800 24px 'Barlow Condensed',sans-serif">0</div><div style="font:600 11px Barlow,sans-serif;color:#5c6270">TURN</div></div>
+      <div style="flex:1;background:#171A20;border:1px solid #232733;border-radius:12px;padding:10px 0;text-align:center"><div style="font:800 24px 'Barlow Condensed',sans-serif">4</div><div style="font:600 11px Barlow,sans-serif;color:#5c6270">FADE</div></div>
+    </div>
+  </div>
+  <div style="margin-top:14px">
+    <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B">PLASTIC COLOR</div>
+    <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">
+      <span style="width:36px;height:36px;border-radius:50%;background:#D8342C;outline:3px solid #EDEEF2;outline-offset:3px"></span>
+      <span style="width:36px;height:36px;border-radius:50%;background:#E87A2C"></span>
+      <span style="width:36px;height:36px;border-radius:50%;background:#F2C230"></span>
+      <span style="width:36px;height:36px;border-radius:50%;background:#3FA05A"></span>
+      <span style="width:36px;height:36px;border-radius:50%;background:#2D8CC9"></span>
+      <span style="width:36px;height:36px;border-radius:50%;background:#8B5CC7"></span>
+      <span style="width:36px;height:36px;border-radius:50%;background:#E86FA4"></span>
+      <span style="width:36px;height:36px;border-radius:50%;background:#F5F1E8"></span>
+      <span style="width:36px;height:36px;border-radius:50%;background:#3A3F4A"></span>
+    </div>
+  </div>
+  <div style="margin-top:16px;background:#171A20;border:1px solid #232733;border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center">
+    <div>
+      <div style="font:700 16px Barlow,sans-serif">In my bag</div>
+      <div style="font:600 12px Barlow,sans-serif;color:#8B909B">Shelved discs don't show in disc pickers</div>
+    </div>
+    <span style="width:56px;height:32px;border-radius:16px;background:#3FA05A;position:relative;flex:none"><span style="position:absolute;top:3px;right:3px;width:26px;height:26px;border-radius:50%;background:#fff"></span></span>
+  </div>
+  <div style="flex:1"></div>
+  <div style="background:#EDEEF2;color:#101216;border-radius:14px;padding:16px;text-align:center;font:800 20px 'Barlow Condensed',sans-serif;letter-spacing:.08em">SAVE DISC</div>
+</div>
+</div></div>
+</div>
+<p class="dv-next">Try next: "carry the color dots into My Bag (<a class="dv-oid" href="#1h">1h</a>) and the Play card" · "show the confirm-delete pattern" · "flight numbers as steppers instead"</p>
+</section>
+
+<section class="dv-turn" id="t6">
+<div class="dv-thd"><a class="dv-tid" href="#t6">6</a><span class="dv-tname">Play — layout picker (entry from Home's PLAY tile on <a class="dv-oid" href="#1d">1d</a>)</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="6a"><div class="dv-olabel"><a class="dv-oid" href="#6a">6a</a>Resume first, then layouts sorted by plan coverage; unplanned routes to Plan</div>
+<div class="dv-card" style="width:390px">
+<div data-screen-label="Play layout picker" style="width:390px;height:844px;background:#101216;display:flex;flex-direction:column;color:#EDEEF2;padding:26px 20px 20px;box-sizing:border-box">
+  <span style="font:600 15px Barlow,sans-serif;color:#8B909B">‹ Home</span>
+  <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:14px">
+    <div style="font:800 34px 'Barlow Condensed',sans-serif;letter-spacing:.03em">PICK A LAYOUT</div>
+    <span style="background:#0E8C8C;color:#fff;font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.1em;padding:6px 10px;border-radius:6px">PLAY</span>
+  </div>
+  <div style="margin-top:16px;background:#0E8C8C;border-radius:16px;padding:18px">
+    <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:rgba(255,255,255,.75)">RESUME — YOU WERE ON HOLE 7</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+      <div>
+        <div style="font:700 21px Barlow,sans-serif;color:#fff">Maple Hill · Long</div>
+        <div style="font:600 13px Barlow,sans-serif;color:rgba(255,255,255,.75);margin-top:2px">16 of 18 holes planned</div>
+      </div>
+      <div style="background:#fff;color:#0E8C8C;border-radius:10px;padding:12px 18px;font:800 20px 'Barlow Condensed',sans-serif;letter-spacing:.06em">RESUME ›</div>
+    </div>
+  </div>
+  <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B;margin-top:22px">ALL LAYOUTS — MOST PLANNED FIRST</div>
+  <div style="display:flex;flex-direction:column;gap:10px;margin-top:10px;flex:1">
+    <div style="background:#171A20;border:1px solid #232733;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px">
+      <div style="flex:1">
+        <div style="font:700 18px Barlow,sans-serif">Maple Hill · Short</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+          <span style="flex:1;height:5px;border-radius:3px;background:#232733;overflow:hidden;display:flex"><span style="width:100%;background:#0E8C8C;border-radius:3px"></span></span>
+          <span style="font:600 12px Barlow,sans-serif;color:#8B909B;flex:none">18/18</span>
+        </div>
+      </div>
+      <span style="font:800 22px 'Barlow Condensed',sans-serif;color:#0E8C8C;flex:none">PLAY ›</span>
+    </div>
+    <div style="background:#171A20;border:1px solid #232733;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px">
+      <div style="flex:1">
+        <div style="font:700 18px Barlow,sans-serif">Pyramids · Main</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+          <span style="flex:1;height:5px;border-radius:3px;background:#232733;overflow:hidden;display:flex"><span style="width:61%;background:#0E8C8C;border-radius:3px"></span></span>
+          <span style="font:600 12px Barlow,sans-serif;color:#8B909B;flex:none">11/18</span>
+        </div>
+      </div>
+      <span style="font:800 22px 'Barlow Condensed',sans-serif;color:#0E8C8C;flex:none">PLAY ›</span>
+    </div>
+    <div style="background:#171A20;border:1px solid #232733;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px">
+      <div style="flex:1">
+        <div style="font:700 18px Barlow,sans-serif">Devens · Whites</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+          <span style="flex:1;height:5px;border-radius:3px;background:#232733;overflow:hidden;display:flex"><span style="width:22%;background:#0E8C8C;border-radius:3px"></span></span>
+          <span style="font:600 12px Barlow,sans-serif;color:#8B909B;flex:none">4/18</span>
+        </div>
+      </div>
+      <span style="font:800 22px 'Barlow Condensed',sans-serif;color:#0E8C8C;flex:none">PLAY ›</span>
+    </div>
+    <div style="background:transparent;border:1px dashed #3a4050;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px">
+      <div style="flex:1">
+        <div style="font:700 18px Barlow,sans-serif;color:#8B909B">Maple Hill · Tournament</div>
+        <div style="font:600 12px Barlow,sans-serif;color:#5c6270;margin-top:4px">No plan yet</div>
+      </div>
+      <span style="font:800 18px 'Barlow Condensed',sans-serif;color:#5B4FC7;flex:none">PLAN IT ›</span>
+    </div>
+    <div style="background:transparent;border:1px dashed #3a4050;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px">
+      <div style="flex:1">
+        <div style="font:700 18px Barlow,sans-serif;color:#8B909B">Devens · Blues</div>
+        <div style="font:600 12px Barlow,sans-serif;color:#5c6270;margin-top:4px">No plan yet</div>
+      </div>
+      <span style="font:800 18px 'Barlow Condensed',sans-serif;color:#5B4FC7;flex:none">PLAN IT ›</span>
+    </div>
+  </div>
+  <div style="text-align:center;font:600 13px Barlow,sans-serif;color:#5c6270;padding-top:10px">Playing starts at hole 1 — or long-press PLAY to start elsewhere</div>
+</div>
+</div></div>
+</div>
+<p class="dv-next">Try next: "show the confirm-delete pattern" · "show the start-at-hole long-press sheet" · "carry disc-color dots into My Bag and Play"</p>
+</section>
+
+<section class="dv-turn" id="t5">
+<div class="dv-thd"><a class="dv-tid" href="#t5">5</a><span class="dv-tname">Disc picker settled — <a class="dv-oid" href="#4a">4a</a> list + <a class="dv-oid" href="#4b">4b</a> category filter + disc-color dots, sized for a 22-disc bag</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="5a"><div class="dv-olabel"><a class="dv-oid" href="#5a">5a</a>No recent row — filter chips do the narrowing; color dot = the physical disc</div>
+<div class="dv-card" style="width:390px">
+<div data-screen-label="Disc picker 5a" style="width:390px;height:844px;background:#101216;display:flex;flex-direction:column;color:#EDEEF2;position:relative;overflow:hidden">
+  <div style="padding:24px 20px 0;opacity:.35;filter:blur(1px)">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span style="font:600 15px Barlow,sans-serif;color:#8B909B">‹ Long Layout</span>
+      <span style="background:#5B4FC7;color:#fff;font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.1em;padding:6px 10px;border-radius:6px">PLAN</span>
+    </div>
+    <div style="display:flex;align-items:baseline;gap:12px;margin-top:12px">
+      <span style="font:800 44px/1 'Barlow Condensed',sans-serif">HOLE 7</span>
+    </div>
+  </div>
+  <div style="position:absolute;left:0;right:0;bottom:0;top:118px;background:#171A20;border:1px solid #232733;border-radius:22px 22px 0 0;box-shadow:0 -12px 32px rgba(0,0,0,.5);display:flex;flex-direction:column;padding:12px 20px 0;box-sizing:border-box">
+    <div style="width:44px;height:5px;border-radius:3px;background:#3a4050;margin:0 auto"></div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:14px">
+      <span style="font:800 26px 'Barlow Condensed',sans-serif;letter-spacing:.04em">PICK A DISC</span>
+      <span style="font:600 14px Barlow,sans-serif;color:#8B909B">Cancel</span>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <span style="background:#5B4FC7;color:#fff;font:700 14px Barlow,sans-serif;padding:9px 15px;border-radius:999px">All · 22</span>
+      <span style="background:#232733;font:600 14px Barlow,sans-serif;padding:9px 15px;border-radius:999px">DD</span>
+      <span style="background:#232733;font:600 14px Barlow,sans-serif;padding:9px 15px;border-radius:999px">FWD</span>
+      <span style="background:#232733;font:600 14px Barlow,sans-serif;padding:9px 15px;border-radius:999px">MID</span>
+      <span style="background:#232733;font:600 14px Barlow,sans-serif;padding:9px 15px;border-radius:999px">P&amp;A</span>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:8px;margin-top:14px;overflow:hidden;position:relative">
+      <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B">DD — DISTANCE DRIVERS</div>
+      <div style="background:#101216;border:1px solid #232733;border-radius:12px;padding:13px 14px;display:flex;align-items:center;gap:12px">
+        <span style="width:22px;height:22px;border-radius:50%;background:#E8443A;border:2px solid rgba(255,255,255,.25);flex:none"></span>
+        <span style="font:700 17px Barlow,sans-serif;flex:1">Big D <span style="font-weight:600;color:#8B909B">· Destroyer</span></span>
+        <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.06em;color:#8B909B">12/5/-1/3</span>
+      </div>
+      <div style="background:#101216;border:1px solid #232733;border-radius:12px;padding:13px 14px;display:flex;align-items:center;gap:12px">
+        <span style="width:22px;height:22px;border-radius:50%;background:#F5F1E8;border:2px solid rgba(255,255,255,.25);flex:none"></span>
+        <span style="font:700 17px Barlow,sans-serif;flex:1">Wraith</span>
+        <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.06em;color:#8B909B">11/5/-1/3</span>
+      </div>
+      <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B;margin-top:8px">FWD — FAIRWAY DRIVERS</div>
+      <div style="background:#1E2032;border:2px solid #5B4FC7;border-radius:12px;padding:12px 13px;display:flex;align-items:center;gap:12px">
+        <span style="width:22px;height:22px;border-radius:50%;background:#D8342C;border:2px solid rgba(255,255,255,.25);flex:none"></span>
+        <span style="font:700 17px Barlow,sans-serif;color:#fff;flex:1">Raskolnikov <span style="font-weight:600;color:#8B909B">· Firebird</span></span>
+        <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.06em;color:#B7BBC6">9/3/0/4</span>
+      </div>
+      <div style="background:#101216;border:1px solid #232733;border-radius:12px;padding:13px 14px;display:flex;align-items:center;gap:12px">
+        <span style="width:22px;height:22px;border-radius:50%;background:#F2C230;border:2px solid rgba(255,255,255,.25);flex:none"></span>
+        <span style="font:700 17px Barlow,sans-serif;flex:1">Leopard3</span>
+        <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.06em;color:#8B909B">7/5/-2/1</span>
+      </div>
+      <div style="background:#101216;border:1px solid #232733;border-radius:12px;padding:13px 14px;display:flex;align-items:center;gap:12px">
+        <span style="width:22px;height:22px;border-radius:50%;background:#2D8CC9;border:2px solid rgba(255,255,255,.25);flex:none"></span>
+        <span style="font:700 17px Barlow,sans-serif;flex:1">Undertaker</span>
+        <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.06em;color:#8B909B">9/4/-1/2</span>
+      </div>
+      <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B;margin-top:8px">MID — MIDRANGES</div>
+      <div style="background:#101216;border:1px solid #232733;border-radius:12px;padding:13px 14px;display:flex;align-items:center;gap:12px">
+        <span style="width:22px;height:22px;border-radius:50%;background:#E87A2C;border:2px solid rgba(255,255,255,.25);flex:none"></span>
+        <span style="font:700 17px Barlow,sans-serif;flex:1">Hex</span>
+        <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.06em;color:#8B909B">5/5/-1/1</span>
+      </div>
+      <div style="background:#101216;border:1px solid #232733;border-radius:12px;padding:13px 14px;display:flex;align-items:center;gap:12px">
+        <span style="width:22px;height:22px;border-radius:50%;background:#3FA05A;border:2px solid rgba(255,255,255,.25);flex:none"></span>
+        <span style="font:700 17px Barlow,sans-serif;flex:1">Caiman</span>
+        <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.06em;color:#8B909B">5/2/0/4</span>
+      </div>
+      <div style="background:#101216;border:1px solid #232733;border-radius:12px;padding:13px 14px;display:flex;align-items:center;gap:12px;opacity:.55">
+        <span style="width:22px;height:22px;border-radius:50%;background:#C7CDD6;border:2px solid rgba(255,255,255,.25);flex:none"></span>
+        <span style="font:700 17px Barlow,sans-serif;flex:1">Mako3</span>
+        <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.06em;color:#8B909B">5/5/0/0</span>
+      </div>
+      <div style="position:absolute;left:0;right:0;bottom:0;height:70px;background:linear-gradient(180deg,rgba(23,26,32,0),#171A20)"></div>
+    </div>
+    <div style="text-align:center;font:600 13px Barlow,sans-serif;color:#5c6270;padding:10px 0 16px">22 in bag · scroll for P&amp;A · shelved discs in My Bag</div>
+  </div>
+</div>
+</div></div>
+</div>
+<p class="dv-next">Try next: "carry the color dots into My Bag (<a class="dv-oid" href="#1h">1h</a>) and the Play card" · "show the Play layout picker + confirm-delete patterns" · "show the add-disc form"</p>
+</section>
+
+<section class="dv-turn" id="t4">
+<div class="dv-thd"><a class="dv-tid" href="#t4">4</a><span class="dv-tname">Disc picker — bottom sheet over the Plan card (<a class="dv-oid" href="#1g">1g</a>), recent first</span></div>
+<div class="dv-opts">
+
+<!-- 4a list sheet -->
+<div class="dv-opt" id="4a"><div class="dv-olabel"><a class="dv-oid" href="#4a">4a</a>List sheet — recent chips + category sections, one tap picks</div>
+<div class="dv-card" style="width:390px">
+<div data-screen-label="Disc picker 4a" style="width:390px;height:844px;background:#101216;display:flex;flex-direction:column;color:#EDEEF2;position:relative;overflow:hidden">
+  <div style="padding:24px 20px 0;opacity:.35;filter:blur(1px)">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span style="font:600 15px Barlow,sans-serif;color:#8B909B">‹ Long Layout</span>
+      <span style="background:#5B4FC7;color:#fff;font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.1em;padding:6px 10px;border-radius:6px">PLAN</span>
+    </div>
+    <div style="display:flex;align-items:baseline;gap:12px;margin-top:12px">
+      <span style="font:800 44px/1 'Barlow Condensed',sans-serif">HOLE 7</span>
+      <span style="font:600 15px Barlow,sans-serif;color:#8B909B;white-space:nowrap">Par <b style="color:#EDEEF2">3</b> · <b style="color:#EDEEF2">285</b> ft</span>
+    </div>
+  </div>
+  <div style="position:absolute;left:0;right:0;bottom:0;top:150px;background:#171A20;border:1px solid #232733;border-radius:22px 22px 0 0;box-shadow:0 -12px 32px rgba(0,0,0,.5);display:flex;flex-direction:column;padding:12px 20px 0;box-sizing:border-box">
+    <div style="width:44px;height:5px;border-radius:3px;background:#3a4050;margin:0 auto"></div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:14px">
+      <span style="font:800 26px 'Barlow Condensed',sans-serif;letter-spacing:.04em">PICK A DISC</span>
+      <span style="font:600 14px Barlow,sans-serif;color:#8B909B">Cancel</span>
+    </div>
+    <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B;margin-top:16px">RECENT ON THIS LAYOUT</div>
+    <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+      <span style="background:#5B4FC7;color:#fff;font:700 15px Barlow,sans-serif;padding:9px 14px;border-radius:999px">Raskolnikov</span>
+      <span style="background:#232733;font:600 15px Barlow,sans-serif;padding:9px 14px;border-radius:999px">Hex</span>
+      <span style="background:#232733;font:600 15px Barlow,sans-serif;padding:9px 14px;border-radius:999px">Zone</span>
+      <span style="background:#232733;font:600 15px Barlow,sans-serif;padding:9px 14px;border-radius:999px">Judge</span>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:8px;margin-top:16px;overflow:hidden">
+      <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B">DD — DISTANCE DRIVERS</div>
+      <div style="background:#101216;border:1px solid #232733;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font:700 17px Barlow,sans-serif">Big D <span style="font-weight:600;color:#8B909B">· Destroyer</span></span>
+        <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.06em;color:#8B909B">12/5/-1/3</span>
+      </div>
+      <div style="background:#101216;border:1px solid #232733;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font:700 17px Barlow,sans-serif">Wraith</span>
+        <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.06em;color:#8B909B">11/5/-1/3</span>
+      </div>
+      <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B;margin-top:8px">FWD — FAIRWAY DRIVERS</div>
+      <div style="background:#101216;border:1px solid #5B4FC7;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font:700 17px Barlow,sans-serif;color:#fff">Raskolnikov <span style="font-weight:600;color:#8B909B">· Firebird</span></span>
+        <span style="font:800 15px 'Barlow Condensed',sans-serif;letter-spacing:.06em;color:#5B4FC7">✓ 9/3/0/4</span>
+      </div>
+      <div style="background:#101216;border:1px solid #232733;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font:700 17px Barlow,sans-serif">Leopard3</span>
+        <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.06em;color:#8B909B">7/5/-2/1</span>
+      </div>
+      <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B;margin-top:8px">MID — MIDRANGES</div>
+      <div style="background:#101216;border:1px solid #232733;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font:700 17px Barlow,sans-serif">Hex</span>
+        <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.06em;color:#8B909B">5/5/-1/1</span>
+      </div>
+      <div style="background:#101216;border:1px solid #232733;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;opacity:.6">
+        <span style="font:700 17px Barlow,sans-serif">Mako3</span>
+        <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.06em;color:#8B909B">5/5/0/0</span>
+      </div>
+    </div>
+    <div style="text-align:center;font:600 13px Barlow,sans-serif;color:#5c6270;padding:12px 0 16px">Shelved discs aren't shown · manage in My Bag</div>
+  </div>
+</div>
+</div></div>
+
+<!-- 4b tile grid -->
+<div class="dv-opt" id="4b"><div class="dv-olabel"><a class="dv-oid" href="#4b">4b</a>Tile grid — category filter chips, bigger targets, recent first</div>
+<div class="dv-card" style="width:390px">
+<div data-screen-label="Disc picker 4b" style="width:390px;height:844px;background:#101216;display:flex;flex-direction:column;color:#EDEEF2;position:relative;overflow:hidden">
+  <div style="padding:24px 20px 0;opacity:.35;filter:blur(1px)">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span style="font:600 15px Barlow,sans-serif;color:#8B909B">‹ Long Layout</span>
+      <span style="background:#5B4FC7;color:#fff;font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.1em;padding:6px 10px;border-radius:6px">PLAN</span>
+    </div>
+    <div style="display:flex;align-items:baseline;gap:12px;margin-top:12px">
+      <span style="font:800 44px/1 'Barlow Condensed',sans-serif">HOLE 7</span>
+      <span style="font:600 15px Barlow,sans-serif;color:#8B909B;white-space:nowrap">Par <b style="color:#EDEEF2">3</b> · <b style="color:#EDEEF2">285</b> ft</span>
+    </div>
+  </div>
+  <div style="position:absolute;left:0;right:0;bottom:0;top:150px;background:#171A20;border:1px solid #232733;border-radius:22px 22px 0 0;box-shadow:0 -12px 32px rgba(0,0,0,.5);display:flex;flex-direction:column;padding:12px 20px 0;box-sizing:border-box">
+    <div style="width:44px;height:5px;border-radius:3px;background:#3a4050;margin:0 auto"></div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:14px">
+      <span style="font:800 26px 'Barlow Condensed',sans-serif;letter-spacing:.04em">PICK A DISC</span>
+      <span style="font:600 14px Barlow,sans-serif;color:#8B909B">Cancel</span>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <span style="background:#5B4FC7;color:#fff;font:700 14px Barlow,sans-serif;padding:8px 14px;border-radius:999px">All</span>
+      <span style="background:#232733;font:600 14px Barlow,sans-serif;padding:8px 14px;border-radius:999px">DD</span>
+      <span style="background:#232733;font:600 14px Barlow,sans-serif;padding:8px 14px;border-radius:999px">FWD</span>
+      <span style="background:#232733;font:600 14px Barlow,sans-serif;padding:8px 14px;border-radius:999px">MID</span>
+      <span style="background:#232733;font:600 14px Barlow,sans-serif;padding:8px 14px;border-radius:999px">P&amp;A</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;flex:1;align-content:start;overflow:hidden">
+      <div style="background:#101216;border:2px solid #5B4FC7;border-radius:14px;padding:14px 14px 12px;position:relative">
+        <div style="font:700 11px 'Barlow Condensed',sans-serif;letter-spacing:.12em;color:#5B4FC7">FWD · RECENT</div>
+        <div style="font:800 24px/1 'Barlow Condensed',sans-serif;margin-top:6px">RASKOLNIKOV</div>
+        <div style="font:600 12px Barlow,sans-serif;color:#8B909B;margin-top:3px">Firebird</div>
+        <div style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.08em;color:#B7BBC6;margin-top:8px">9 / 3 / 0 / 4</div>
+        <span style="position:absolute;top:10px;right:12px;font:800 16px Barlow,sans-serif;color:#5B4FC7">✓</span>
+      </div>
+      <div style="background:#101216;border:1px solid #232733;border-radius:14px;padding:14px 14px 12px">
+        <div style="font:700 11px 'Barlow Condensed',sans-serif;letter-spacing:.12em;color:#8B909B">MID · RECENT</div>
+        <div style="font:800 24px/1 'Barlow Condensed',sans-serif;margin-top:6px">HEX</div>
+        <div style="font:600 12px Barlow,sans-serif;color:#8B909B;margin-top:3px">&nbsp;</div>
+        <div style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.08em;color:#B7BBC6;margin-top:8px">5 / 5 / -1 / 1</div>
+      </div>
+      <div style="background:#101216;border:1px solid #232733;border-radius:14px;padding:14px 14px 12px">
+        <div style="font:700 11px 'Barlow Condensed',sans-serif;letter-spacing:.12em;color:#8B909B">P&amp;A · RECENT</div>
+        <div style="font:800 24px/1 'Barlow Condensed',sans-serif;margin-top:6px">ZONE</div>
+        <div style="font:600 12px Barlow,sans-serif;color:#8B909B;margin-top:3px">&nbsp;</div>
+        <div style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.08em;color:#B7BBC6;margin-top:8px">4 / 3 / 0 / 3</div>
+      </div>
+      <div style="background:#101216;border:1px solid #232733;border-radius:14px;padding:14px 14px 12px">
+        <div style="font:700 11px 'Barlow Condensed',sans-serif;letter-spacing:.12em;color:#8B909B">P&amp;A</div>
+        <div style="font:800 24px/1 'Barlow Condensed',sans-serif;margin-top:6px">JUDGE</div>
+        <div style="font:600 12px Barlow,sans-serif;color:#8B909B;margin-top:3px">&nbsp;</div>
+        <div style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.08em;color:#B7BBC6;margin-top:8px">2 / 4 / 0 / 1</div>
+      </div>
+      <div style="background:#101216;border:1px solid #232733;border-radius:14px;padding:14px 14px 12px">
+        <div style="font:700 11px 'Barlow Condensed',sans-serif;letter-spacing:.12em;color:#8B909B">DD</div>
+        <div style="font:800 24px/1 'Barlow Condensed',sans-serif;margin-top:6px">BIG D</div>
+        <div style="font:600 12px Barlow,sans-serif;color:#8B909B;margin-top:3px">Destroyer</div>
+        <div style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.08em;color:#B7BBC6;margin-top:8px">12 / 5 / -1 / 3</div>
+      </div>
+      <div style="background:#101216;border:1px solid #232733;border-radius:14px;padding:14px 14px 12px">
+        <div style="font:700 11px 'Barlow Condensed',sans-serif;letter-spacing:.12em;color:#8B909B">DD</div>
+        <div style="font:800 24px/1 'Barlow Condensed',sans-serif;margin-top:6px">WRAITH</div>
+        <div style="font:600 12px Barlow,sans-serif;color:#8B909B;margin-top:3px">&nbsp;</div>
+        <div style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.08em;color:#B7BBC6;margin-top:8px">11 / 5 / -1 / 3</div>
+      </div>
+    </div>
+    <div style="text-align:center;font:600 13px Barlow,sans-serif;color:#5c6270;padding:12px 0 16px">Shelved discs aren't shown · manage in My Bag</div>
+  </div>
+</div>
+</div></div>
+</div>
+<p class="dv-next">Try next: "go with <a class="dv-oid" href="#4a">4a</a>" · "add search to <a class="dv-oid" href="#4b">4b</a>" · "show the Play layout picker + confirm-delete patterns"</p>
+</section>
+
+<section class="dv-turn" id="t3">
+<div class="dv-thd"><a class="dv-tid" href="#t3">3</a><span class="dv-tname"><a class="dv-oid" href="#2a">2a</a> with Plan B expanded — Plan A collapses to a one-liner, B takes the stage</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="3a"><div class="dv-olabel"><a class="dv-oid" href="#3a">3a</a>Expanded state — tap the strip again (or ⌄) to collapse back</div>
+<div class="dv-card" style="width:390px">
+<div data-screen-label="Play 3a Plan B open" style="width:390px;height:844px;background:#F6F7F4;display:flex;flex-direction:column;color:#101312">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0">
+    <span style="background:#0E8C8C;color:#fff;font:700 13px/1 'Barlow Condensed',sans-serif;letter-spacing:.12em;padding:6px 10px;border-radius:6px">PLAY</span>
+    <span style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.12em;color:#9aa29e">MAPLE HILL · LONG</span>
+    <span style="font:600 14px Barlow,sans-serif;color:#5c6663">✕</span>
+  </div>
+  <div style="padding:22px 24px 0">
+    <div style="display:flex;align-items:baseline;gap:14px">
+      <span style="font:800 58px/0.9 'Barlow Condensed',sans-serif">7</span>
+      <span style="font:600 17px Barlow,sans-serif;color:#5c6663">PAR 3 · 285 FT</span>
+    </div>
+  </div>
+  <div style="margin:18px 20px 0;background:#fff;border:2px solid #e0e3de;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;opacity:.75">
+    <span style="background:#e0e3de;color:#5c6663;font:800 14px 'Barlow Condensed',sans-serif;letter-spacing:.1em;padding:5px 9px;border-radius:6px;flex:none">PLAN A</span>
+    <span style="font:700 17px Barlow,sans-serif;color:#101312;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Raskolnikov · FH Flex</span>
+    <span style="font:800 20px 'Barlow Condensed',sans-serif;color:#9aa29e">⌄</span>
+  </div>
+  <div style="flex:1;margin:12px 20px 10px;background:#101312;color:#fff;border-radius:18px;padding:24px 24px 20px;display:flex;flex-direction:column;box-shadow:0 10px 28px rgba(16,19,18,.25)">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <span style="background:#FDF1D7;color:#6b5a1e;font:800 14px 'Barlow Condensed',sans-serif;letter-spacing:.12em;padding:6px 10px;border-radius:6px">PLAN B</span>
+      <span style="font:800 17px 'Barlow Condensed',sans-serif;letter-spacing:.12em;color:#FDF1D7">INTO THE WIND</span>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:18px">
+      <div>
+        <div style="font:800 62px/0.95 'Barlow Condensed',sans-serif;letter-spacing:.01em">ZONE</div>
+        <div style="font:600 15px Barlow,sans-serif;color:#9aa29e;margin-top:6px">P&amp;A</div>
+      </div>
+      <div style="display:inline-flex;align-self:flex-start;background:#0E8C8C;color:#fff;font:700 26px/1 'Barlow Condensed',sans-serif;letter-spacing:.06em;padding:12px 18px;border-radius:10px">FH ROLLER</div>
+      <div style="font:600 25px/1.35 Barlow,sans-serif;color:#fff;text-wrap:pretty">Stand it up on the right line, low under the wind. Dies right at the end — aim left of the pole.</div>
+    </div>
+    <div style="text-align:center;font:800 20px 'Barlow Condensed',sans-serif;color:#5c6663">⌄</div>
+  </div>
+  <div style="display:flex;gap:10px;padding:0 20px 14px">
+    <div style="flex:0 0 84px;height:96px;border-radius:14px;border:2px solid #d4d8d3;display:flex;align-items:center;justify-content:center;font:700 24px 'Barlow Condensed',sans-serif;color:#8a938f">‹ 6</div>
+    <div style="flex:1;height:96px;border-radius:14px;background:#101312;color:#fff;display:flex;align-items:center;justify-content:center;gap:12px;font:800 30px 'Barlow Condensed',sans-serif;letter-spacing:.05em">HOLE 8 <span style="font-size:26px">›</span></div>
+  </div>
+  <div style="text-align:center;font:600 12px Barlow,sans-serif;color:#9aa29e;padding-bottom:14px">or swipe anywhere</div>
+</div>
+</div></div>
+</div>
+<p class="dv-next">Try next: "make Plan B light instead of dark" · "build the disc-picker sheet" · "show the Play layout picker + confirm-delete patterns"</p>
+</section>
+
+<section class="dv-turn" id="t2">
+<div class="dv-thd"><a class="dv-tid" href="#t2">2</a><span class="dv-tname">Play card riffs — Plan B affordance + course/layout demoted to a caption</span></div>
+<div class="dv-opts">
+
+<!-- 2a: 1a + Plan B peek strip -->
+<div class="dv-opt" id="2a"><div class="dv-olabel"><a class="dv-oid" href="#2a">2a</a>From <a class="dv-oid" href="#1a">1a</a> — collapsed Plan B strip above the nav; tap to swap</div>
+<div class="dv-card" style="width:390px">
+<div data-screen-label="Play 2a" style="width:390px;height:844px;background:#F6F7F4;display:flex;flex-direction:column;color:#101312">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0">
+    <span style="background:#0E8C8C;color:#fff;font:700 13px/1 'Barlow Condensed',sans-serif;letter-spacing:.12em;padding:6px 10px;border-radius:6px">PLAY</span>
+    <span style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.12em;color:#9aa29e">MAPLE HILL · LONG</span>
+    <span style="font:600 14px Barlow,sans-serif;color:#5c6663">✕</span>
+  </div>
+  <div style="padding:22px 24px 0">
+    <div style="display:flex;align-items:baseline;gap:14px">
+      <span style="font:800 58px/0.9 'Barlow Condensed',sans-serif">7</span>
+      <span style="font:600 17px Barlow,sans-serif;color:#5c6663">PAR 3 · 285 FT</span>
+    </div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 24px;gap:18px">
+    <div>
+      <div style="font:800 62px/0.95 'Barlow Condensed',sans-serif;letter-spacing:.01em">RASKOLNIKOV</div>
+      <div style="font:600 15px Barlow,sans-serif;color:#5c6663;margin-top:6px">Firebird · FWD</div>
+    </div>
+    <div style="display:inline-flex;align-self:flex-start;background:#0E8C8C;color:#fff;font:700 26px/1 'Barlow Condensed',sans-serif;letter-spacing:.06em;padding:12px 18px;border-radius:10px">FH FLEX</div>
+    <div style="font:600 27px/1.3 Barlow,sans-serif;color:#101312;text-wrap:pretty">Right edge of the gap, let it fade back to the basket. OB left — don't flip it.</div>
+  </div>
+  <div style="margin:0 20px 10px;background:#fff;border:2px solid #d4d8d3;border-radius:14px;padding:12px 16px;display:flex;align-items:center;gap:12px">
+    <span style="background:#101312;color:#fff;font:800 14px 'Barlow Condensed',sans-serif;letter-spacing:.1em;padding:5px 9px;border-radius:6px;flex:none">PLAN B</span>
+    <span style="font:600 15px Barlow,sans-serif;color:#5c6663;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Into the wind → Zone, FH roller</span>
+    <span style="font:800 20px 'Barlow Condensed',sans-serif;color:#9aa29e">⌃</span>
+  </div>
+  <div style="display:flex;gap:10px;padding:0 20px 14px">
+    <div style="flex:0 0 84px;height:96px;border-radius:14px;border:2px solid #d4d8d3;display:flex;align-items:center;justify-content:center;font:700 24px 'Barlow Condensed',sans-serif;color:#8a938f">‹ 6</div>
+    <div style="flex:1;height:96px;border-radius:14px;background:#101312;color:#fff;display:flex;align-items:center;justify-content:center;gap:12px;font:800 30px 'Barlow Condensed',sans-serif;letter-spacing:.05em">HOLE 8 <span style="font-size:26px">›</span></div>
+  </div>
+  <div style="text-align:center;font:600 12px Barlow,sans-serif;color:#9aa29e;padding-bottom:14px">or swipe anywhere</div>
+</div>
+</div></div>
+
+<!-- 2b: A|B toggle -->
+<div class="dv-opt" id="2b"><div class="dv-olabel"><a class="dv-oid" href="#2b">2b</a>From <a class="dv-oid" href="#1b">1b</a> — A / B segmented toggle in the banner (B shown)</div>
+<div class="dv-card" style="width:390px">
+<div data-screen-label="Play 2b" style="width:390px;height:844px;background:#FBFBF9;display:flex;flex-direction:column;color:#101312">
+  <div style="background:#0E8C8C;color:#fff;padding:18px 20px 16px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span style="font:700 12px/1 'Barlow Condensed',sans-serif;letter-spacing:.14em;opacity:.75">PLAY · MAPLE HILL LONG</span>
+      <span style="font:600 14px Barlow,sans-serif;opacity:.85">✕</span>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
+      <div style="display:flex;align-items:baseline;gap:12px">
+        <span style="font:800 56px/0.9 'Barlow Condensed',sans-serif">HOLE 7</span>
+        <span style="font:600 15px Barlow,sans-serif;opacity:.9">PAR 3 · 285 FT</span>
+      </div>
+      <div style="display:flex;background:rgba(0,0,0,.22);border-radius:11px;padding:4px">
+        <span style="font:800 20px 'Barlow Condensed',sans-serif;padding:8px 16px;border-radius:8px;color:rgba(255,255,255,.7)">A</span>
+        <span style="font:800 20px 'Barlow Condensed',sans-serif;padding:8px 16px;border-radius:8px;background:#fff;color:#0E8C8C">B</span>
+      </div>
+    </div>
+  </div>
+  <div style="background:#FDF1D7;color:#6b5a1e;font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.12em;text-align:center;padding:9px">PLAN B — INTO THE WIND</div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:22px;padding:0 26px;text-align:center">
+    <div>
+      <div style="font:700 15px 'Barlow Condensed',sans-serif;letter-spacing:.18em;color:#8a938f">THROW</div>
+      <div style="font:800 66px/0.95 'Barlow Condensed',sans-serif;margin-top:4px">ZONE</div>
+      <div style="font:700 30px 'Barlow Condensed',sans-serif;color:#0E8C8C;letter-spacing:.05em;margin-top:8px">FOREHAND ROLLER</div>
+    </div>
+    <div style="height:2px;background:#e4e7e2;margin:0 30px"></div>
+    <div style="font:600 25px/1.35 Barlow,sans-serif;text-wrap:pretty">Stand it up on the right line, low under the wind. Dies right at the end — aim left of the pole.</div>
+  </div>
+  <div style="display:flex;height:120px;border-top:2px solid #e4e7e2">
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;font:800 44px 'Barlow Condensed',sans-serif;color:#c2c8c3;border-right:2px solid #e4e7e2">‹</div>
+    <div style="flex:2;display:flex;align-items:center;justify-content:center;font:800 44px 'Barlow Condensed',sans-serif;color:#0E8C8C;background:#EAF4F2">›</div>
+  </div>
+</div>
+</div></div>
+
+<!-- 2c: card stack peek -->
+<div class="dv-opt" id="2c"><div class="dv-olabel"><a class="dv-oid" href="#2c">2c</a>From <a class="dv-oid" href="#1c">1c</a> — Plan B as a second card peeking beneath; swipe up</div>
+<div class="dv-card" style="width:390px">
+<div data-screen-label="Play 2c" style="width:390px;height:844px;background:#E8EAE6;display:flex;flex-direction:column;color:#101312;padding:16px 14px 0;box-sizing:border-box">
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:2px 8px 12px">
+    <span style="font:700 13px 'Barlow Condensed',sans-serif;letter-spacing:.14em;color:#0E8C8C">● PLAY</span>
+    <span style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.12em;color:#9aa29e">MAPLE HILL · LONG</span>
+    <span style="font:600 14px Barlow,sans-serif;color:#7d857f">✕</span>
+  </div>
+  <div style="flex:1;background:#fff;border-radius:18px;box-shadow:0 8px 24px rgba(16,19,18,.12);display:flex;flex-direction:column;padding:26px 26px 22px;box-sizing:border-box;position:relative">
+    <div style="position:absolute;top:0;right:26px;background:#101312;color:#fff;border-radius:0 0 10px 10px;padding:12px 16px 10px;text-align:center">
+      <div style="font:800 40px/0.9 'Barlow Condensed',sans-serif">7</div>
+      <div style="font:700 11px 'Barlow Condensed',sans-serif;letter-spacing:.1em;color:#9aa29e">OF 18</div>
+    </div>
+    <div style="font:700 15px 'Barlow Condensed',sans-serif;letter-spacing:.14em;color:#8a938f">PAR 3 — 285 FT</div>
+    <div style="margin-top:24px">
+      <div style="font:800 60px/0.95 'Barlow Condensed',sans-serif;border-bottom:6px solid #0E8C8C;display:inline-block;padding-bottom:6px">RASKOLNIKOV</div>
+      <div style="font:700 26px 'Barlow Condensed',sans-serif;letter-spacing:.06em;margin-top:14px">FH FLEX</div>
+    </div>
+    <div style="flex:1;display:flex;align-items:center">
+      <div style="font:600 26px/1.35 Barlow,sans-serif;text-wrap:pretty">Right edge of the gap, let it fade back to the basket. <span style="background:#FDF1D7;box-decoration-break:clone;-webkit-box-decoration-break:clone;padding:0 4px">OB left — don't flip it.</span></div>
+    </div>
+  </div>
+  <div style="margin:-6px 24px 0;background:#101312;color:#fff;border-radius:14px 14px 0 0;padding:12px 18px 22px;display:flex;align-items:center;gap:12px;box-shadow:0 -4px 16px rgba(16,19,18,.18)">
+    <span style="font:800 20px 'Barlow Condensed',sans-serif;color:#9aa29e">⌃</span>
+    <span style="font:800 14px 'Barlow Condensed',sans-serif;letter-spacing:.12em;color:#FDF1D7;flex:none">PLAN B</span>
+    <span style="font:600 14px Barlow,sans-serif;color:#c2c8c3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Into the wind → Zone, FH roller — swipe up</span>
+  </div>
+  <div style="display:flex;align-items:center;justify-content:center;gap:16px;height:64px;background:#E8EAE6">
+    <span style="font:800 26px 'Barlow Condensed',sans-serif;color:#7d857f">‹</span>
+    <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.2em;color:#7d857f">SWIPE</span>
+    <span style="font:800 26px 'Barlow Condensed',sans-serif;color:#7d857f">›</span>
+  </div>
+</div>
+</div></div>
+</div>
+<p class="dv-next">Try next: "expand <a class="dv-oid" href="#2c">2c</a> with the Plan B card fully open" · "put <a class="dv-oid" href="#2a">2a</a>'s strip into <a class="dv-oid" href="#2b">2b</a>" · "settle on one and build the disc-picker sheet"</p>
+</section>
+
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">ShotCaller V2 — full app, dark shell + sunlight Play mode</span></div>
+
+<div style="max-width:760px;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:22px 26px;margin:0 0 26px;font-size:13px;line-height:1.55;color:#333">
+  <div style="font-weight:700;font-size:14px;margin-bottom:8px;color:#111">System</div>
+  <div style="display:flex;gap:22px;flex-wrap:wrap;margin-bottom:10px">
+    <div style="display:flex;align-items:center;gap:8px"><span style="width:26px;height:26px;border-radius:7px;background:#5B4FC7;display:inline-block"></span><b>PLAN</b>&nbsp;indigo — calm, at-home authoring</div>
+    <div style="display:flex;align-items:center;gap:8px"><span style="width:26px;height:26px;border-radius:7px;background:#0E8C8C;display:inline-block"></span><b>PLAY</b>&nbsp;teal — on-course reading</div>
+  </div>
+  <div><b>Type:</b> Barlow Condensed (disc names, numerals, headers) + Barlow (UI). <b>Theme:</b> dark shell everywhere; Play mode flips to a high-contrast light theme (glare-first). <b>Nav:</b> swipe to advance in Play, backed by giant tap zones — both, no dropdowns. <b>IA:</b> Home → (Plan) Courses → Layout → Hole card; Home → (Play) pick layout → caddie cards; Bag + About off Home. <b>Future-proofing:</b> tee-photo slot reserved on the Plan card and under the Play card; Plan B slots beneath the primary line in both modes.</div>
+</div>
+
+<div class="dv-h">Play mode — the caddie card, 3 directions (hole 7, same plan)</div>
+<div class="dv-opts">
+
+<!-- 1a Caddie sentence -->
+<div class="dv-opt" id="1a"><div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Caddie sentence — stacked, giant NEXT bar</div>
+<div class="dv-card" style="width:390px">
+<div data-screen-label="Play 1a" style="width:390px;height:844px;background:#F6F7F4;display:flex;flex-direction:column;color:#101312">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:22px 20px 0">
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="background:#0E8C8C;color:#fff;font:700 13px/1 'Barlow Condensed',sans-serif;letter-spacing:.12em;padding:6px 10px;border-radius:6px">PLAY</span>
+      <span style="font:600 14px Barlow,sans-serif;color:#5c6663">Maple Hill · Long</span>
+    </div>
+    <span style="font:600 14px Barlow,sans-serif;color:#5c6663">✕</span>
+  </div>
+  <div style="padding:26px 24px 0">
+    <div style="display:flex;align-items:baseline;gap:14px">
+      <span style="font:800 58px/0.9 'Barlow Condensed',sans-serif">7</span>
+      <span style="font:600 17px Barlow,sans-serif;color:#5c6663">PAR 3 · 285 FT</span>
+    </div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 24px;gap:18px">
+    <div>
+      <div style="font:800 62px/0.95 'Barlow Condensed',sans-serif;letter-spacing:.01em">RASKOLNIKOV</div>
+      <div style="font:600 15px Barlow,sans-serif;color:#5c6663;margin-top:6px">Firebird · FWD</div>
+    </div>
+    <div style="display:inline-flex;align-self:flex-start;background:#0E8C8C;color:#fff;font:700 26px/1 'Barlow Condensed',sans-serif;letter-spacing:.06em;padding:12px 18px;border-radius:10px">FH FLEX</div>
+    <div style="font:600 27px/1.3 Barlow,sans-serif;color:#101312;text-wrap:pretty">Right edge of the gap, let it fade back to the basket. OB left — don't flip it.</div>
+  </div>
+  <div style="display:flex;gap:10px;padding:0 20px 14px">
+    <div style="flex:0 0 84px;height:96px;border-radius:14px;border:2px solid #d4d8d3;display:flex;align-items:center;justify-content:center;font:700 24px 'Barlow Condensed',sans-serif;color:#8a938f">‹ 6</div>
+    <div style="flex:1;height:96px;border-radius:14px;background:#101312;color:#fff;display:flex;align-items:center;justify-content:center;gap:12px;font:800 30px 'Barlow Condensed',sans-serif;letter-spacing:.05em">HOLE 8 <span style="font-size:26px">›</span></div>
+  </div>
+  <div style="text-align:center;font:600 12px Barlow,sans-serif;color:#9aa29e;padding-bottom:16px">or swipe anywhere</div>
+</div>
+</div></div>
+
+<!-- 1b Teal header split -->
+<div class="dv-opt" id="1b"><div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Split banner — hole strip on top, edge tap zones</div>
+<div class="dv-card" style="width:390px">
+<div data-screen-label="Play 1b" style="width:390px;height:844px;background:#FBFBF9;display:flex;flex-direction:column;color:#101312;position:relative">
+  <div style="background:#0E8C8C;color:#fff;padding:20px 20px 18px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span style="font:700 13px/1 'Barlow Condensed',sans-serif;letter-spacing:.14em;opacity:.85">PLAY · MAPLE HILL LONG</span>
+      <span style="font:600 14px Barlow,sans-serif;opacity:.85">✕</span>
+    </div>
+    <div style="display:flex;align-items:baseline;gap:12px;margin-top:10px">
+      <span style="font:800 64px/0.9 'Barlow Condensed',sans-serif">HOLE 7</span>
+      <span style="font:600 16px Barlow,sans-serif;opacity:.9">PAR 3 · 285 FT</span>
+    </div>
+    <div style="display:flex;gap:4px;margin-top:14px">
+      <span style="flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.95)"></span><span style="flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.95)"></span><span style="flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.95)"></span><span style="flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.95)"></span><span style="flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.95)"></span><span style="flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.95)"></span><span style="flex:1;height:6px;border-radius:3px;background:#fff;outline:2px solid #fff"></span><span style="flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.35)"></span><span style="flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.35)"></span><span style="flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.35)"></span><span style="flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.35)"></span><span style="flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.35)"></span><span style="flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.35)"></span><span style="flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.35)"></span><span style="flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.35)"></span><span style="flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.35)"></span><span style="flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.35)"></span><span style="flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.35)"></span>
+    </div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:22px;padding:0 26px;text-align:center">
+    <div>
+      <div style="font:700 15px 'Barlow Condensed',sans-serif;letter-spacing:.18em;color:#8a938f">THROW</div>
+      <div style="font:800 66px/0.95 'Barlow Condensed',sans-serif;margin-top:4px">RASKOLNIKOV</div>
+      <div style="font:700 30px 'Barlow Condensed',sans-serif;color:#0E8C8C;letter-spacing:.05em;margin-top:8px">FOREHAND FLEX</div>
+    </div>
+    <div style="height:2px;background:#e4e7e2;margin:0 30px"></div>
+    <div style="font:600 25px/1.35 Barlow,sans-serif;text-wrap:pretty">Right edge of the gap, let it fade back to the basket. OB left — don't flip it.</div>
+  </div>
+  <div style="display:flex;height:120px;border-top:2px solid #e4e7e2">
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;font:800 44px 'Barlow Condensed',sans-serif;color:#c2c8c3;border-right:2px solid #e4e7e2">‹</div>
+    <div style="flex:2;display:flex;align-items:center;justify-content:center;font:800 44px 'Barlow Condensed',sans-serif;color:#0E8C8C;background:#EAF4F2">›</div>
+  </div>
+</div>
+</div></div>
+
+<!-- 1c Index card -->
+<div class="dv-opt" id="1c"><div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Index card — laminated-card minimalism, swipe-first</div>
+<div class="dv-card" style="width:390px">
+<div data-screen-label="Play 1c" style="width:390px;height:844px;background:#E8EAE6;display:flex;flex-direction:column;color:#101312;padding:18px 14px 0;box-sizing:border-box">
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:2px 8px 14px">
+    <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.14em;color:#0E8C8C">● PLAY — MAPLE HILL LONG</span>
+    <span style="font:600 14px Barlow,sans-serif;color:#7d857f">✕</span>
+  </div>
+  <div style="flex:1;background:#fff;border-radius:18px;box-shadow:0 8px 24px rgba(16,19,18,.12);display:flex;flex-direction:column;padding:26px 26px 22px;box-sizing:border-box;position:relative">
+    <div style="position:absolute;top:0;right:26px;background:#101312;color:#fff;border-radius:0 0 10px 10px;padding:12px 16px 10px;text-align:center">
+      <div style="font:800 40px/0.9 'Barlow Condensed',sans-serif">7</div>
+      <div style="font:700 11px 'Barlow Condensed',sans-serif;letter-spacing:.1em;color:#9aa29e">OF 18</div>
+    </div>
+    <div style="font:700 15px 'Barlow Condensed',sans-serif;letter-spacing:.14em;color:#8a938f">PAR 3 — 285 FT</div>
+    <div style="margin-top:26px">
+      <div style="font:800 62px/0.95 'Barlow Condensed',sans-serif;border-bottom:6px solid #0E8C8C;display:inline-block;padding-bottom:6px">RASKOLNIKOV</div>
+      <div style="font:700 26px 'Barlow Condensed',sans-serif;letter-spacing:.06em;margin-top:14px">FH FLEX</div>
+    </div>
+    <div style="flex:1;display:flex;align-items:center">
+      <div style="font:600 26px/1.35 Barlow,sans-serif;text-wrap:pretty">Right edge of the gap, let it fade back to the basket. <span style="background:#FDF1D7;box-decoration-break:clone;-webkit-box-decoration-break:clone;padding:0 4px">OB left — don't flip it.</span></div>
+    </div>
+    <div style="border-top:2px dashed #e0e3de;padding-top:14px;display:flex;justify-content:space-between;align-items:center">
+      <span style="font:600 13px Barlow,sans-serif;color:#9aa29e">Tee photo — coming soon</span>
+      <span style="font:600 13px Barlow,sans-serif;color:#9aa29e">Plan B slot</span>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;justify-content:center;gap:16px;height:76px">
+    <span style="font:800 26px 'Barlow Condensed',sans-serif;color:#7d857f">‹</span>
+    <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.2em;color:#7d857f">SWIPE</span>
+    <span style="font:800 26px 'Barlow Condensed',sans-serif;color:#7d857f">›</span>
+  </div>
+</div>
+</div></div>
+</div>
+
+<div class="dv-h">Plan mode + shell (dark, indigo)</div>
+<div class="dv-opts">
+
+<!-- 1d Home -->
+<div class="dv-opt" id="1d"><div class="dv-olabel"><a class="dv-oid" href="#1d">1d</a>Home — two modes + resume</div>
+<div class="dv-card" style="width:390px">
+<div data-screen-label="Home" style="width:390px;height:844px;background:#101216;display:flex;flex-direction:column;color:#EDEEF2;padding:26px 20px 20px;box-sizing:border-box">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <div style="font:800 26px 'Barlow Condensed',sans-serif;letter-spacing:.04em">SHOTCALLER</div>
+    <span style="font:600 13px Barlow,sans-serif;color:#8B909B">About</span>
+  </div>
+  <div style="font:600 13px Barlow,sans-serif;color:#8B909B;margin-top:2px">You call the shots.</div>
+  <div style="margin-top:28px;background:#171A20;border:1px solid #232733;border-radius:16px;padding:18px 18px 16px">
+    <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#0E8C8C">RESUME ROUND</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+      <div>
+        <div style="font:700 20px Barlow,sans-serif">Maple Hill · Long</div>
+        <div style="font:600 13px Barlow,sans-serif;color:#8B909B;margin-top:2px">On hole 7 of 18</div>
+      </div>
+      <div style="background:#0E8C8C;color:#fff;border-radius:10px;padding:12px 18px;font:800 20px 'Barlow Condensed',sans-serif;letter-spacing:.06em">PLAY ›</div>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:14px;margin-top:22px;flex:1">
+    <div style="flex:1;border-radius:18px;background:linear-gradient(160deg,#5B4FC7,#4A3FA8);padding:22px;display:flex;flex-direction:column;justify-content:space-between">
+      <div style="font:800 40px/1 'Barlow Condensed',sans-serif;color:#fff">PLAN</div>
+      <div>
+        <div style="font:600 15px/1.4 Barlow,sans-serif;color:rgba(255,255,255,.85)">Build a hole-by-hole game plan at home.</div>
+        <div style="font:700 16px Barlow,sans-serif;color:#fff;margin-top:10px">Open courses ›</div>
+      </div>
+    </div>
+    <div style="flex:1;border-radius:18px;background:linear-gradient(160deg,#0E8C8C,#0A6E6E);padding:22px;display:flex;flex-direction:column;justify-content:space-between">
+      <div style="font:800 40px/1 'Barlow Condensed',sans-serif;color:#fff">PLAY</div>
+      <div>
+        <div style="font:600 15px/1.4 Barlow,sans-serif;color:rgba(255,255,255,.85)">Read your plan on the tee. One glance, one throw.</div>
+        <div style="font:700 16px Barlow,sans-serif;color:#fff;margin-top:10px">Pick a layout ›</div>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;justify-content:center;gap:10px;margin-top:18px">
+    <div style="flex:1;background:#171A20;border:1px solid #232733;border-radius:12px;padding:14px;text-align:center;font:700 16px Barlow,sans-serif">My Bag <span style="color:#8B909B;font-weight:600">· 14 discs</span></div>
+  </div>
+</div>
+</div></div>
+
+<!-- 1e Courses -->
+<div class="dv-opt" id="1e"><div class="dv-olabel"><a class="dv-oid" href="#1e">1e</a>Courses & layouts — active first</div>
+<div class="dv-card" style="width:390px">
+<div data-screen-label="Courses" style="width:390px;height:844px;background:#101216;display:flex;flex-direction:column;color:#EDEEF2;padding:26px 20px 20px;box-sizing:border-box">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="font:600 15px Barlow,sans-serif;color:#8B909B">‹ Home</span>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:14px">
+    <div style="font:800 34px 'Barlow Condensed',sans-serif;letter-spacing:.03em">COURSES</div>
+    <span style="background:#5B4FC7;color:#fff;font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.1em;padding:6px 10px;border-radius:6px">PLAN</span>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:12px;margin-top:18px;flex:1">
+    <div style="background:#171A20;border:1px solid #5B4FC7;border-radius:16px;padding:16px 18px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="font:700 20px Barlow,sans-serif">Maple Hill</div>
+        <span style="font:700 11px 'Barlow Condensed',sans-serif;letter-spacing:.12em;color:#8B909B">3 LAYOUTS</span>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+        <span style="background:#5B4FC7;color:#fff;font:700 15px Barlow,sans-serif;padding:9px 14px;border-radius:999px">Long · 18 ✓</span>
+        <span style="background:#232733;color:#EDEEF2;font:600 15px Barlow,sans-serif;padding:9px 14px;border-radius:999px">Short · 18</span>
+        <span style="background:#232733;color:#EDEEF2;font:600 15px Barlow,sans-serif;padding:9px 14px;border-radius:999px">Tournament · 18</span>
+      </div>
+      <div style="font:600 12px Barlow,sans-serif;color:#8B909B;margin-top:10px">Most recent — planned 16 / 18 holes</div>
+    </div>
+    <div style="background:#171A20;border:1px solid #232733;border-radius:16px;padding:16px 18px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="font:700 20px Barlow,sans-serif">Pyramids (Borderland)</div>
+        <span style="font:700 11px 'Barlow Condensed',sans-serif;letter-spacing:.12em;color:#8B909B">1 LAYOUT</span>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <span style="background:#232733;color:#EDEEF2;font:600 15px Barlow,sans-serif;padding:9px 14px;border-radius:999px">Main · 18</span>
+      </div>
+    </div>
+    <div style="background:#171A20;border:1px solid #232733;border-radius:16px;padding:16px 18px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="font:700 20px Barlow,sans-serif">Devens DGC</div>
+        <span style="font:700 11px 'Barlow Condensed',sans-serif;letter-spacing:.12em;color:#8B909B">2 LAYOUTS</span>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <span style="background:#232733;color:#EDEEF2;font:600 15px Barlow,sans-serif;padding:9px 14px;border-radius:999px">Whites · 18</span>
+        <span style="background:#232733;color:#EDEEF2;font:600 15px Barlow,sans-serif;padding:9px 14px;border-radius:999px">Blues · 18</span>
+      </div>
+    </div>
+  </div>
+  <div style="background:#5B4FC7;border-radius:14px;padding:16px;text-align:center;font:800 20px 'Barlow Condensed',sans-serif;letter-spacing:.08em;color:#fff">+ NEW COURSE</div>
+</div>
+</div></div>
+
+<!-- 1f Layout holes -->
+<div class="dv-opt" id="1f"><div class="dv-olabel"><a class="dv-oid" href="#1f">1f</a>Layout → holes — plan coverage at a glance</div>
+<div class="dv-card" style="width:390px">
+<div data-screen-label="Layout holes" style="width:390px;height:844px;background:#101216;display:flex;flex-direction:column;color:#EDEEF2;padding:26px 20px 20px;box-sizing:border-box">
+  <span style="font:600 15px Barlow,sans-serif;color:#8B909B">‹ Maple Hill</span>
+  <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:14px">
+    <div>
+      <div style="font:800 34px 'Barlow Condensed',sans-serif;letter-spacing:.03em">LONG LAYOUT</div>
+      <div style="font:600 13px Barlow,sans-serif;color:#8B909B;margin-top:2px">16 of 18 holes planned</div>
+    </div>
+    <span style="background:#5B4FC7;color:#fff;font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.1em;padding:6px 10px;border-radius:6px">PLAN</span>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px;flex:1;align-content:start">
+    <div style="background:#171A20;border:1px solid #232733;border-radius:12px;padding:12px 12px 10px"><div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:800 24px 'Barlow Condensed',sans-serif">1</span><span style="font:600 11px Barlow,sans-serif;color:#8B909B">P3·310</span></div><div style="font:600 12px Barlow,sans-serif;color:#B7BBC6;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Zone · BH Hyzer</div></div>
+    <div style="background:#171A20;border:1px solid #232733;border-radius:12px;padding:12px 12px 10px"><div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:800 24px 'Barlow Condensed',sans-serif">2</span><span style="font:600 11px Barlow,sans-serif;color:#8B909B">P4·520</span></div><div style="font:600 12px Barlow,sans-serif;color:#B7BBC6;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Hex · BH Flat</div></div>
+    <div style="background:#171A20;border:1px solid #232733;border-radius:12px;padding:12px 12px 10px"><div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:800 24px 'Barlow Condensed',sans-serif">3</span><span style="font:600 11px Barlow,sans-serif;color:#8B909B">P3·265</span></div><div style="font:600 12px Barlow,sans-serif;color:#B7BBC6;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Judge · BH Flat</div></div>
+    <div style="background:#171A20;border:1px solid #232733;border-radius:12px;padding:12px 12px 10px"><div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:800 24px 'Barlow Condensed',sans-serif">4</span><span style="font:600 11px Barlow,sans-serif;color:#8B909B">P3·340</span></div><div style="font:600 12px Barlow,sans-serif;color:#B7BBC6;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Raskolnikov · FH…</div></div>
+    <div style="background:transparent;border:1px dashed #3a4050;border-radius:12px;padding:12px 12px 10px"><div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:800 24px 'Barlow Condensed',sans-serif;color:#8B909B">5</span><span style="font:600 11px Barlow,sans-serif;color:#5c6270">P3·298</span></div><div style="font:600 12px Barlow,sans-serif;color:#5B4FC7;margin-top:6px">+ Plan</div></div>
+    <div style="background:#171A20;border:1px solid #232733;border-radius:12px;padding:12px 12px 10px"><div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:800 24px 'Barlow Condensed',sans-serif">6</span><span style="font:600 11px Barlow,sans-serif;color:#8B909B">P4·610</span></div><div style="font:600 12px Barlow,sans-serif;color:#B7BBC6;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Hex · BH Turnover</div></div>
+    <div style="background:#171A20;border:1px solid #5B4FC7;border-radius:12px;padding:12px 12px 10px"><div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:800 24px 'Barlow Condensed',sans-serif">7</span><span style="font:600 11px Barlow,sans-serif;color:#8B909B">P3·285</span></div><div style="font:600 12px Barlow,sans-serif;color:#B7BBC6;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Raskolnikov · FH…</div></div>
+    <div style="background:#171A20;border:1px solid #232733;border-radius:12px;padding:12px 12px 10px"><div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:800 24px 'Barlow Condensed',sans-serif">8</span><span style="font:600 11px Barlow,sans-serif;color:#8B909B">P3·245</span></div><div style="font:600 12px Barlow,sans-serif;color:#B7BBC6;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Judge · BH Hyzer</div></div>
+    <div style="background:transparent;border:1px dashed #3a4050;border-radius:12px;padding:12px 12px 10px"><div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:800 24px 'Barlow Condensed',sans-serif;color:#8B909B">9</span><span style="font:600 11px Barlow,sans-serif;color:#5c6270">P3·330</span></div><div style="font:600 12px Barlow,sans-serif;color:#5B4FC7;margin-top:6px">+ Plan</div></div>
+  </div>
+  <div style="display:flex;gap:10px">
+    <div style="flex:1;background:#171A20;border:1px solid #232733;border-radius:14px;padding:16px;text-align:center;font:800 19px 'Barlow Condensed',sans-serif;letter-spacing:.08em;color:#EDEEF2">EDIT LAYOUT</div>
+    <div style="flex:1;background:#0E8C8C;border-radius:14px;padding:16px;text-align:center;font:800 19px 'Barlow Condensed',sans-serif;letter-spacing:.08em;color:#fff">▶ PLAY THIS</div>
+  </div>
+</div>
+</div></div>
+
+<!-- 1g Plan a hole -->
+<div class="dv-opt" id="1g"><div class="dv-olabel"><a class="dv-oid" href="#1g">1g</a>Plan a hole — smart card, tap-to-pick</div>
+<div class="dv-card" style="width:390px">
+<div data-screen-label="Plan a hole" style="width:390px;height:844px;background:#101216;display:flex;flex-direction:column;color:#EDEEF2;padding:24px 20px 20px;box-sizing:border-box">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <span style="font:600 15px Barlow,sans-serif;color:#8B909B">‹ Long Layout</span>
+    <span style="background:#5B4FC7;color:#fff;font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.1em;padding:6px 10px;border-radius:6px">PLAN</span>
+  </div>
+  <div style="display:flex;align-items:baseline;gap:12px;margin-top:12px">
+    <span style="font:800 44px/1 'Barlow Condensed',sans-serif">HOLE 7</span>
+    <span style="font:600 15px Barlow,sans-serif;color:#8B909B;white-space:nowrap">Par <b style="color:#EDEEF2">3</b> · <b style="color:#EDEEF2">285</b> ft ✎</span>
+  </div>
+  <div style="margin-top:16px">
+    <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B">DISC — FROM YOUR BAG</div>
+    <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+      <span style="background:#5B4FC7;color:#fff;font:700 15px Barlow,sans-serif;padding:9px 14px;border-radius:999px">Raskolnikov</span>
+      <span style="background:#171A20;border:1px solid #232733;font:600 15px Barlow,sans-serif;padding:9px 14px;border-radius:999px">Hex</span>
+      <span style="background:#171A20;border:1px solid #232733;font:600 15px Barlow,sans-serif;padding:9px 14px;border-radius:999px">Zone</span>
+      <span style="background:#171A20;border:1px solid #232733;font:600 15px Barlow,sans-serif;padding:9px 14px;border-radius:999px">Judge</span>
+      <span style="background:transparent;border:1px dashed #3a4050;color:#8B909B;font:600 15px Barlow,sans-serif;padding:9px 14px;border-radius:999px">All 14 discs…</span>
+    </div>
+  </div>
+  <div style="margin-top:16px">
+    <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B">THROW</div>
+    <div style="display:flex;background:#171A20;border:1px solid #232733;border-radius:12px;padding:4px;margin-top:8px">
+      <span style="flex:1;text-align:center;font:600 15px Barlow,sans-serif;padding:10px 0;color:#8B909B">Backhand</span>
+      <span style="flex:1;text-align:center;font:700 15px Barlow,sans-serif;padding:10px 0;background:#5B4FC7;border-radius:9px;color:#fff">Forehand</span>
+      <span style="flex:1;text-align:center;font:600 15px Barlow,sans-serif;padding:10px 0;color:#8B909B">Overhand</span>
+    </div>
+  </div>
+  <div style="margin-top:16px">
+    <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B">SHAPE</div>
+    <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+      <span style="background:#171A20;border:1px solid #232733;font:600 14px Barlow,sans-serif;padding:8px 13px;border-radius:999px">Hyzer</span>
+      <span style="background:#171A20;border:1px solid #232733;font:600 14px Barlow,sans-serif;padding:8px 13px;border-radius:999px">Flat</span>
+      <span style="background:#171A20;border:1px solid #232733;font:600 14px Barlow,sans-serif;padding:8px 13px;border-radius:999px">Anhyzer</span>
+      <span style="background:#5B4FC7;color:#fff;font:700 14px Barlow,sans-serif;padding:8px 13px;border-radius:999px">Flex</span>
+      <span style="background:#171A20;border:1px solid #232733;font:600 14px Barlow,sans-serif;padding:8px 13px;border-radius:999px">Turnover</span>
+      <span style="background:#171A20;border:1px solid #232733;font:600 14px Barlow,sans-serif;padding:8px 13px;border-radius:999px">Roller</span>
+      <span style="background:#171A20;border:1px solid #232733;font:600 14px Barlow,sans-serif;padding:8px 13px;border-radius:999px">Spike hyzer</span>
+      <span style="background:#171A20;border:1px solid #232733;font:600 14px Barlow,sans-serif;padding:8px 13px;border-radius:999px">Thumber ⇒OH</span>
+      <span style="background:#171A20;border:1px solid #232733;font:600 14px Barlow,sans-serif;padding:8px 13px;border-radius:999px">Tomahawk ⇒OH</span>
+    </div>
+  </div>
+  <div style="margin-top:16px;flex:1;display:flex;flex-direction:column">
+    <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B">AIM — WHAT WOULD YOUR CADDIE SAY?</div>
+    <div style="flex:1;background:#171A20;border:1px solid #232733;border-radius:12px;padding:14px;margin-top:8px;font:600 17px/1.45 Barlow,sans-serif;color:#EDEEF2">Right edge of the gap, let it fade back to the basket. OB left — don't flip it.</div>
+  </div>
+  <div style="display:flex;gap:10px;margin-top:14px;align-items:stretch">
+    <div style="flex:1;border:1px dashed #3a4050;border-radius:12px;padding:12px;text-align:center;font:600 13px Barlow,sans-serif;color:#8B909B">📷 Add tee photo<br><span style="font-size:11px">coming soon</span></div>
+    <div style="flex:2;background:#5B4FC7;border-radius:12px;display:flex;align-items:center;justify-content:center;font:800 22px 'Barlow Condensed',sans-serif;letter-spacing:.08em;color:#fff">SAVE · NEXT HOLE ›</div>
+  </div>
+</div>
+</div></div>
+
+<!-- 1h Bag -->
+<div class="dv-opt" id="1h"><div class="dv-olabel"><a class="dv-oid" href="#1h">1h</a>My Bag — in-bag first, category groups</div>
+<div class="dv-card" style="width:390px">
+<div data-screen-label="My Bag" style="width:390px;height:844px;background:#101216;display:flex;flex-direction:column;color:#EDEEF2;padding:26px 20px 20px;box-sizing:border-box">
+  <span style="font:600 15px Barlow,sans-serif;color:#8B909B">‹ Home</span>
+  <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:14px">
+    <div style="font:800 34px 'Barlow Condensed',sans-serif;letter-spacing:.03em">MY BAG</div>
+    <span style="font:600 13px Barlow,sans-serif;color:#8B909B">14 in bag · 3 shelved</span>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;margin-top:16px;flex:1">
+    <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B;margin-top:4px">DD — DISTANCE DRIVERS</div>
+    <div style="background:#171A20;border:1px solid #232733;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
+      <div><div style="font:700 17px Barlow,sans-serif">Big D <span style="font-weight:600;color:#8B909B">· Destroyer</span></div></div>
+      <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.06em;color:#8B909B">12 / 5 / -1 / 3</span>
+    </div>
+    <div style="background:#171A20;border:1px solid #232733;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
+      <div><div style="font:700 17px Barlow,sans-serif">Wraith</div></div>
+      <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.06em;color:#8B909B">11 / 5 / -1 / 3</span>
+    </div>
+    <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B;margin-top:10px">FWD — FAIRWAY DRIVERS</div>
+    <div style="background:#171A20;border:1px solid #232733;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
+      <div><div style="font:700 17px Barlow,sans-serif">Raskolnikov <span style="font-weight:600;color:#8B909B">· Firebird</span></div></div>
+      <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.06em;color:#8B909B">9 / 3 / 0 / 4</span>
+    </div>
+    <div style="background:#171A20;border:1px solid #232733;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
+      <div><div style="font:700 17px Barlow,sans-serif">Leopard3</div></div>
+      <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.06em;color:#8B909B">7 / 5 / -2 / 1</span>
+    </div>
+    <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B;margin-top:10px">MID — MIDRANGES</div>
+    <div style="background:#171A20;border:1px solid #232733;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
+      <div><div style="font:700 17px Barlow,sans-serif">Hex</div></div>
+      <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.06em;color:#8B909B">5 / 5 / -1 / 1</span>
+    </div>
+    <div style="font:700 12px 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#8B909B;margin-top:10px">P&amp;A — PUTT &amp; APPROACH</div>
+    <div style="background:#171A20;border:1px solid #232733;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
+      <div><div style="font:700 17px Barlow,sans-serif">Zone</div></div>
+      <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.06em;color:#8B909B">4 / 3 / 0 / 3</span>
+    </div>
+    <div style="background:#171A20;border:1px solid #232733;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
+      <div><div style="font:700 17px Barlow,sans-serif">Judge</div></div>
+      <span style="font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:.06em;color:#8B909B">2 / 4 / 0 / 1</span>
+    </div>
+  </div>
+  <div style="background:#171A20;border:1px solid #232733;border-radius:14px;padding:16px;text-align:center;font:800 19px 'Barlow Condensed',sans-serif;letter-spacing:.08em">+ ADD DISC</div>
+</div>
+</div></div>
+
+<!-- 1i About -->
+<div class="dv-opt" id="1i"><div class="dv-olabel"><a class="dv-oid" href="#1i">1i</a>About — how it works</div>
+<div class="dv-card" style="width:390px">
+<div data-screen-label="About" style="width:390px;height:844px;background:#101216;display:flex;flex-direction:column;color:#EDEEF2;padding:26px 24px;box-sizing:border-box">
+  <span style="font:600 15px Barlow,sans-serif;color:#8B909B">‹ Home</span>
+  <div style="font:800 42px/1 'Barlow Condensed',sans-serif;margin-top:20px">YOU CALL<br>THE SHOTS.</div>
+  <div style="font:600 16px/1.55 Barlow,sans-serif;color:#B7BBC6;margin-top:18px">ShotCaller is your game plan, not your scorecard. UDisc keeps score — we answer one question on every tee: <b style="color:#EDEEF2">what am I throwing, and where?</b></div>
+  <div style="display:flex;flex-direction:column;gap:14px;margin-top:26px">
+    <div style="display:flex;gap:14px;align-items:flex-start">
+      <span style="background:#5B4FC7;color:#fff;border-radius:9px;font:800 18px 'Barlow Condensed',sans-serif;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex:none">1</span>
+      <div><div style="font:700 17px Barlow,sans-serif">Plan at home</div><div style="font:600 14px/1.5 Barlow,sans-serif;color:#8B909B">Pick a disc from your bag, a throw, a shape — then write what your caddie would say.</div></div>
+    </div>
+    <div style="display:flex;gap:14px;align-items:flex-start">
+      <span style="background:#0E8C8C;color:#fff;border-radius:9px;font:800 18px 'Barlow Condensed',sans-serif;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex:none">2</span>
+      <div><div style="font:700 17px Barlow,sans-serif">Play with one glance</div><div style="font:600 14px/1.5 Barlow,sans-serif;color:#8B909B">On the tee, swipe to your hole. Disc, shape, target — readable in the sun, one hand.</div></div>
+    </div>
+    <div style="display:flex;gap:14px;align-items:flex-start">
+      <span style="background:#171A20;border:1px solid #232733;color:#8B909B;border-radius:9px;font:800 18px 'Barlow Condensed',sans-serif;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex:none">3</span>
+      <div><div style="font:700 17px Barlow,sans-serif">Everything stays on your phone</div><div style="font:600 14px/1.5 Barlow,sans-serif;color:#8B909B">No account, no network, no score. Your plan is yours.</div></div>
+    </div>
+  </div>
+</div>
+</div></div>
+</div>
+
+<p class="dv-next">Try next: "go deeper on <a class="dv-oid" href="#1a">1a</a> with the disc picker sheet" · "merge <a class="dv-oid" href="#1c">1c</a>'s card metaphor into <a class="dv-oid" href="#1a">1a</a>'s nav" · "show the Play layout picker + confirm-delete patterns"</p>
+</section>
+
+</x-dc>
+</body>
+</html>

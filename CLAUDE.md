@@ -14,6 +14,36 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 document. `V2_DESIGN_HANDOFF.md` is the UI/design brief. Read both before writing
 code. If a doc and this file disagree, the handoff wins — update CLAUDE.md to match.
 
+## Design source of truth (UI)
+
+**`design_handoff_shotcaller_v2/`** is the delivered, product-owner-approved UI. Its
+`README.md` documents every screen, token, and copy decision; `screens/` has the 13
+canonical PNGs; `ShotCaller V2.dc.html` is the pan/zoom design canvas (exact values).
+Build the UI from this — recreate the designs with RN/Expo patterns, don't port the
+HTML. When a screen is ambiguous in prose, the canvas/PNG wins.
+
+Locked design decisions (these override anything vaguer elsewhere):
+- **Mode colors:** PLAN indigo `#5B4FC7`, PLAY teal `#0E8C8C`. Applied to badges,
+  selected chips/segments, primary buttons, Home mode tiles (gradients per README).
+  Neutral surfaces (Bag, Add disc) use white/neutral selection — never a mode color.
+- **Two themes:** dark shell everywhere (`bg #101216`, card `#171A20`) **except**
+  Play reading surfaces, which use a sunlight-first light theme (`bg #F6F7F4`,
+  ink `#101312`). Full token list in the design README.
+- **Fonts:** Barlow Condensed (display: disc names, hole numerals, titles, labels)
+  + Barlow (body/chips/notes). Add via `@expo-google-fonts/*` + `expo-font`.
+- **Icons:** replace the design's placeholder glyphs with the codebase's icon set
+  (v1 used Ionicons).
+- **Display-name rule (single source of truth):** `displayName = nickname ?? model`;
+  secondary line = `nickname ? "model · category" : "category"`. Never show the model
+  twice.
+- **Courses are NOT deletable** — only layouts and discs are. (Deleting a layout
+  cascades its hole plans; the confirm button restates the cost.)
+- **Discs shelve, not just delete:** `in_bag = false` = shelved (hidden from disc
+  pickers). The delete-disc sheet offers "shelve instead" as the safe first option.
+- **Plan B** (conditional alternative) is designed on the Play caddie card (collapsed
+  strip → dark expanded card) but is a **fast-follow**; MVP may omit the strip.
+  Build the caddie card so the strip can slot in later without relayout.
+
 ## Stack
 
 - React Native + Expo SDK 54 (single codebase). **Native iOS/Android is the primary
@@ -66,10 +96,9 @@ default (sunlight is the enemy), even if the rest of the app is darker. Play mus
 `last_play_hole_number`) because players constantly background the app for UDisc.
 The bar: answer "what am I throwing and where?" in under 2 seconds, one-handed.
 
-**Mode color is identity, not decoration.** Two modes, two signature colors
-(finalized in `V2_DESIGN_HANDOFF.md`) on badges, selected pills, and primary
-buttons. The V1 three-color palette (Blue/Green/Pink) is retired. Don't reuse mode
-colors for unrelated UI.
+**Mode color is identity, not decoration.** PLAN indigo `#5B4FC7`, PLAY teal
+`#0E8C8C`, on badges, selected pills, and primary buttons. The V1 three-color palette
+(Blue/Green/Pink) is retired. Don't reuse mode colors for unrelated UI.
 
 **HOLE belongs to LAYOUT, not COURSE.** A course has many layouts (Short / Long /
 Tournament); holes live under a layout. Plans reference `layout_id` / `hole_id`,
@@ -98,9 +127,10 @@ accept free text. The **only** free-text field in a plan is `aim_note`. (The V1
 must auto-set `throw_type = Overhand` and disable the throw_type selector.
 Switching away re-enables it. Enforce in the **form layer**, not just visually.
 
-**Keep destructive actions confirmed; sort active items first.** Deleting a course,
-layout, plan, or disc gets a confirmation. In-bag discs and the current/most-recent
-layout sort to the top of their lists.
+**Keep destructive actions confirmed; sort active items first.** Deleting a layout,
+plan, or disc gets a confirmation whose button restates the cost; **courses are not
+deletable**. In-bag discs and the current/most-recent layout sort to the top of
+their lists.
 
 ## What V1 left behind (remove, don't extend)
 

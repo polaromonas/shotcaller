@@ -4,8 +4,12 @@ Disc golf **game-planning** app. Read this entire file before writing any code.
 This document supersedes the V1 handoff. Where an older file disagrees with this
 one, **this file wins.**
 
-> Companion doc: **`V2_DESIGN_HANDOFF.md`** is the UI/design brief (for Claude
-> Design). This file is the product + engineering source of truth.
+> Companion docs: **`V2_DESIGN_HANDOFF.md`** is the original UI/design brief.
+> **`design_handoff_shotcaller_v2/`** is the delivered, approved UI — its `README.md`
+> + `screens/` + `.dc.html` canvas are the **canonical UI source of truth** (colors,
+> type, spacing, copy, all 13 screens). This file is the product + data-model source
+> of truth. Where the two overlap, the design bundle wins on visuals, this file wins
+> on data/behavior.
 
 ---
 
@@ -36,6 +40,8 @@ feature is measured against: *"Is this actually better than a note?"*
 - **React Native + Expo (SDK 54)** — single codebase, iOS + Android + web.
 - **Expo SQLite** — on-device, fully offline. No account, no network in MVP.
 - **TypeScript**, `strict: true`.
+- **Fonts:** Barlow + Barlow Condensed (via `@expo-google-fonts/*` + `expo-font`) —
+  required by the design; loaded at startup before rendering.
 - **Supabase** — future sync/auth only. **Do not add it in MVP.**
 
 ---
@@ -48,10 +54,10 @@ actions so the player always knows which mode they're in. The two colors are
 **finalized by design** (see `V2_DESIGN_HANDOFF.md`); the V1 three-color palette is
 retired.
 
-| Mode | Purpose | Where used |
-|------|---------|-----------|
-| **Plan** | Author the plan for each Course → Layout → Hole. Calm, deliberate, thumb-friendly. | At home / off the course. |
-| **Play** | Read the plan on the tee: one hole per screen, glanceable in under 2 seconds. A **caddie card**, not a form. | On the course, one-handed, in sun. |
+| Mode | Color | Purpose | Where used |
+|------|-------|---------|-----------|
+| **Plan** | Indigo `#5B4FC7` | Author the plan for each Course → Layout → Hole. Calm, deliberate, thumb-friendly. Dark shell. | At home / off the course. |
+| **Play** | Teal `#0E8C8C` | Read the plan on the tee: one hole per screen, glanceable in under 2 seconds. A **caddie card**, not a form. **Sunlight-first light theme.** | On the course, one-handed, in sun. |
 
 Unlike V1, these are **not one shared screen** — Plan (authoring) and Play
 (reading) are designed for two very different moments and should not share density
@@ -72,18 +78,24 @@ schema `CHECK` constraints and TypeScript types — **never duplicate enum liter
 | Column | Type | Notes |
 |--------|------|-------|
 | id | integer PK | |
-| manufacturer | string | e.g. "Innova" |
-| model | string | e.g. "Destroyer" |
+| model | string | e.g. "Firebird" |
 | nickname | string (nullable) | When set, used as the disc's **primary display name** everywhere |
-| color | string | Hex from swatch picker |
+| color | string | Hex from the curated plastic-color swatch set (the disc's dot everywhere) |
 | category | enum | `DD` \| `FWD` \| `MID` \| `P&A` |
-| in_bag | boolean | Default false. True = currently in the bag |
+| in_bag | boolean | Default false. True = in the bag; **false = shelved** (hidden from disc pickers) |
 | speed / glide / turn / fade | float (nullable) | Optional flight numbers |
-| plastic | string (nullable) | Optional |
+
+> **Changed from V1:** the design's Add-Disc has no **manufacturer** and no
+> free-text **plastic** field — both are dropped. The plastic *color* swatch is the
+> existing `color` column. Drop `manufacturer` and `plastic` from the V2 schema.
+>
+> **Display-name rule (single source of truth):** `displayName = nickname ?? model`;
+> secondary line = `nickname ? "model · category" : "category"`. Never show the model
+> twice.
 
 **TAG / DISC_TAG** — disc characterization labels (Flippy, Overstable, Gamer, …),
 seeded on first launch. Many-to-many via `disc_tag`. *(These describe discs, not
-shots — kept.)*
+shots — kept. Not surfaced in the canonical MVP screens; low priority.)*
 
 **COURSE** — `id`, `name`, `location`.
 
@@ -182,8 +194,10 @@ There is **no** Stats tab in V2.
 - **Thumber/Tomahawk → Overhand** coupling (see §4), enforced in the form layer.
 - **Sort "active" items first.** In-bag discs and the current/most-recent layout go
   to the top of their lists.
-- **Confirm destructive actions.** Deleting a course, layout, plan, or disc gets a
-  confirmation step.
+- **Confirm destructive actions.** Deleting a layout, plan, or disc gets a
+  confirmation whose button restates the cost (e.g. "DELETE LAYOUT + 16 PLANS").
+  **Courses are not deletable** (design decision). Deleting a disc offers
+  **"shelve instead"** (set `in_bag = false`) as the safe first option.
 - **Progressive authoring.** Partial plans are valid and expected — don't force all
   fields before a hole can be saved.
 - **Offline-first.** Fully functional with no connection. No UI implies login/sync.
