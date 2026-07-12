@@ -22,6 +22,17 @@ canonical PNGs; `ShotCaller V2.dc.html` is the pan/zoom design canvas (exact val
 Build the UI from this — recreate the designs with RN/Expo patterns, don't port the
 HTML. When a screen is ambiguous in prose, the canvas/PNG wins.
 
+**Approved deviations from the delivered design (product-owner overrides).** The
+design bundle omitted three things V1 had and the owner wants kept — implement these
+instead of the bare design where they conflict:
+1. **Add-Disc keeps the disc-catalog autocomplete** (`searchCatalog` over the
+   1,164-disc JSON) plus **Manufacturer** and **Plastic** fields. The design's 7a
+   manual form is the visual style, not a spec to strip features down to.
+2. **Plastic type is shown** on disc-picker rows (5a) and the **caddie card** subline
+   (9b) per the disc display rule below — the design's "Firebird · FWD" becomes
+   "Star Firebird · FWD" / "Star · FWD".
+3. **Manufacturer stays in the schema** (catalog search); just never rendered.
+
 Locked design decisions (these override anything vaguer elsewhere):
 - **Mode colors:** PLAN indigo `#5B4FC7`, PLAY teal `#0E8C8C`. Applied to badges,
   selected chips/segments, primary buttons, Home mode tiles (gradients per README).
@@ -33,9 +44,11 @@ Locked design decisions (these override anything vaguer elsewhere):
   + Barlow (body/chips/notes). Add via `@expo-google-fonts/*` + `expo-font`.
 - **Icons:** replace the design's placeholder glyphs with the codebase's icon set
   (v1 used Ionicons).
-- **Display-name rule (single source of truth):** `displayName = nickname ?? model`;
-  secondary line = `nickname ? "model · category" : "category"`. Never show the model
-  twice.
+- **Disc display rule (single source of truth):** primary (big) name =
+  `nickname ?? model`; secondary line = nickname set → `"{plastic} {model} · {category}"`,
+  else → `plastic ? "{plastic} · {category}" : "{category}"`. **Manufacturer is never
+  displayed** (it only powers catalog search); **plastic type is always shown when
+  set** — the same mold is bagged in different plastics. Never show the model twice.
 - **Courses are NOT deletable** — only layouts and discs are. (Deleting a layout
   cascades its hole plans; the confirm button restates the cost.)
 - **Discs shelve, not just delete:** `in_bag = false` = shelved (hidden from disc
