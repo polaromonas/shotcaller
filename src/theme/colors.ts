@@ -33,6 +33,19 @@ export const SHELL = {
   selectedFill: '#1E2032', // disc row fill when picked, paired with a 2px plan border
 } as const;
 
+// Play-mode light theme — sunlight-first, used ONLY on the Play caddie card.
+// High-contrast ink on a near-white ground so it reads on a bright tee. The
+// rest of the app uses the dark SHELL. Values from the design README.
+export const PLAY_LIGHT = {
+  bg: '#F6F7F4',
+  card: '#ffffff',
+  ink: '#101312',
+  secondary: '#5c6663',
+  muted: '#9aa29e',
+  border: '#d4d8d3',
+  borderDim: '#e0e3de',
+} as const;
+
 // Font families (loaded at startup in App.tsx). Barlow Condensed carries display
 // type — disc names, hole numerals, section labels; Barlow carries body/notes.
 export const FONT = {

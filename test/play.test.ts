@@ -1,0 +1,73 @@
+import { resetDb, getDb } from '../src/db';
+import { createCourse, createLayoutWithHoles, deleteLayout } from '../src/db/courses';
+import { createDisc } from '../src/db/discs';
+import { saveHolePlan } from '../src/db/plans';
+import {
+  getPlayHoleNumber,
+  loadPlayDeck,
+  setPlayHoleNumber,
+} from '../src/db/play';
+
+type HoleRow = { id: number; hole_number: number };
+
+async function setup() {
+  const courseId = await createCourse({ name: 'Maple Hill', location: 'MA' });
+  const layoutId = await createLayoutWithHoles({ courseId, name: 'Long', holeCount: 3 });
+  const db = await getDb();
+  const holes = await db.getAllAsync<HoleRow>(
+    'SELECT id, hole_number FROM hole WHERE layout_id = $id ORDER BY hole_number',
+    { $id: layoutId }
+  );
+  return { layoutId, holes };
+}
+
+beforeEach(async () => {
+  await resetDb();
+  await getDb();
+});
+
+test('play position round-trips and defaults to null', async () => {
+  const { layoutId } = await setup();
+  expect(await getPlayHoleNumber(layoutId)).toBeNull();
+  await setPlayHoleNumber(layoutId, 7);
+  expect(await getPlayHoleNumber(layoutId)).toBe(7);
+  await setPlayHoleNumber(layoutId, 12); // upsert
+  expect(await getPlayHoleNumber(layoutId)).toBe(12);
+});
+
+test('loadPlayDeck resolves plan + disc per hole, leaving blanks null', async () => {
+  const { layoutId, holes } = await setup();
+  const discId = await createDisc({
+    manufacturer: 'Innova',
+    model: 'Firebird',
+    plastic: 'Star',
+    nickname: 'Zone',
+    category: 'FWD',
+    color: '#e63946',
+    speed: 9, glide: 3, turn: 0, fade: 4,
+    tagIds: [],
+  });
+  await saveHolePlan(layoutId, holes[0].id, {
+    disc_id: discId,
+    throw_type: 'Forehand',
+    shot_shape: 'Flex',
+    aim_note: 'flex it back',
+  });
+
+  const deck = await loadPlayDeck(layoutId);
+  expect(deck).toHaveLength(3);
+  // hole 1: planned with disc
+  expect(deck[0].plan?.shot_shape).toBe('Flex');
+  expect(deck[0].disc?.nickname).toBe('Zone');
+  expect(deck[0].disc?.plastic).toBe('Star');
+  // holes 2 & 3: no plan
+  expect(deck[1].plan).toBeNull();
+  expect(deck[1].disc).toBeNull();
+});
+
+test('play_state is cleared when its layout is deleted (FK cascade)', async () => {
+  const { layoutId } = await setup();
+  await setPlayHoleNumber(layoutId, 5);
+  await deleteLayout(layoutId);
+  expect(await getPlayHoleNumber(layoutId)).toBeNull();
+});

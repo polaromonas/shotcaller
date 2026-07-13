@@ -133,10 +133,12 @@ export function LayoutHolesScreen() {
         >
           <Text style={styles.editLabel}>Edit layout</Text>
         </Pressable>
-        <View style={styles.playBtn}>
+        <Pressable
+          style={styles.playBtn}
+          onPress={() => navigation.navigate('PlayLayout', { layoutId })}
+        >
           <Text style={styles.playLabel}>▶ Play this</Text>
-          <Text style={styles.playSoon}>coming soon</Text>
-        </View>
+        </Pressable>
       </View>
     </SafeAreaView>
   );
@@ -206,12 +208,11 @@ const styles = StyleSheet.create({
   editLabel: { fontFamily: FONT.bc700, fontSize: 15, letterSpacing: 0.5, color: SHELL.textSecondary },
   playBtn: {
     flex: 1,
-    paddingVertical: 11,
+    paddingVertical: 15,
     borderRadius: 14,
     alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: MODE.play,
-    opacity: 0.5,
   },
   playLabel: { fontFamily: FONT.bc800, fontSize: 16, letterSpacing: 0.5, color: '#fff' },
-  playSoon: { fontFamily: FONT.b500, fontSize: 11, color: 'rgba(255,255,255,0.85)' },
 });

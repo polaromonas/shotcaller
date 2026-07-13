@@ -88,6 +88,15 @@ CREATE TABLE IF NOT EXISTS hole_plan (
 );
 CREATE INDEX IF NOT EXISTS idx_hole_plan_layout ON hole_plan(layout_id);
 
+-- Play-mode resume: the hole a player last viewed on a layout, so Play reopens
+-- exactly where they left off after bouncing back from their scorekeeping app.
+-- One row per layout. updated_at also drives "most recently played" for Home.
+CREATE TABLE IF NOT EXISTS play_state (
+  layout_id   INTEGER PRIMARY KEY REFERENCES layout(id) ON DELETE CASCADE,
+  hole_number INTEGER NOT NULL,
+  updated_at  TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS app_settings (
   id INTEGER PRIMARY KEY CHECK (id = 1),
   disc_sort TEXT NOT NULL DEFAULT 'bag-order' CHECK (${DISC_SORT_CHECK})
