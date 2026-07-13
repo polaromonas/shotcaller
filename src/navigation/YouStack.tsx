@@ -1,7 +1,8 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { CourseAddScreen } from '../screens/CourseAddScreen';
 import { CoursesScreen } from '../screens/CoursesScreen';
-import { LayoutDetailScreen } from '../screens/LayoutDetailScreen';
+import { LayoutHolesScreen } from '../screens/LayoutHolesScreen';
+import { LayoutEditScreen } from '../screens/LayoutEditScreen';
 import { MyDiscsScreen } from '../screens/MyDiscsScreen';
 import { PlanHoleScreen } from '../screens/PlanHoleScreen';
 import { YouScreen } from '../screens/YouScreen';
@@ -34,8 +35,13 @@ export function YouStack() {
       />
       <Stack.Screen
         name="LayoutDetail"
-        component={LayoutDetailScreen}
-        options={{ title: 'Layout', headerBackTitle: 'Courses' }}
+        component={LayoutHolesScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="LayoutEdit"
+        component={LayoutEditScreen}
+        options={{ title: 'Edit layout', headerBackTitle: 'Layout' }}
       />
       <Stack.Screen
         name="PlanHole"

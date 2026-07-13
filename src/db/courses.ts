@@ -194,6 +194,22 @@ export async function listHoles(layoutId: number): Promise<Hole[]> {
   );
 }
 
+// Layout name + its course's name, for screen headers (e.g. "‹ Maple Hill").
+export async function getLayoutHeading(
+  layoutId: number
+): Promise<{ layoutName: string; courseName: string } | null> {
+  const db = await getDb();
+  const row = await db.getFirstAsync<{ layout_name: string; course_name: string }>(
+    `SELECT l.name AS layout_name, c.name AS course_name
+       FROM layout l JOIN course c ON c.id = l.course_id
+      WHERE l.id = $id`,
+    { $id: layoutId }
+  );
+  return row
+    ? { layoutName: row.layout_name, courseName: row.course_name }
+    : null;
+}
+
 export async function updateHole(input: {
   id: number;
   par: number;

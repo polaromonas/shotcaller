@@ -23,18 +23,17 @@ import {
   type Layout,
 } from '../db/courses';
 import { confirmAction } from '../util/confirm';
-import { INBAG_GREEN, MODE, UI } from '../theme/colors';
+import { INBAG_GREEN, UI } from '../theme/colors';
 import type { YouStackParamList } from '../navigation/types';
 
-type Nav = NativeStackNavigationProp<YouStackParamList, 'LayoutDetail'>;
-type Rt = RouteProp<YouStackParamList, 'LayoutDetail'>;
+type Nav = NativeStackNavigationProp<YouStackParamList, 'LayoutEdit'>;
+type Rt = RouteProp<YouStackParamList, 'LayoutEdit'>;
 
 const PARS = [2, 3, 4, 5];
 
-export function LayoutDetailScreen() {
+export function LayoutEditScreen() {
   const navigation = useNavigation<Nav>();
-  const route = useRoute<Rt>();
-  const { layoutId } = route.params;
+  const { layoutId } = useRoute<Rt>().params;
 
   const [layout, setLayout] = useState<Layout | null>(null);
   const [holes, setHoles] = useState<Hole[] | null>(null);
@@ -50,7 +49,7 @@ export function LayoutDetailScreen() {
   }, [load]);
 
   useEffect(() => {
-    if (layout) navigation.setOptions({ title: layout.name });
+    if (layout) navigation.setOptions({ title: `Edit ${layout.name}` });
   }, [layout, navigation]);
 
   const handleUpdate = useCallback(
@@ -59,11 +58,7 @@ export function LayoutDetailScreen() {
       setHoles((prev) =>
         prev ? prev.map((h) => (h.id === hole.id ? next : h)) : prev
       );
-      await updateHole({
-        id: next.id,
-        par: next.par,
-        distance_ft: next.distance_ft,
-      });
+      await updateHole({ id: next.id, par: next.par, distance_ft: next.distance_ft });
     },
     []
   );
@@ -77,18 +72,13 @@ export function LayoutDetailScreen() {
   }
 
   const handleDelete = async () => {
-    if (!layout) return;
     const impact = await getLayoutImpact(layout.id);
-    const lines: string[] = [];
-    if (impact.plannedHoles > 0) {
-      lines.push(
-        `${impact.plannedHoles} hole ${
-          impact.plannedHoles === 1 ? 'plan' : 'plans'
-        }`
-      );
-    }
     const tail =
-      lines.length > 0 ? `This will also delete ${lines.join(', ')}. ` : '';
+      impact.plannedHoles > 0
+        ? `This will also delete ${impact.plannedHoles} hole ${
+            impact.plannedHoles === 1 ? 'plan' : 'plans'
+          }. `
+        : '';
     confirmAction({
       title: `Delete ${layout.name}?`,
       message: `${tail}This cannot be undone.`,
@@ -108,17 +98,10 @@ export function LayoutDetailScreen() {
     >
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.hint}>
-          Set par and distance for each hole, then tap Plan to write the shot.
+          Set par and distance for each hole. Changes save as you type.
         </Text>
         {holes.map((h) => (
-          <HoleRow
-            key={h.id}
-            hole={h}
-            onUpdate={handleUpdate}
-            onPlan={() =>
-              navigation.navigate('PlanHole', { layoutId, holeId: h.id })
-            }
-          />
+          <HoleRow key={h.id} hole={h} onUpdate={handleUpdate} />
         ))}
         <Pressable
           style={styles.deleteBtn}
@@ -134,14 +117,10 @@ export function LayoutDetailScreen() {
 
 type HoleRowProps = {
   hole: Hole;
-  onUpdate: (
-    hole: Hole,
-    changes: Partial<Pick<Hole, 'par' | 'distance_ft'>>
-  ) => void;
-  onPlan: () => void;
+  onUpdate: (hole: Hole, changes: Partial<Pick<Hole, 'par' | 'distance_ft'>>) => void;
 };
 
-function HoleRow({ hole, onUpdate, onPlan }: HoleRowProps) {
+function HoleRow({ hole, onUpdate }: HoleRowProps) {
   const [distanceText, setDistanceText] = useState(
     hole.distance_ft > 0 ? String(hole.distance_ft) : ''
   );
@@ -149,9 +128,7 @@ function HoleRow({ hole, onUpdate, onPlan }: HoleRowProps) {
   const commitDistance = () => {
     const parsed = Number(distanceText.trim());
     const value = Number.isFinite(parsed) && parsed >= 0 ? Math.round(parsed) : 0;
-    if (value !== hole.distance_ft) {
-      onUpdate(hole, { distance_ft: value });
-    }
+    if (value !== hole.distance_ft) onUpdate(hole, { distance_ft: value });
     setDistanceText(value > 0 ? String(value) : '');
   };
 
@@ -172,12 +149,7 @@ function HoleRow({ hole, onUpdate, onPlan }: HoleRowProps) {
                   onPress={() => onUpdate(hole, { par: p })}
                   style={[styles.parSegment, on && styles.parSegmentOn]}
                 >
-                  <Text
-                    style={[
-                      styles.parSegmentLabel,
-                      on && styles.parSegmentLabelOn,
-                    ]}
-                  >
+                  <Text style={[styles.parSegmentLabel, on && styles.parSegmentLabelOn]}>
                     {p}
                   </Text>
                 </Pressable>
@@ -199,9 +171,6 @@ function HoleRow({ hole, onUpdate, onPlan }: HoleRowProps) {
           />
           <Text style={styles.distSuffix}>ft</Text>
         </View>
-        <Pressable style={styles.planBtn} onPress={onPlan}>
-          <Text style={styles.planLabel}>Plan this hole ›</Text>
-        </Pressable>
       </View>
     </View>
   );
@@ -252,12 +221,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: UI.border,
   },
-  parSegment: {
-    flex: 1,
-    paddingVertical: 6,
-    alignItems: 'center',
-    borderRadius: 6,
-  },
+  parSegment: { flex: 1, paddingVertical: 6, alignItems: 'center', borderRadius: 6 },
   parSegmentOn: { backgroundColor: INBAG_GREEN },
   parSegmentLabel: { fontSize: 13, color: UI.textMuted, fontWeight: '600' },
   parSegmentLabelOn: { color: UI.textInverse },
@@ -274,15 +238,6 @@ const styles = StyleSheet.create({
     borderColor: UI.border,
   },
   distSuffix: { fontSize: 13, color: UI.textMuted, width: 20 },
-  planBtn: {
-    marginTop: 4,
-    alignSelf: 'flex-start',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-    backgroundColor: MODE.plan,
-  },
-  planLabel: { fontSize: 13, fontWeight: '700', color: '#fff' },
   deleteBtn: {
     marginTop: 16,
     paddingVertical: 12,

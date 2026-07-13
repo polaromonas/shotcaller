@@ -1,11 +1,18 @@
 import { getDb, resetDb } from '../src/db';
-import { createCourse, createLayoutWithHoles, getLayoutImpact, deleteLayout } from '../src/db/courses';
+import {
+  createCourse,
+  createLayoutWithHoles,
+  getLayoutHeading,
+  getLayoutImpact,
+  deleteLayout,
+} from '../src/db/courses';
 import { createDisc, deleteDisc } from '../src/db/discs';
 import {
   countPlannedHoles,
   countPlansUsingDisc,
   getHolePlan,
   listHolePlans,
+  planSummary,
   saveHolePlan,
 } from '../src/db/plans';
 
@@ -166,6 +173,29 @@ test('deleting a layout cascades its hole plans, and impact reports them', async
 
   await deleteLayout(layoutId);
   expect(await listHolePlans(layoutId)).toHaveLength(0);
+});
+
+test('planSummary composes disc + throw/shape, with sensible fallbacks', () => {
+  expect(planSummary({ throw_type: 'Backhand', shot_shape: 'Hyzer', aim_note: null }, 'Zone'))
+    .toBe('Zone · BH Hyzer');
+  expect(planSummary({ throw_type: 'Overhand', shot_shape: null, aim_note: null }, 'Destroyer'))
+    .toBe('Destroyer · OH');
+  expect(planSummary({ throw_type: null, shot_shape: 'Flex', aim_note: null }, null))
+    .toBe('Flex');
+  expect(planSummary({ throw_type: null, shot_shape: null, aim_note: '  send it  ' }, null))
+    .toBe('send it');
+  expect(planSummary({ throw_type: null, shot_shape: null, aim_note: null }, null))
+    .toBe('Planned');
+});
+
+test('getLayoutHeading returns the layout and course names', async () => {
+  const courseId = await createCourse({ name: 'Maple Hill', location: 'MA' });
+  const layoutId = await createLayoutWithHoles({ courseId, name: 'Long', holeCount: 3 });
+  expect(await getLayoutHeading(layoutId)).toEqual({
+    layoutName: 'Long',
+    courseName: 'Maple Hill',
+  });
+  expect(await getLayoutHeading(99999)).toBeNull();
 });
 
 test('rejects an invalid enum via the CHECK constraint', async () => {

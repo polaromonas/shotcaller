@@ -1,6 +1,34 @@
 import { getDb } from './index';
 import type { ShotShape, ThrowType } from './types';
 
+const THROW_ABBREV: Record<ThrowType, string> = {
+  Backhand: 'BH',
+  Forehand: 'FH',
+  Overhand: 'OH',
+};
+
+// One-line summary of a hole plan for the layout grid, e.g. "Zone · BH Hyzer".
+// Falls back to the throw/shape alone, then the aim note, then "Planned".
+export function planSummary(
+  plan: {
+    throw_type: ThrowType | null;
+    shot_shape: ShotShape | null;
+    aim_note: string | null;
+  },
+  discName: string | null
+): string {
+  const throwShape = [
+    plan.throw_type ? THROW_ABBREV[plan.throw_type] : null,
+    plan.shot_shape,
+  ]
+    .filter(Boolean)
+    .join(' ');
+  const parts = [discName, throwShape].filter((p) => p && p.length > 0);
+  if (parts.length > 0) return parts.join(' · ');
+  const aim = plan.aim_note?.trim();
+  return aim && aim.length > 0 ? aim : 'Planned';
+}
+
 // A saved plan for one hole. Every field except the row's own bookkeeping is
 // nullable — a hole is "planned" once a row exists, even if it only holds an
 // aim note. See src/db/schema.ts for the table and its FK behavior.
