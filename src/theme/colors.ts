@@ -58,15 +58,19 @@ export const FONT = {
   b700: 'Barlow_700Bold',
 } as const;
 
+// V2 is dark-shell across the board. UI mirrors the SHELL palette so the
+// screens still written against `UI` (Courses, My Bag, Add Disc, About, …) read
+// as the same dark theme as the Plan/Play surfaces. `textInverse` stays white —
+// it's used for label text on colored buttons (green in-bag, indigo/teal CTAs).
 export const UI = {
-  bg: '#ffffff',
-  surface: '#f6f7fb',
-  border: '#e3e5ee',
-  text: '#1a1c2a',
-  textMuted: '#555870',
+  bg: '#101216',
+  surface: '#171A20',
+  border: '#232733',
+  text: '#EDEEF2',
+  textMuted: '#8B909B',
   textInverse: '#ffffff',
-  danger: '#d64545',
-  dangerBg: '#d64545',
+  danger: '#C7362B',
+  dangerBg: '#C7362B',
 } as const;
 
 export const DISC_SWATCHES: readonly string[] = [

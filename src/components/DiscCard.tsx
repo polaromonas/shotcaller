@@ -7,11 +7,11 @@ import { UI } from '../theme/colors';
 import { discDisplayName, type DiscWithTags } from '../db/discs';
 import { InBagButton } from './InBagButton';
 
-// When the user has nicknamed a disc, surface the model in the subtitle so
-// they can still tell what disc this actually is. Plastic gets appended to
-// either form when set.
+// Subtitle disambiguates the disc without repeating the display name or showing
+// the manufacturer (never displayed in V2). When nicknamed, surface the model
+// so the player still knows the mold; plastic type is appended when set.
 const discSubtitle = (disc: DiscWithTags): string => {
-  const parts: string[] = [disc.manufacturer];
+  const parts: string[] = [];
   if (disc.nickname) parts.push(disc.model);
   if (disc.plastic) parts.push(disc.plastic);
   return parts.join(' · ');

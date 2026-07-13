@@ -606,9 +606,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 8,
   },
-  segmentOn: { backgroundColor: UI.bg },
+  segmentOn: { backgroundColor: UI.text },
   segmentLabel: { fontSize: 14, color: UI.textMuted, fontWeight: '600' },
-  segmentLabelOn: { color: UI.text },
+  segmentLabelOn: { color: UI.bg },
   swatchGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   swatch: {
     width: 36,
@@ -632,7 +632,7 @@ const styles = StyleSheet.create({
   },
   tagChipOn: { backgroundColor: UI.text, borderColor: UI.text },
   tagChipLabel: { fontSize: 13, color: UI.textMuted },
-  tagChipLabelOn: { color: UI.textInverse, fontWeight: '600' },
+  tagChipLabelOn: { color: UI.bg, fontWeight: '600' },
   newTagRow: { flexDirection: 'row', gap: 8 },
   newTagInput: { flex: 1 },
   newTagBtn: {
@@ -714,6 +714,6 @@ const styles = StyleSheet.create({
   },
   signBtnOn: { backgroundColor: UI.text, borderColor: UI.text },
   signLabel: { fontSize: 16, fontWeight: '700', color: UI.textMuted },
-  signLabelOn: { color: UI.textInverse },
+  signLabelOn: { color: UI.bg },
   error: { color: UI.danger, fontSize: 14, marginTop: 4 },
 });

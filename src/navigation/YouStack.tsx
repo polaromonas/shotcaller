@@ -8,13 +8,22 @@ import { PlanHoleScreen } from '../screens/PlanHoleScreen';
 import { PlayLayoutScreen } from '../screens/PlayLayoutScreen';
 import { PlayPickerScreen } from '../screens/PlayPickerScreen';
 import { YouScreen } from '../screens/YouScreen';
+import { UI } from '../theme/colors';
 import type { YouStackParamList } from './types';
 
 const Stack = createNativeStackNavigator<YouStackParamList>();
 
 export function YouStack() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: UI.bg },
+        headerTintColor: UI.text,
+        headerTitleStyle: { color: UI.text },
+        headerShadowVisible: false,
+        contentStyle: { backgroundColor: UI.bg },
+      }}
+    >
       <Stack.Screen
         name="YouHome"
         component={YouScreen}

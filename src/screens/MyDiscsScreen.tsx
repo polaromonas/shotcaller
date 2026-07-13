@@ -341,7 +341,7 @@ const styles = StyleSheet.create({
     backgroundColor: UI.text,
     borderRadius: 12,
   },
-  emptyBtnLabel: { color: UI.textInverse, fontSize: 15, fontWeight: '600' },
+  emptyBtnLabel: { color: UI.bg, fontSize: 15, fontWeight: '600' },
   modalBackdrop: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.4)',
@@ -349,7 +349,7 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   modalCard: {
-    backgroundColor: UI.bg,
+    backgroundColor: UI.surface,
     borderRadius: 14,
     padding: 16,
     gap: 6,

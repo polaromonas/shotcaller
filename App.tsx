@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native';
+import { DarkTheme, NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {
   useFonts,
@@ -25,6 +25,13 @@ type InitState =
   | { status: 'loading' }
   | { status: 'ready' }
   | { status: 'error'; message: string };
+
+// Dark navigation theme so the container background (and inter-screen
+// transitions) match the dark shell instead of flashing white.
+const navTheme = {
+  ...DarkTheme,
+  colors: { ...DarkTheme.colors, background: UI.bg, card: UI.bg, border: UI.border },
+};
 
 export default function App() {
   const [state, setState] = useState<InitState>({ status: 'loading' });
@@ -56,7 +63,7 @@ export default function App() {
     <GestureHandlerRootView style={styles.root}>
       <SafeAreaProvider>
         {state.status === 'ready' && fontsLoaded ? (
-          <NavigationContainer>
+          <NavigationContainer theme={navTheme}>
             <RootStack />
           </NavigationContainer>
         ) : (
@@ -68,7 +75,7 @@ export default function App() {
             )}
           </View>
         )}
-        <StatusBar style="auto" />
+        <StatusBar style="light" />
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

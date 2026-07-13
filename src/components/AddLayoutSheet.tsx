@@ -191,9 +191,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 8,
   },
-  segmentOn: { backgroundColor: UI.bg },
+  segmentOn: { backgroundColor: UI.text },
   segmentLabel: { fontSize: 14, color: UI.textMuted, fontWeight: '600' },
-  segmentLabelOn: { color: UI.text },
+  segmentLabelOn: { color: UI.bg },
   hint: { fontSize: 12, color: UI.textMuted, lineHeight: 16 },
   error: { color: UI.danger, fontSize: 14 },
 });

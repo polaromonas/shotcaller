@@ -21,7 +21,7 @@ import {
 } from '../db/courses';
 import { AddLayoutSheet } from '../components/AddLayoutSheet';
 import { confirmAction } from '../util/confirm';
-import { UI } from '../theme/colors';
+import { MODE, UI } from '../theme/colors';
 import type { YouStackParamList } from '../navigation/types';
 
 type Nav = NativeStackNavigationProp<YouStackParamList, 'CoursesList'>;
@@ -295,7 +295,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingHorizontal: 20,
     paddingVertical: 12,
-    backgroundColor: UI.text,
+    backgroundColor: MODE.plan,
     borderRadius: 12,
   },
   emptyBtnLabel: { color: UI.textInverse, fontSize: 15, fontWeight: '600' },

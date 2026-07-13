@@ -30,7 +30,11 @@ export function RootTabs() {
         tabBarInactiveTintColor: UI.textMuted,
         tabBarLabelStyle: styles.tabLabel,
         tabBarLabelPosition: 'below-icon',
-        tabBarStyle: { borderTopColor: UI.border, height: 64 },
+        tabBarStyle: {
+          backgroundColor: UI.bg,
+          borderTopColor: UI.border,
+          height: 64,
+        },
       }}
     >
       <Tab.Screen
