@@ -6,6 +6,7 @@ import { LayoutEditScreen } from '../screens/LayoutEditScreen';
 import { MyDiscsScreen } from '../screens/MyDiscsScreen';
 import { PlanHoleScreen } from '../screens/PlanHoleScreen';
 import { PlayLayoutScreen } from '../screens/PlayLayoutScreen';
+import { PlayPickerScreen } from '../screens/PlayPickerScreen';
 import { YouScreen } from '../screens/YouScreen';
 import type { YouStackParamList } from './types';
 
@@ -47,6 +48,11 @@ export function YouStack() {
       <Stack.Screen
         name="PlanHole"
         component={PlanHoleScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="PlayPicker"
+        component={PlayPickerScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen

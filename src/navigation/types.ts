@@ -6,6 +6,7 @@ export type YouStackParamList = {
   LayoutDetail: { layoutId: number };
   LayoutEdit: { layoutId: number };
   PlanHole: { layoutId: number; holeId: number };
+  PlayPicker: undefined;
   PlayLayout: { layoutId: number };
 };
 

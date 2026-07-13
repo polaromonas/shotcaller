@@ -101,6 +101,14 @@ function orderBySql(sort: DiscSort): string {
   }
 }
 
+export async function countDiscs(): Promise<number> {
+  const db = await getDb();
+  const row = await db.getFirstAsync<{ count: number }>(
+    'SELECT COUNT(*) AS count FROM disc'
+  );
+  return row?.count ?? 0;
+}
+
 export async function listDiscs(): Promise<DiscWithTags[]> {
   const db = await getDb();
   const sort = await getDiscSort();

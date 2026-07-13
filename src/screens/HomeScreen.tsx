@@ -1,112 +1,162 @@
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useCallback, useState } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
-import { MODE, UI } from '../theme/colors';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { countDiscs } from '../db/discs';
+import {
+  listPlayableLayouts,
+  mostRecentlyPlayed,
+  type PlayableLayout,
+} from '../db/play';
+import { FONT, MODE, SHELL } from '../theme/colors';
 
-// Transitional V2 Home. The full design-1d Home (resume-round card, gradient
-// PLAN/PLAY tiles, My Bag card) lands once the Plan and Play screens exist.
-// For now it wires only to surfaces that are actually built: Courses, My Bag,
-// and About. Plan/Play tiles route to Courses (pick a layout) as a stopgap.
 export function HomeScreen() {
   const navigation = useNavigation<any>();
+  const [resume, setResume] = useState<PlayableLayout | null>(null);
+  const [discCount, setDiscCount] = useState<number | null>(null);
 
-  const openCourses = () =>
-    navigation.navigate('More', { screen: 'CoursesList' });
+  const load = useCallback(async () => {
+    const [layouts, count] = await Promise.all([listPlayableLayouts(), countDiscs()]);
+    setResume(mostRecentlyPlayed(layouts));
+    setDiscCount(count);
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      void load();
+    }, [load])
+  );
+
+  const openCourses = () => navigation.navigate('More', { screen: 'CoursesList' });
+  const openPlay = () => navigation.navigate('More', { screen: 'PlayPicker' });
   const openBag = () => navigation.navigate('More', { screen: 'MyDiscs' });
   const openAbout = () => navigation.getParent()?.navigate('About');
+  const resumeRound = () =>
+    resume &&
+    navigation.navigate('More', {
+      screen: 'PlayLayout',
+      params: { layoutId: resume.layoutId },
+    });
 
   return (
     <SafeAreaView style={styles.root} edges={['top']}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.hero}>
-          <Text style={styles.title}>ShotCaller</Text>
-          <Text style={styles.subtitle}>You call the shots.</Text>
+      <View style={styles.header}>
+        <View>
+          <Text style={styles.wordmark}>SHOTCALLER</Text>
+          <Text style={styles.tagline}>You call the shots.</Text>
         </View>
+        <Pressable onPress={openAbout} hitSlop={8}>
+          <Text style={styles.about}>About</Text>
+        </Pressable>
+      </View>
 
-        <View style={styles.modes}>
-          <ModeCard
-            label="Plan"
-            description="Build a hole-by-hole game plan."
-            color={MODE.plan}
-            onPress={openCourses}
-          />
-          <ModeCard
-            label="Play"
-            description="Read your plan on the tee. One glance, one throw."
-            color={MODE.play}
-            onPress={openCourses}
-          />
-        </View>
+      <View style={styles.body}>
+        {resume && (
+          <Pressable style={styles.resume} onPress={resumeRound}>
+            <Text style={styles.resumeLabel}>RESUME ROUND</Text>
+            <Text style={styles.resumeTitle} numberOfLines={1}>
+              {resume.courseName} · {resume.layoutName}
+            </Text>
+            <View style={styles.resumeRow}>
+              <Text style={styles.resumeMeta}>
+                On hole {resume.lastHole} of {resume.holeCount}
+              </Text>
+              <View style={styles.resumeBtn}>
+                <Text style={styles.resumeBtnLabel}>PLAY ›</Text>
+              </View>
+            </View>
+          </Pressable>
+        )}
 
-        <Pressable
-          style={({ pressed }) => [styles.bagCard, pressed && styles.pressed]}
-          onPress={openBag}
-        >
+        <Pressable style={styles.tileWrap} onPress={openCourses}>
+          <LinearGradient
+            colors={['#5B4FC7', '#4A3FA8']}
+            start={{ x: 0.15, y: 0 }}
+            end={{ x: 0.85, y: 1 }}
+            style={styles.tile}
+          >
+            <Text style={styles.tileLabel}>PLAN</Text>
+            <View>
+              <Text style={styles.tileDesc}>Build a hole-by-hole game plan at home.</Text>
+              <Text style={styles.tileLink}>Open courses ›</Text>
+            </View>
+          </LinearGradient>
+        </Pressable>
+
+        <Pressable style={styles.tileWrap} onPress={openPlay}>
+          <LinearGradient
+            colors={['#0E8C8C', '#0A6E6E']}
+            start={{ x: 0.15, y: 0 }}
+            end={{ x: 0.85, y: 1 }}
+            style={styles.tile}
+          >
+            <Text style={styles.tileLabel}>PLAY</Text>
+            <View>
+              <Text style={styles.tileDesc}>Read your plan on the tee. One glance, one throw.</Text>
+              <Text style={styles.tileLink}>Pick a layout ›</Text>
+            </View>
+          </LinearGradient>
+        </Pressable>
+
+        <Pressable style={styles.bagCard} onPress={openBag}>
           <Text style={styles.bagLabel}>My Bag</Text>
-          <Text style={styles.bagChev}>›</Text>
+          <Text style={styles.bagMeta}>
+            {discCount === null ? '' : `${discCount} ${discCount === 1 ? 'disc' : 'discs'} ›`}
+          </Text>
         </Pressable>
-
-        <Pressable onPress={openAbout} hitSlop={6} style={styles.helpLink}>
-          <Text style={styles.helpLinkLabel}>How does ShotCaller work?</Text>
-        </Pressable>
-
-        <Text style={styles.wip}>V2 in progress — Plan and Play screens coming next.</Text>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
 
-type ModeCardProps = {
-  label: string;
-  description: string;
-  color: string;
-  onPress: () => void;
-};
-
-function ModeCard({ label, description, color, onPress }: ModeCardProps) {
-  return (
-    <Pressable
-      onPress={onPress}
-      style={({ pressed }) => [
-        styles.modeCard,
-        { backgroundColor: color },
-        pressed && styles.pressed,
-      ]}
-    >
-      <Text style={styles.modeLabel}>{label}</Text>
-      <Text style={styles.modeDescription}>{description}</Text>
-    </Pressable>
-  );
-}
-
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: UI.bg },
-  content: { padding: 20, paddingTop: 24, gap: 24 },
-  hero: { gap: 4 },
-  title: { fontSize: 34, fontWeight: '700', color: UI.text },
-  subtitle: { fontSize: 16, color: UI.textMuted },
-  modes: { gap: 12 },
-  modeCard: { borderRadius: 16, padding: 24, gap: 4 },
-  pressed: { opacity: 0.85 },
-  modeLabel: { fontSize: 24, fontWeight: '800', color: UI.textInverse },
-  modeDescription: { fontSize: 14, color: UI.textInverse, opacity: 0.92 },
+  root: { flex: 1, backgroundColor: SHELL.bg },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingTop: 8,
+    paddingBottom: 12,
+  },
+  wordmark: { fontFamily: FONT.bc800, fontSize: 30, letterSpacing: 0.5, color: SHELL.text },
+  tagline: { fontFamily: FONT.b500, fontSize: 14, color: SHELL.textMuted, marginTop: -2 },
+  about: { fontFamily: FONT.b600, fontSize: 15, color: SHELL.textSecondary },
+  body: { flex: 1, paddingHorizontal: 20, paddingBottom: 20, gap: 12 },
+  resume: {
+    backgroundColor: MODE.play,
+    borderRadius: 16,
+    padding: 16,
+    gap: 2,
+  },
+  resumeLabel: { fontFamily: FONT.bc700, fontSize: 12, letterSpacing: 1.2, color: 'rgba(255,255,255,0.85)' },
+  resumeTitle: { fontFamily: FONT.bc800, fontSize: 22, color: '#fff' },
+  resumeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 6,
+  },
+  resumeMeta: { fontFamily: FONT.b600, fontSize: 14, color: 'rgba(255,255,255,0.9)' },
+  resumeBtn: { backgroundColor: '#fff', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 10 },
+  resumeBtnLabel: { fontFamily: FONT.bc800, fontSize: 14, color: MODE.play },
+  tileWrap: { flex: 1, borderRadius: 20, overflow: 'hidden' },
+  tile: { flex: 1, padding: 22, justifyContent: 'space-between' },
+  tileLabel: { fontFamily: FONT.bc800, fontSize: 40, color: '#fff' },
+  tileDesc: { fontFamily: FONT.b500, fontSize: 15, color: 'rgba(255,255,255,0.92)' },
+  tileLink: { fontFamily: FONT.bc700, fontSize: 15, letterSpacing: 0.5, color: '#fff', marginTop: 8 },
   bagCard: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 16,
-    borderRadius: 12,
-    backgroundColor: UI.surface,
+    paddingHorizontal: 18,
+    paddingVertical: 16,
+    borderRadius: 14,
+    backgroundColor: SHELL.card,
     borderWidth: 1,
-    borderColor: UI.border,
+    borderColor: SHELL.border,
   },
-  bagLabel: { fontSize: 16, fontWeight: '700', color: UI.text },
-  bagChev: { fontSize: 20, color: UI.textMuted },
-  helpLink: { alignItems: 'center' },
-  helpLinkLabel: {
-    fontSize: 13,
-    color: UI.textMuted,
-    textDecorationLine: 'underline',
-  },
-  wip: { fontSize: 12, color: UI.textMuted, textAlign: 'center' },
+  bagLabel: { fontFamily: FONT.bc700, fontSize: 17, color: SHELL.text },
+  bagMeta: { fontFamily: FONT.b600, fontSize: 14, color: SHELL.textMuted },
 });
