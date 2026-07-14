@@ -3,6 +3,9 @@
     "name": "ShotCaller",
     "slug": "shotcaller",
     "version": "1.0.0",
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -32,6 +35,15 @@
     ],
     "experiments": {
       "baseUrl": "/shotcaller-v2"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c2732cb2-a9a8-457f-a273-c5a628c0f6f3"
+      }
+    },
+    "owner": "polaromonas",
+    "updates": {
+      "url": "https://u.expo.dev/c2732cb2-a9a8-457f-a273-c5a628c0f6f3"
     }
   }
 }
