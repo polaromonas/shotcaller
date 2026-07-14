@@ -75,7 +75,8 @@ export function PlayLayoutScreen() {
   const go = useCallback(
     (delta: number) => {
       setIndex((i) => {
-        const next = Math.min(Math.max(i + delta, 0), deck.length - 1);
+        const max = Math.max(deck.length - 1, 0);
+        const next = Math.min(Math.max(i + delta, 0), max);
         const holeNumber = deck[next]?.hole.hole_number;
         if (holeNumber != null) void setPlayHoleNumber(layoutId, holeNumber);
         return next;
@@ -84,6 +85,13 @@ export function PlayLayoutScreen() {
     [deck, layoutId]
   );
 
+  // The PanResponder is created once (useRef), so it would otherwise capture the
+  // first-render `go` — when deck is still empty — and drive index to -1 on
+  // swipe, blanking the card into a spinner. Route swipes through a ref that
+  // always holds the latest `go`.
+  const goRef = useRef(go);
+  goRef.current = go;
+
   // Swipe anywhere: left → next hole, right → previous. Kept loose (35px) so a
   // one-handed flick while walking registers.
   const pan = useRef(
@@ -91,8 +99,8 @@ export function PlayLayoutScreen() {
       onMoveShouldSetPanResponder: (_e, g) =>
         Math.abs(g.dx) > 24 && Math.abs(g.dx) > Math.abs(g.dy) * 1.5,
       onPanResponderRelease: (_e, g) => {
-        if (g.dx < -35) go(1);
-        else if (g.dx > 35) go(-1);
+        if (g.dx < -35) goRef.current(1);
+        else if (g.dx > 35) goRef.current(-1);
       },
     })
   ).current;
