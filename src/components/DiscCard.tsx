@@ -24,6 +24,7 @@ type Props = {
   onToggleInBag: () => void;
   onDelete: () => void;
   onOpen: (methods: SwipeableMethods) => void;
+  bagColor?: string | null;
 };
 
 export function DiscCard({
@@ -32,6 +33,7 @@ export function DiscCard({
   onToggleInBag,
   onDelete,
   onOpen,
+  bagColor,
 }: Props) {
   const ref = useRef<SwipeableMethods>(null);
 
@@ -84,7 +86,11 @@ export function DiscCard({
             </View>
           )}
         </View>
-        <InBagButton inBag={disc.in_bag} onToggle={onToggleInBag} />
+        <InBagButton
+          inBag={disc.in_bag}
+          onToggle={onToggleInBag}
+          bagColor={bagColor}
+        />
       </Pressable>
     </ReanimatedSwipeable>
   );

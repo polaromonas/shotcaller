@@ -237,6 +237,7 @@ export function MyDiscsScreen() {
       ) : (
         <FlatList
           data={discs}
+          extraData={bagColor}
           keyExtractor={(d) => String(d.id)}
           renderItem={({ item }) => (
             <DiscCard
@@ -245,6 +246,7 @@ export function MyDiscsScreen() {
               onToggleInBag={() => handleToggleInBag(item)}
               onDelete={() => handleDelete(item)}
               onOpen={handleRowOpen}
+              bagColor={bagColor}
             />
           )}
         />
