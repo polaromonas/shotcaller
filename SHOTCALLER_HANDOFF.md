@@ -152,20 +152,26 @@ UDisc.
 
 ---
 
-## 4. Enums
+## 4. Enums & shapes
 
-Fixed lists. **Never** allow free-text for these fields. Defined in `src/db/types.ts`.
+`throw_type` and disc `category` are **fixed lists** — never free-text. Defined
+in `src/db/types.ts`.
 
 ### throw_type
 `Backhand` · `Forehand` · `Overhand`
 
-### shot_shape
+### shot_shape — user-extensible (not a fixed enum)
+The `shape` table seeds these 9 built-ins; **users add and delete their own** from
+the Plan-a-hole screen, so `hole_plan.shot_shape` is free TEXT (no CHECK) and its
+TS type is `string`.
+
 `Hyzer` · `Flat` · `Anhyzer` · `Flex` · `Turnover` · `Roller` · `Spike hyzer` ·
 `Thumber` · `Tomahawk`
 
-> **Thumber/Tomahawk coupling:** selecting `Thumber` or `Tomahawk` auto-sets
-> `throw_type = Overhand` and disables the throw_type selector. Switching to any
-> other shape re-enables it. Enforce this in the **form layer**, not just visually.
+> **Thumber/Tomahawk coupling:** a shape with `is_overhand = 1` (the two built-in
+> overhand shapes) auto-sets `throw_type = Overhand` and disables the throw_type
+> selector; switching away re-enables it. Enforce in the **form layer**. Built-ins
+> (`is_builtin = 1`) can't be deleted; user shapes can.
 
 ### disc category
 `DD` (Distance Driver) · `FWD` (Fairway Driver) · `MID` (Midrange) ·

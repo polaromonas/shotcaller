@@ -1,6 +1,7 @@
 import {
   DISC_CATEGORIES,
   DISC_SORTS,
+  OVERHAND_SHOT_SHAPES,
   SHOT_SHAPES,
   THROW_TYPES,
 } from './types';
@@ -14,7 +15,17 @@ const DISC_SORT_CHECK = `disc_sort IN (${quote(DISC_SORTS)})`;
 // NULL — `NULL IN (...)` is NULL, not false — so these constants work as-is for
 // the nullable columns.
 const THROW_TYPE_CHECK = `throw_type IN (${quote(THROW_TYPES)})`;
-const SHOT_SHAPE_CHECK = `shot_shape IN (${quote(SHOT_SHAPES)})`;
+
+// The built-in shot shapes seed the extensible `shape` table. Shapes are NOT a
+// fixed enum any more — users add their own — so hole_plan.shot_shape is free
+// TEXT (throw_type and disc category stay fixed enums). is_overhand drives the
+// Thumber/Tomahawk → Overhand lock; is_builtin protects the 9 from deletion.
+const SHAPE_SEED = SHOT_SHAPES.map(
+  (name, i) =>
+    `('${name.replace(/'/g, "''")}', ${
+      OVERHAND_SHOT_SHAPES.includes(name) ? 1 : 0
+    }, 1, ${i + 1})`
+).join(', ');
 
 // V2 schema. Practice logging, throws, stats, and the old game_plan_shot were
 // removed in the V2 strip; the hole plan table lands in the next step. This is
@@ -81,7 +92,7 @@ CREATE TABLE IF NOT EXISTS hole_plan (
   hole_id    INTEGER NOT NULL REFERENCES hole(id)   ON DELETE CASCADE,
   disc_id    INTEGER REFERENCES disc(id) ON DELETE SET NULL,
   throw_type TEXT CHECK (${THROW_TYPE_CHECK}),
-  shot_shape TEXT CHECK (${SHOT_SHAPE_CHECK}),
+  shot_shape TEXT,
   aim_note   TEXT,
   updated_at TEXT NOT NULL,
   UNIQUE (hole_id)
@@ -96,6 +107,17 @@ CREATE TABLE IF NOT EXISTS play_state (
   hole_number INTEGER NOT NULL,
   updated_at  TEXT NOT NULL
 );
+
+-- Shot shapes shown in the Plan-a-hole chip row. Seeded with the 9 built-ins;
+-- users add their own (is_builtin = 0), which persist and can be deleted.
+CREATE TABLE IF NOT EXISTS shape (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL UNIQUE,
+  is_overhand INTEGER NOT NULL DEFAULT 0 CHECK (is_overhand IN (0, 1)),
+  is_builtin  INTEGER NOT NULL DEFAULT 0 CHECK (is_builtin IN (0, 1)),
+  sort_order  INTEGER NOT NULL DEFAULT 100
+);
+INSERT OR IGNORE INTO shape (name, is_overhand, is_builtin, sort_order) VALUES ${SHAPE_SEED};
 
 CREATE TABLE IF NOT EXISTS app_settings (
   id INTEGER PRIMARY KEY CHECK (id = 1),

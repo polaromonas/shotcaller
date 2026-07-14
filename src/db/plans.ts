@@ -1,5 +1,5 @@
 import { getDb } from './index';
-import type { ShotShape, ThrowType } from './types';
+import type { ThrowType } from './types';
 
 const THROW_ABBREV: Record<ThrowType, string> = {
   Backhand: 'BH',
@@ -12,7 +12,7 @@ const THROW_ABBREV: Record<ThrowType, string> = {
 export function planSummary(
   plan: {
     throw_type: ThrowType | null;
-    shot_shape: ShotShape | null;
+    shot_shape: string | null;
     aim_note: string | null;
   },
   discName: string | null
@@ -38,7 +38,7 @@ export type HolePlan = {
   hole_id: number;
   disc_id: number | null;
   throw_type: ThrowType | null;
-  shot_shape: ShotShape | null;
+  shot_shape: string | null;
   aim_note: string | null;
   updated_at: string;
 };
@@ -46,7 +46,7 @@ export type HolePlan = {
 export type HolePlanInput = {
   disc_id: number | null;
   throw_type: ThrowType | null;
-  shot_shape: ShotShape | null;
+  shot_shape: string | null;
   aim_note: string | null;
 };
 

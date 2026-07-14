@@ -132,9 +132,13 @@ UDisc/PDGA and never tracks score, strokes, results, or throw-by-throw data. The
 is no "best disc" suggestion and no stats screen. If a request smells like ranking
 or analytics, check it against the handoff before building.
 
-**Enums are fixed lists.** `throw_type`, `shot_shape`, and disc `category` never
-accept free text. The **only** free-text field in a plan is `aim_note`. (The V1
-`result` and `session mode` enums are gone — they belonged to throw logging.)
+**Enums: `throw_type` and disc `category` are fixed lists** — never free text.
+**`shot_shape` is user-extensible** (changed at the owner's request): the `shape`
+table seeds the 9 built-ins and users add/delete their own, so `hole_plan.shot_shape`
+is free TEXT (no CHECK), and its display type is `string`, not a union. The
+Thumber/Tomahawk→Overhand lock is driven by `shape.is_overhand`; built-ins are
+protected from deletion by `shape.is_builtin`. The V1 `result`/`session mode` enums
+are gone. `aim_note` is still free text.
 
 **Thumber/Tomahawk coupling.** Selecting `Thumber` or `Tomahawk` as `shot_shape`
 must auto-set `throw_type = Overhand` and disable the throw_type selector.

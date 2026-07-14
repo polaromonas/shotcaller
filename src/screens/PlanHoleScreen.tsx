@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
+  Modal,
   Platform,
   Pressable,
   ScrollView,
@@ -15,13 +16,7 @@ import { Ionicons } from '@expo/vector-icons';
 import type { RouteProp } from '@react-navigation/native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import {
-  SHOT_SHAPES,
-  THROW_TYPES,
-  OVERHAND_SHOT_SHAPES,
-  type ShotShape,
-  type ThrowType,
-} from '../db/types';
+import { THROW_TYPES, type ThrowType } from '../db/types';
 import {
   getLayout,
   listHoles,
@@ -37,8 +32,10 @@ import {
   type NewDiscInput,
 } from '../db/discs';
 import { getHolePlan, saveHolePlan } from '../db/plans';
+import { listShapes, createShape, deleteShape, type Shape } from '../db/shapes';
 import { DiscPickerSheet } from '../components/DiscPickerSheet';
 import { AddDiscSheet } from '../components/AddDiscSheet';
+import { confirmAction } from '../util/confirm';
 import { FONT, MODE, SHELL } from '../theme/colors';
 import type { RootStackParamList } from '../navigation/types';
 
@@ -46,8 +43,6 @@ type Nav = NativeStackNavigationProp<RootStackParamList, 'PlanHole'>;
 type Rt = RouteProp<RootStackParamList, 'PlanHole'>;
 
 const PARS = [2, 3, 4, 5];
-const isOverhandShape = (s: ShotShape | null) =>
-  s !== null && OVERHAND_SHOT_SHAPES.includes(s);
 
 export function PlanHoleScreen() {
   const navigation = useNavigation<Nav>();
@@ -60,28 +55,33 @@ export function PlanHoleScreen() {
 
   const [discId, setDiscId] = useState<number | null>(null);
   const [throwType, setThrowType] = useState<ThrowType | null>(null);
-  const [shotShape, setShotShape] = useState<ShotShape | null>(null);
+  const [shotShape, setShotShape] = useState<string | null>(null);
+  const [shapes, setShapes] = useState<Shape[]>([]);
   const [aim, setAim] = useState('');
   const [par, setPar] = useState(3);
   const [distance, setDistance] = useState('');
   const [editingFacts, setEditingFacts] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [addDiscOpen, setAddDiscOpen] = useState(false);
+  const [addShapeOpen, setAddShapeOpen] = useState(false);
+  const [newShapeName, setNewShapeName] = useState('');
 
   useEffect(() => {
     let alive = true;
     setLoading(true);
     (async () => {
-      const [l, hs, ds, plan] = await Promise.all([
+      const [l, hs, ds, plan, sh] = await Promise.all([
         getLayout(layoutId),
         listHoles(layoutId),
         listDiscs(),
         getHolePlan(holeId),
+        listShapes(),
       ]);
       if (!alive) return;
       setLayout(l);
       setHoles([...hs].sort((a, b) => a.hole_number - b.hole_number));
       setDiscs(ds);
+      setShapes(sh);
       const hole = hs.find((h) => h.id === holeId);
       setPar(hole?.par ?? 3);
       setDistance(hole && hole.distance_ft > 0 ? String(hole.distance_ft) : '');
@@ -114,15 +114,52 @@ export function PlanHoleScreen() {
     return chips;
   }, [bagDiscs, selectedDisc]);
 
-  const overhandLocked = isOverhandShape(shotShape);
+  // Shape chips come from the DB (built-ins + user shapes). Keep the current
+  // shape visible even if it was deleted from the list, like disc quick-chips.
+  const shapeChips = useMemo<Shape[]>(() => {
+    if (shotShape && !shapes.some((s) => s.name === shotShape)) {
+      return [{ id: -1, name: shotShape, is_overhand: false, is_builtin: false }, ...shapes];
+    }
+    return shapes;
+  }, [shapes, shotShape]);
 
-  const pickShape = (s: ShotShape) => {
-    if (shotShape === s) {
+  const overhandLocked =
+    shapes.find((s) => s.name === shotShape)?.is_overhand ?? false;
+
+  const pickShape = (shape: Shape) => {
+    if (shotShape === shape.name) {
       setShotShape(null);
       return;
     }
-    setShotShape(s);
-    if (isOverhandShape(s)) setThrowType('Overhand');
+    setShotShape(shape.name);
+    if (shape.is_overhand) setThrowType('Overhand');
+  };
+
+  const reloadShapes = async () => setShapes(await listShapes());
+
+  const handleAddShape = async () => {
+    const name = newShapeName.trim();
+    if (!name) return;
+    await createShape(name);
+    await reloadShapes();
+    setShotShape(name); // select the shape you just added
+    setNewShapeName('');
+    setAddShapeOpen(false);
+  };
+
+  const handleDeleteShape = (shape: Shape) => {
+    if (shape.is_builtin || shape.id < 0) return;
+    confirmAction({
+      title: `Delete "${shape.name}"?`,
+      message: 'Removes this shape from the list. Plans already using it keep it.',
+      confirmLabel: 'Delete',
+      destructive: true,
+      onConfirm: async () => {
+        await deleteShape(shape.id);
+        if (shotShape === shape.name) setShotShape(null);
+        await reloadShapes();
+      },
+    });
   };
 
   // Add a disc without leaving the plan flow, then auto-select it for this hole
@@ -298,21 +335,33 @@ export function PlanHoleScreen() {
 
           <Section label="Shape">
             <View style={styles.chipWrap}>
-              {SHOT_SHAPES.map((s) => {
-                const on = shotShape === s;
+              {shapeChips.map((shape) => {
+                const on = shotShape === shape.name;
                 return (
                   <Pressable
-                    key={s}
-                    onPress={() => pickShape(s)}
+                    key={shape.name}
+                    onPress={() => pickShape(shape)}
+                    onLongPress={() => handleDeleteShape(shape)}
+                    delayLongPress={350}
                     style={[styles.shapeChip, on && styles.shapeChipOn]}
                   >
                     <Text style={[styles.shapeLabel, on && styles.shapeLabelOn]}>
-                      {s}
+                      {shape.name}
                     </Text>
                   </Pressable>
                 );
               })}
+              <Pressable
+                style={styles.addDiscChip}
+                onPress={() => {
+                  setNewShapeName('');
+                  setAddShapeOpen(true);
+                }}
+              >
+                <Text style={styles.addDiscLabel}>+ Add</Text>
+              </Pressable>
             </View>
+            <Text style={styles.shapeHint}>Long-press a shape you added to remove it.</Text>
           </Section>
 
           <Section label="Note">
@@ -357,6 +406,46 @@ export function PlanHoleScreen() {
         onClose={() => setAddDiscOpen(false)}
         onSubmit={handleAddDisc}
       />
+
+      <Modal
+        visible={addShapeOpen}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setAddShapeOpen(false)}
+      >
+        <View style={styles.modalWrap}>
+          <Pressable
+            style={StyleSheet.absoluteFill}
+            onPress={() => setAddShapeOpen(false)}
+          />
+          <View style={styles.modalCard}>
+            <Text style={styles.modalTitle}>NEW SHAPE</Text>
+            <TextInput
+              style={styles.modalInput}
+              value={newShapeName}
+              onChangeText={setNewShapeName}
+              placeholder="e.g. Hyzer flip"
+              placeholderTextColor={SHELL.textFaint}
+              autoFocus
+              autoCapitalize="words"
+              returnKeyType="done"
+              onSubmitEditing={() => void handleAddShape()}
+            />
+            <View style={styles.modalActions}>
+              <Pressable onPress={() => setAddShapeOpen(false)} hitSlop={8}>
+                <Text style={styles.modalCancel}>Cancel</Text>
+              </Pressable>
+              <Pressable
+                style={[styles.modalAdd, !newShapeName.trim() && styles.modalAddDisabled]}
+                disabled={!newShapeName.trim()}
+                onPress={() => void handleAddShape()}
+              >
+                <Text style={styles.modalAddLabel}>Add shape</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -499,6 +588,45 @@ const styles = StyleSheet.create({
   shapeChipOn: { backgroundColor: MODE.plan, borderColor: MODE.plan },
   shapeLabel: { fontFamily: FONT.b600, fontSize: 15, color: SHELL.textSecondary },
   shapeLabelOn: { color: '#fff' },
+  shapeHint: { fontFamily: FONT.b500, fontSize: 12, color: SHELL.textFaint, marginTop: 2 },
+  modalWrap: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 28,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+  },
+  modalCard: {
+    width: '100%',
+    backgroundColor: SHELL.card,
+    borderRadius: 18,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: SHELL.border,
+    gap: 14,
+  },
+  modalTitle: { fontFamily: FONT.bc700, fontSize: 14, letterSpacing: 1.6, color: SHELL.textMuted },
+  modalInput: {
+    backgroundColor: SHELL.bg,
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    fontFamily: FONT.b600,
+    fontSize: 17,
+    color: SHELL.text,
+    borderWidth: 1,
+    borderColor: SHELL.border,
+  },
+  modalActions: { flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', gap: 18 },
+  modalCancel: { fontFamily: FONT.b600, fontSize: 15, color: SHELL.textMuted },
+  modalAdd: {
+    backgroundColor: MODE.plan,
+    paddingHorizontal: 18,
+    paddingVertical: 11,
+    borderRadius: 12,
+  },
+  modalAddDisabled: { opacity: 0.4 },
+  modalAddLabel: { fontFamily: FONT.bc700, fontSize: 15, color: '#fff' },
   aimInput: {
     minHeight: 96,
     backgroundColor: SHELL.card,

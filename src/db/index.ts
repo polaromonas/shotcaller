@@ -2,10 +2,10 @@ import * as SQLite from 'expo-sqlite';
 import { SCHEMA_SQL } from './schema';
 import { DEFAULT_TAGS } from './types';
 
-// Fresh filename for V2 — the V1 practice/stats/tournament tables are gone, so
-// a new DB starts clean rather than carrying forward the old shape. There are
-// no V1 users and no practice data worth migrating.
-const DB_NAME = 'shotcaller-v2.db';
+// Filename is bumped on schema changes pre-release (no migration framework yet).
+// v2b: shot_shape is no longer a fixed enum — the `shape` table makes it
+// user-extensible, so hole_plan.shot_shape dropped its CHECK constraint.
+const DB_NAME = 'shotcaller-v2b.db';
 
 let dbPromise: Promise<SQLite.SQLiteDatabase> | null = null;
 
