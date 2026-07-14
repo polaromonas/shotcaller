@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import type { RouteProp } from '@react-navigation/native';
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -139,7 +140,8 @@ export function LayoutHolesScreen() {
           style={styles.playBtn}
           onPress={() => navigation.navigate('PlayLayout', { layoutId })}
         >
-          <Text style={styles.playLabel}>▶ Play this</Text>
+          <Ionicons name="play" size={15} color="#fff" />
+          <Text style={styles.playLabel}>Play this</Text>
         </Pressable>
       </View>
     </SafeAreaView>
@@ -210,6 +212,8 @@ const styles = StyleSheet.create({
   editLabel: { fontFamily: FONT.bc700, fontSize: 15, letterSpacing: 0.5, color: SHELL.textSecondary },
   playBtn: {
     flex: 1,
+    flexDirection: 'row',
+    gap: 7,
     paddingVertical: 15,
     borderRadius: 14,
     alignItems: 'center',
