@@ -17,6 +17,7 @@ type Props = {
   selectedId: number | null;
   onPick: (discId: number) => void;
   onClose: () => void;
+  onAddDisc?: () => void;
 };
 
 type Filter = 'All' | DiscCategory;
@@ -40,6 +41,7 @@ export function DiscPickerSheet({
   selectedId,
   onPick,
   onClose,
+  onAddDisc,
 }: Props) {
   const [filter, setFilter] = useState<Filter>('All');
 
@@ -68,9 +70,16 @@ export function DiscPickerSheet({
         <View style={styles.grabber} />
         <View style={styles.header}>
           <Text style={styles.title}>PICK A DISC</Text>
-          <Pressable onPress={onClose} hitSlop={10}>
-            <Text style={styles.cancel}>Cancel</Text>
-          </Pressable>
+          <View style={styles.headerActions}>
+            {onAddDisc && (
+              <Pressable onPress={onAddDisc} hitSlop={8}>
+                <Text style={styles.addDisc}>+ Add disc</Text>
+              </Pressable>
+            )}
+            <Pressable onPress={onClose} hitSlop={10}>
+              <Text style={styles.cancel}>Cancel</Text>
+            </Pressable>
+          </View>
         </View>
 
         <View style={styles.filterRow}>
@@ -174,6 +183,8 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
     color: SHELL.text,
   },
+  headerActions: { flexDirection: 'row', alignItems: 'center', gap: 18 },
+  addDisc: { fontFamily: FONT.b600, fontSize: 15, color: MODE.plan },
   cancel: { fontFamily: FONT.b600, fontSize: 15, color: SHELL.textMuted },
   filterRow: {
     flexDirection: 'row',

@@ -6,6 +6,7 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
   TextInput,
   View,
@@ -45,6 +46,9 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
   const [nickname, setNickname] = useState('');
   const [category, setCategory] = useState<DiscCategory | null>(null);
   const [color, setColor] = useState<string | null>(null);
+  // New discs default to in-bag — you're usually adding a disc you'll throw.
+  // Only shown when adding; existing discs toggle in/out from the bag list.
+  const [inBag, setInBag] = useState(true);
   const [flight, setFlight] = useState<Record<FlightField, string>>({
     speed: '',
     glide: '',
@@ -76,6 +80,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
       setNickname(disc.nickname ?? '');
       setCategory(disc.category);
       setColor(disc.color);
+      setInBag(disc.in_bag);
       setFlight({
         speed: flightToText(disc.speed),
         glide: flightToText(disc.glide),
@@ -93,6 +98,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
       setNickname('');
       setCategory(null);
       setColor(null);
+      setInBag(true);
       setFlight({ speed: '', glide: '', turn: '', fade: '' });
       setTurnNegative(true);
       setSelectedTagIds(new Set());
@@ -110,6 +116,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
     setNickname('');
     setCategory(null);
     setColor(null);
+    setInBag(true);
     setFlight({ speed: '', glide: '', turn: '', fade: '' });
     setTurnNegative(true);
     setSelectedTagIds(new Set());
@@ -231,6 +238,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
         nickname: nickname.trim() || null,
         category,
         color,
+        in_bag: inBag,
         speed: parseFlight(flight.speed),
         glide: parseFlight(flight.glide),
         turn: parseTurn(flight.turn, turnNegative),
@@ -494,6 +502,24 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
             </View>
           </Field>
 
+          {!isEditing && (
+            <View style={styles.inBagRow}>
+              <View style={styles.inBagText}>
+                <Text style={styles.inBagLabel}>In my bag</Text>
+                <Text style={styles.inBagCaption}>
+                  Shelved discs don't show in disc pickers
+                </Text>
+              </View>
+              <Switch
+                value={inBag}
+                onValueChange={setInBag}
+                trackColor={{ true: INBAG_GREEN, false: UI.border }}
+                thumbColor="#fff"
+                ios_backgroundColor={UI.border}
+              />
+            </View>
+          )}
+
           {error && <Text style={styles.error}>{error}</Text>}
         </ScrollView>
       </KeyboardAvoidingView>
@@ -716,4 +742,14 @@ const styles = StyleSheet.create({
   signLabel: { fontSize: 16, fontWeight: '700', color: UI.textMuted },
   signLabelOn: { color: UI.bg },
   error: { color: UI.danger, fontSize: 14, marginTop: 4 },
+  inBagRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 12,
+    paddingVertical: 4,
+  },
+  inBagText: { flex: 1, minWidth: 0, gap: 2 },
+  inBagLabel: { fontSize: 15, fontWeight: '600', color: UI.text },
+  inBagCaption: { fontSize: 12, color: UI.textMuted },
 });

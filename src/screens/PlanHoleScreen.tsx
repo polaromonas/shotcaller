@@ -28,9 +28,16 @@ import {
   type Hole,
   type Layout,
 } from '../db/courses';
-import { discDisplayName, listDiscs, type DiscWithTags } from '../db/discs';
+import {
+  createDisc,
+  discDisplayName,
+  listDiscs,
+  type DiscWithTags,
+  type NewDiscInput,
+} from '../db/discs';
 import { getHolePlan, saveHolePlan } from '../db/plans';
 import { DiscPickerSheet } from '../components/DiscPickerSheet';
+import { AddDiscSheet } from '../components/AddDiscSheet';
 import { FONT, MODE, SHELL } from '../theme/colors';
 import type { YouStackParamList } from '../navigation/types';
 
@@ -58,6 +65,7 @@ export function PlanHoleScreen() {
   const [distance, setDistance] = useState('');
   const [editingFacts, setEditingFacts] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [addDiscOpen, setAddDiscOpen] = useState(false);
 
   useEffect(() => {
     let alive = true;
@@ -114,6 +122,14 @@ export function PlanHoleScreen() {
     }
     setShotShape(s);
     if (isOverhandShape(s)) setThrowType('Overhand');
+  };
+
+  // Add a disc without leaving the plan flow, then auto-select it for this hole
+  // (you added it because you want to throw it here).
+  const handleAddDisc = async (input: NewDiscInput) => {
+    const newId = await createDisc(input);
+    setDiscs(await listDiscs());
+    setDiscId(newId);
   };
 
   const nextHole = useMemo(() => {
@@ -240,6 +256,12 @@ export function PlanHoleScreen() {
                   All {bagDiscs.length} discs…
                 </Text>
               </Pressable>
+              <Pressable
+                style={styles.addDiscChip}
+                onPress={() => setAddDiscOpen(true)}
+              >
+                <Text style={styles.addDiscLabel}>+ Add</Text>
+              </Pressable>
             </View>
           </Section>
 
@@ -323,6 +345,16 @@ export function PlanHoleScreen() {
           setPickerOpen(false);
         }}
         onClose={() => setPickerOpen(false)}
+        onAddDisc={() => {
+          setPickerOpen(false);
+          setAddDiscOpen(true);
+        }}
+      />
+
+      <AddDiscSheet
+        visible={addDiscOpen}
+        onClose={() => setAddDiscOpen(false)}
+        onSubmit={handleAddDisc}
       />
     </SafeAreaView>
   );
@@ -423,6 +455,14 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
   },
   allDiscsLabel: { fontFamily: FONT.b600, fontSize: 15, color: SHELL.textSecondary },
+  addDiscChip: {
+    paddingHorizontal: 14,
+    paddingVertical: 9,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: MODE.plan,
+  },
+  addDiscLabel: { fontFamily: FONT.b700, fontSize: 15, color: MODE.plan },
   segmented: {
     flexDirection: 'row',
     backgroundColor: SHELL.card,
