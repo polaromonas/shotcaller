@@ -11,6 +11,7 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import type { RouteProp } from '@react-navigation/native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -194,7 +195,7 @@ export function PlanHoleScreen() {
               <Text style={styles.factsText}>
                 Par {par} · {distanceLabel}
               </Text>
-              <Text style={styles.factsPencil}>✎</Text>
+              <Ionicons name="pencil" size={14} color={MODE.plan} />
             </Pressable>
           </View>
 
@@ -320,7 +321,7 @@ export function PlanHoleScreen() {
               value={aim}
               onChangeText={setAim}
               multiline
-              placeholder="Right edge of the gap, let it fade back to the basket. OB left — don't flip it."
+              placeholder="Your note for this hole — where to aim, hazards, anything to remember…"
               placeholderTextColor={SHELL.textFaint}
               textAlignVertical="top"
             />
@@ -389,11 +390,20 @@ const styles = StyleSheet.create({
   },
   badgeLabel: { fontFamily: FONT.bc700, fontSize: 13, letterSpacing: 1.5, color: '#fff' },
   content: { paddingHorizontal: 20, paddingBottom: 32, gap: 22 },
-  holeRow: { flexDirection: 'row', alignItems: 'baseline', gap: 14, flexWrap: 'wrap' },
+  holeRow: { flexDirection: 'row', alignItems: 'center', gap: 14, flexWrap: 'wrap' },
   holeNumeral: { fontFamily: FONT.bc800, fontSize: 44, color: SHELL.text },
-  factsBtn: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  factsText: { fontFamily: FONT.b600, fontSize: 16, color: SHELL.textSecondary },
-  factsPencil: { fontSize: 15, color: MODE.plan },
+  factsBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 7,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 10,
+    backgroundColor: SHELL.card,
+    borderWidth: 1,
+    borderColor: SHELL.border,
+  },
+  factsText: { fontFamily: FONT.b600, fontSize: 15, color: SHELL.textSecondary },
   factsEditor: {
     gap: 12,
     padding: 14,
