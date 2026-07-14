@@ -6,11 +6,13 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { countDiscs } from '../db/discs';
 import {
+  clearPlayState,
   listPlayableLayouts,
   mostRecentlyPlayed,
   type PlayableLayout,
 } from '../db/play';
 import { getBagColor } from '../db/settings';
+import { confirmAction } from '../util/confirm';
 import { contrastText, FONT, MODE, SHELL } from '../theme/colors';
 import type { RootStackParamList } from '../navigation/types';
 
@@ -46,6 +48,18 @@ export function HomeScreen() {
   const resumeRound = () =>
     resume && navigation.navigate('PlayLayout', { layoutId: resume.layoutId });
 
+  const endRound = (layoutId: number) =>
+    confirmAction({
+      title: 'End this round?',
+      message: "You'll start fresh next time you play it. Your plan stays.",
+      confirmLabel: 'End round',
+      destructive: true,
+      onConfirm: async () => {
+        await clearPlayState(layoutId);
+        await load();
+      },
+    });
+
   return (
     <SafeAreaView style={styles.root} edges={['top']}>
       <View style={styles.header}>
@@ -56,7 +70,16 @@ export function HomeScreen() {
       <View style={styles.body}>
         {resume && (
           <Pressable style={styles.resume} onPress={resumeRound}>
-            <Text style={styles.resumeLabel}>RESUME ROUND</Text>
+            <View style={styles.resumeTop}>
+              <Text style={styles.resumeLabel}>RESUME ROUND</Text>
+              <Pressable
+                onPress={() => endRound(resume.layoutId)}
+                hitSlop={12}
+                accessibilityLabel="End round"
+              >
+                <Text style={styles.resumeDismiss}>✕</Text>
+              </Pressable>
+            </View>
             <Text style={styles.resumeTitle} numberOfLines={1}>
               {resume.courseName} · {resume.layoutName}
             </Text>
@@ -145,7 +168,9 @@ const styles = StyleSheet.create({
     padding: 16,
     gap: 2,
   },
+  resumeTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   resumeLabel: { fontFamily: FONT.bc700, fontSize: 12, letterSpacing: 1.2, color: 'rgba(255,255,255,0.85)' },
+  resumeDismiss: { fontSize: 16, color: 'rgba(255,255,255,0.75)' },
   resumeTitle: { fontFamily: FONT.bc800, fontSize: 22, color: '#fff' },
   resumeRow: {
     flexDirection: 'row',

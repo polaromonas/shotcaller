@@ -3,6 +3,7 @@ import { createCourse, createLayoutWithHoles, deleteLayout } from '../src/db/cou
 import { createDisc } from '../src/db/discs';
 import { saveHolePlan } from '../src/db/plans';
 import {
+  clearPlayState,
   getPlayHoleNumber,
   listPlayableLayouts,
   loadPlayDeck,
@@ -35,6 +36,8 @@ test('play position round-trips and defaults to null', async () => {
   expect(await getPlayHoleNumber(layoutId)).toBe(7);
   await setPlayHoleNumber(layoutId, 12); // upsert
   expect(await getPlayHoleNumber(layoutId)).toBe(12);
+  await clearPlayState(layoutId); // end the round
+  expect(await getPlayHoleNumber(layoutId)).toBeNull();
 });
 
 test('loadPlayDeck resolves plan + disc per hole, leaving blanks null', async () => {

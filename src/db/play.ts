@@ -96,6 +96,15 @@ export async function getPlayHoleNumber(layoutId: number): Promise<number | null
   return row?.hole_number ?? null;
 }
 
+// End/abandon a round: drop the saved position so it stops showing as a
+// resume. Plans and discs are untouched — only the "where you were" marker.
+export async function clearPlayState(layoutId: number): Promise<void> {
+  const db = await getDb();
+  await db.runAsync('DELETE FROM play_state WHERE layout_id = $id', {
+    $id: layoutId,
+  });
+}
+
 export async function setPlayHoleNumber(
   layoutId: number,
   holeNumber: number

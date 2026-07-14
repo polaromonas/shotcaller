@@ -11,10 +11,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
+  clearPlayState,
   listPlayableLayouts,
   mostRecentlyPlayed,
   type PlayableLayout,
 } from '../db/play';
+import { confirmAction } from '../util/confirm';
 import { FONT, MODE, SHELL } from '../theme/colors';
 import type { RootStackParamList } from '../navigation/types';
 
@@ -37,6 +39,17 @@ export function PlayPickerScreen() {
   const goHome = () => navigation.goBack();
   const play = (layoutId: number) => navigation.navigate('PlayLayout', { layoutId });
   const plan = (layoutId: number) => navigation.navigate('LayoutDetail', { layoutId });
+  const endRound = (layoutId: number) =>
+    confirmAction({
+      title: 'End this round?',
+      message: "You'll start fresh next time you play it. Your plan stays.",
+      confirmLabel: 'End round',
+      destructive: true,
+      onConfirm: async () => {
+        await clearPlayState(layoutId);
+        await load();
+      },
+    });
 
   const resume = layouts ? mostRecentlyPlayed(layouts) : null;
 
@@ -72,9 +85,18 @@ export function PlayPickerScreen() {
 
           {resume && (
             <Pressable style={styles.resume} onPress={() => play(resume.layoutId)}>
-              <Text style={styles.resumeLabel}>
-                RESUME — YOU WERE ON HOLE {resume.lastHole}
-              </Text>
+              <View style={styles.resumeTop}>
+                <Text style={styles.resumeLabel}>
+                  RESUME — YOU WERE ON HOLE {resume.lastHole}
+                </Text>
+                <Pressable
+                  onPress={() => endRound(resume.layoutId)}
+                  hitSlop={12}
+                  accessibilityLabel="End round"
+                >
+                  <Text style={styles.resumeDismiss}>✕</Text>
+                </Pressable>
+              </View>
               <Text style={styles.resumeTitle} numberOfLines={1}>
                 {resume.courseName} · {resume.layoutName}
               </Text>
@@ -170,7 +192,9 @@ const styles = StyleSheet.create({
     padding: 16,
     gap: 4,
   },
+  resumeTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   resumeLabel: { fontFamily: FONT.bc700, fontSize: 12, letterSpacing: 1, color: 'rgba(255,255,255,0.85)' },
+  resumeDismiss: { fontSize: 16, color: 'rgba(255,255,255,0.75)' },
   resumeTitle: { fontFamily: FONT.bc800, fontSize: 22, color: '#fff' },
   resumeRow: {
     flexDirection: 'row',
