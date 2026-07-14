@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
   empty: { gap: 8 },
   emptyTitle: { fontFamily: FONT.bc800, fontSize: 34, color: P.ink },
   emptyBody: { fontFamily: FONT.b500, fontSize: 17, color: P.muted },
-  nav: { flexDirection: 'row', gap: 12, marginTop: 8 },
+  nav: { flexDirection: 'row', gap: 12, marginTop: 8, marginBottom: 16 },
   prevBtn: {
     width: 84,
     height: 96,
