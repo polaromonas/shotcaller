@@ -20,9 +20,9 @@ import {
   type Layout,
 } from '../db/courses';
 import { INBAG_GREEN, UI } from '../theme/colors';
-import type { YouStackParamList } from '../navigation/types';
+import type { RootStackParamList } from '../navigation/types';
 
-type Nav = NativeStackNavigationProp<YouStackParamList, 'CourseAdd'>;
+type Nav = NativeStackNavigationProp<RootStackParamList, 'CourseAdd'>;
 
 const DEFAULT_HOLE_COUNT = 18;
 

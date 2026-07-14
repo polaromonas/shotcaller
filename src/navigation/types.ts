@@ -1,5 +1,7 @@
-export type YouStackParamList = {
-  YouHome: undefined;
+// Single hub-and-spoke stack: Home is the root, every other screen pushes on
+// top and back returns toward Home. No tab navigator.
+export type RootStackParamList = {
+  Home: undefined;
   MyDiscs: undefined;
   CoursesList: undefined;
   CourseAdd: undefined;
@@ -8,9 +10,5 @@ export type YouStackParamList = {
   PlanHole: { layoutId: number; holeId: number };
   PlayPicker: undefined;
   PlayLayout: { layoutId: number };
-};
-
-export type RootStackParamList = {
-  Tabs: undefined;
   About: undefined;
 };

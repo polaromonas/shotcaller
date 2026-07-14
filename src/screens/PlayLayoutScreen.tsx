@@ -22,10 +22,10 @@ import {
 } from '../db/play';
 import type { ThrowType } from '../db/types';
 import { FONT, MODE, PLAY_LIGHT as P } from '../theme/colors';
-import type { YouStackParamList } from '../navigation/types';
+import type { RootStackParamList } from '../navigation/types';
 
-type Nav = NativeStackNavigationProp<YouStackParamList, 'PlayLayout'>;
-type Rt = RouteProp<YouStackParamList, 'PlayLayout'>;
+type Nav = NativeStackNavigationProp<RootStackParamList, 'PlayLayout'>;
+type Rt = RouteProp<RootStackParamList, 'PlayLayout'>;
 
 const THROW_ABBREV: Record<ThrowType, string> = {
   Backhand: 'BH',

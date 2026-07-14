@@ -39,10 +39,10 @@ import { getHolePlan, saveHolePlan } from '../db/plans';
 import { DiscPickerSheet } from '../components/DiscPickerSheet';
 import { AddDiscSheet } from '../components/AddDiscSheet';
 import { FONT, MODE, SHELL } from '../theme/colors';
-import type { YouStackParamList } from '../navigation/types';
+import type { RootStackParamList } from '../navigation/types';
 
-type Nav = NativeStackNavigationProp<YouStackParamList, 'PlanHole'>;
-type Rt = RouteProp<YouStackParamList, 'PlanHole'>;
+type Nav = NativeStackNavigationProp<RootStackParamList, 'PlanHole'>;
+type Rt = RouteProp<RootStackParamList, 'PlanHole'>;
 
 const PARS = [2, 3, 4, 5];
 const isOverhandShape = (s: ShotShape | null) =>

@@ -22,9 +22,9 @@ import {
 import { AddLayoutSheet } from '../components/AddLayoutSheet';
 import { confirmAction } from '../util/confirm';
 import { MODE, UI } from '../theme/colors';
-import type { YouStackParamList } from '../navigation/types';
+import type { RootStackParamList } from '../navigation/types';
 
-type Nav = NativeStackNavigationProp<YouStackParamList, 'CoursesList'>;
+type Nav = NativeStackNavigationProp<RootStackParamList, 'CoursesList'>;
 
 export function CoursesScreen() {
   const navigation = useNavigation<Nav>();
@@ -92,7 +92,12 @@ export function CoursesScreen() {
   return (
     <SafeAreaView style={styles.root} edges={['top']}>
       <View style={styles.header}>
-        <Text style={styles.title}>Courses</Text>
+        <View style={styles.headerLeft}>
+          <Pressable onPress={() => navigation.goBack()} hitSlop={12}>
+            <Text style={styles.back}>‹</Text>
+          </Pressable>
+          <Text style={styles.title}>Courses</Text>
+        </View>
         <Pressable
           onPress={() => navigation.navigate('CourseAdd')}
           style={styles.addBtn}
@@ -251,6 +256,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: UI.border,
   },
+  headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  back: { fontSize: 28, color: UI.textMuted, lineHeight: 30 },
   title: { fontSize: 22, fontWeight: '700', color: UI.text },
   addBtn: {
     paddingHorizontal: 12,

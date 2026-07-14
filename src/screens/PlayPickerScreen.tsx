@@ -16,9 +16,9 @@ import {
   type PlayableLayout,
 } from '../db/play';
 import { FONT, MODE, SHELL } from '../theme/colors';
-import type { YouStackParamList } from '../navigation/types';
+import type { RootStackParamList } from '../navigation/types';
 
-type Nav = NativeStackNavigationProp<YouStackParamList, 'PlayPicker'>;
+type Nav = NativeStackNavigationProp<RootStackParamList, 'PlayPicker'>;
 
 export function PlayPickerScreen() {
   const navigation = useNavigation<Nav>();
@@ -34,7 +34,7 @@ export function PlayPickerScreen() {
     }, [load])
   );
 
-  const goHome = () => navigation.getParent()?.navigate('Home' as never);
+  const goHome = () => navigation.goBack();
   const play = (layoutId: number) => navigation.navigate('PlayLayout', { layoutId });
   const plan = (layoutId: number) => navigation.navigate('LayoutDetail', { layoutId });
 

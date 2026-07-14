@@ -24,10 +24,10 @@ import {
 } from '../db/courses';
 import { confirmAction } from '../util/confirm';
 import { INBAG_GREEN, UI } from '../theme/colors';
-import type { YouStackParamList } from '../navigation/types';
+import type { RootStackParamList } from '../navigation/types';
 
-type Nav = NativeStackNavigationProp<YouStackParamList, 'LayoutEdit'>;
-type Rt = RouteProp<YouStackParamList, 'LayoutEdit'>;
+type Nav = NativeStackNavigationProp<RootStackParamList, 'LayoutEdit'>;
+type Rt = RouteProp<RootStackParamList, 'LayoutEdit'>;
 
 const PARS = [2, 3, 4, 5];
 

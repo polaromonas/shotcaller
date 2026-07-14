@@ -9,6 +9,8 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { SwipeableMethods } from 'react-native-gesture-handler/ReanimatedSwipeable';
 import { AddDiscSheet } from '../components/AddDiscSheet';
 import { DiscCard } from '../components/DiscCard';
@@ -26,6 +28,9 @@ import { getDiscSort, setDiscSort } from '../db/settings';
 import { DEFAULT_DISC_SORT, type DiscSort } from '../db/types';
 import { UI } from '../theme/colors';
 import { confirmAction } from '../util/confirm';
+import type { RootStackParamList } from '../navigation/types';
+
+type Nav = NativeStackNavigationProp<RootStackParamList, 'MyDiscs'>;
 
 const SORT_OPTIONS: { value: DiscSort; label: string; hint: string }[] = [
   {
@@ -54,6 +59,7 @@ const labelFor = (s: DiscSort): string =>
   SORT_OPTIONS.find((o) => o.value === s)?.label ?? s;
 
 export function MyDiscsScreen() {
+  const navigation = useNavigation<Nav>();
   const [discs, setDiscs] = useState<DiscWithTags[] | null>(null);
   const [sortValue, setSortValue] = useState<DiscSort>(DEFAULT_DISC_SORT);
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -151,7 +157,12 @@ export function MyDiscsScreen() {
   return (
     <SafeAreaView style={styles.root} edges={['top']}>
       <View style={styles.header}>
-        <Text style={styles.title}>My discs</Text>
+        <View style={styles.headerLeft}>
+          <Pressable onPress={() => navigation.goBack()} hitSlop={12}>
+            <Text style={styles.back}>‹</Text>
+          </Pressable>
+          <Text style={styles.title}>My discs</Text>
+        </View>
         <Pressable
           onPress={openAddSheet}
           style={styles.addBtn}
@@ -286,6 +297,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: UI.border,
   },
+  headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  back: { fontSize: 28, color: UI.textMuted, lineHeight: 30 },
   title: { fontSize: 22, fontWeight: '700', color: UI.text },
   addBtn: {
     paddingHorizontal: 12,

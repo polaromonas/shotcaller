@@ -20,10 +20,10 @@ import {
 import { discDisplayName, listDiscs } from '../db/discs';
 import { listHolePlans, planSummary, type HolePlan } from '../db/plans';
 import { FONT, MODE, SHELL } from '../theme/colors';
-import type { YouStackParamList } from '../navigation/types';
+import type { RootStackParamList } from '../navigation/types';
 
-type Nav = NativeStackNavigationProp<YouStackParamList, 'LayoutDetail'>;
-type Rt = RouteProp<YouStackParamList, 'LayoutDetail'>;
+type Nav = NativeStackNavigationProp<RootStackParamList, 'LayoutDetail'>;
+type Rt = RouteProp<RootStackParamList, 'LayoutDetail'>;
 
 export function LayoutHolesScreen() {
   const navigation = useNavigation<Nav>();

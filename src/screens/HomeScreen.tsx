@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { countDiscs } from '../db/discs';
 import {
   listPlayableLayouts,
@@ -10,9 +11,12 @@ import {
   type PlayableLayout,
 } from '../db/play';
 import { FONT, MODE, SHELL } from '../theme/colors';
+import type { RootStackParamList } from '../navigation/types';
+
+type Nav = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
 export function HomeScreen() {
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<Nav>();
   const [resume, setResume] = useState<PlayableLayout | null>(null);
   const [discCount, setDiscCount] = useState<number | null>(null);
 
@@ -28,27 +32,18 @@ export function HomeScreen() {
     }, [load])
   );
 
-  const openCourses = () => navigation.navigate('More', { screen: 'CoursesList' });
-  const openPlay = () => navigation.navigate('More', { screen: 'PlayPicker' });
-  const openBag = () => navigation.navigate('More', { screen: 'MyDiscs' });
-  const openAbout = () => navigation.getParent()?.navigate('About');
+  const openCourses = () => navigation.navigate('CoursesList');
+  const openPlay = () => navigation.navigate('PlayPicker');
+  const openBag = () => navigation.navigate('MyDiscs');
+  const openAbout = () => navigation.navigate('About');
   const resumeRound = () =>
-    resume &&
-    navigation.navigate('More', {
-      screen: 'PlayLayout',
-      params: { layoutId: resume.layoutId },
-    });
+    resume && navigation.navigate('PlayLayout', { layoutId: resume.layoutId });
 
   return (
     <SafeAreaView style={styles.root} edges={['top']}>
       <View style={styles.header}>
-        <View>
-          <Text style={styles.wordmark}>SHOTCALLER</Text>
-          <Text style={styles.tagline}>You call the shots.</Text>
-        </View>
-        <Pressable onPress={openAbout} hitSlop={8}>
-          <Text style={styles.about}>About</Text>
-        </Pressable>
+        <Text style={styles.wordmark}>SHOTCALLER</Text>
+        <Text style={styles.tagline}>You call the shots.</Text>
       </View>
 
       <View style={styles.body}>
@@ -105,6 +100,10 @@ export function HomeScreen() {
             {discCount === null ? '' : `${discCount} ${discCount === 1 ? 'disc' : 'discs'} ›`}
           </Text>
         </Pressable>
+
+        <Pressable onPress={openAbout} hitSlop={8} style={styles.aboutLink}>
+          <Text style={styles.aboutLabel}>About ShotCaller</Text>
+        </Pressable>
       </View>
     </SafeAreaView>
   );
@@ -112,18 +111,10 @@ export function HomeScreen() {
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: SHELL.bg },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingTop: 8,
-    paddingBottom: 12,
-  },
+  header: { paddingHorizontal: 20, paddingTop: 8, paddingBottom: 12 },
   wordmark: { fontFamily: FONT.bc800, fontSize: 30, letterSpacing: 0.5, color: SHELL.text },
   tagline: { fontFamily: FONT.b500, fontSize: 14, color: SHELL.textMuted, marginTop: -2 },
-  about: { fontFamily: FONT.b600, fontSize: 15, color: SHELL.textSecondary },
-  body: { flex: 1, paddingHorizontal: 20, paddingBottom: 20, gap: 12 },
+  body: { flex: 1, paddingHorizontal: 20, paddingBottom: 16, gap: 12 },
   resume: {
     backgroundColor: MODE.play,
     borderRadius: 16,
@@ -159,4 +150,6 @@ const styles = StyleSheet.create({
   },
   bagLabel: { fontFamily: FONT.bc700, fontSize: 17, color: SHELL.text },
   bagMeta: { fontFamily: FONT.b600, fontSize: 14, color: SHELL.textMuted },
+  aboutLink: { alignSelf: 'center', paddingVertical: 4 },
+  aboutLabel: { fontFamily: FONT.b500, fontSize: 13, color: SHELL.textFaint },
 });
