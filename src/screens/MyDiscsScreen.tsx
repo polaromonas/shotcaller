@@ -173,7 +173,7 @@ export function MyDiscsScreen() {
           <Pressable onPress={() => navigation.goBack()} hitSlop={12}>
             <Text style={styles.back}>‹</Text>
           </Pressable>
-          <Text style={styles.title}>My discs</Text>
+          <Text style={styles.title}>My Bag</Text>
         </View>
         <Pressable
           onPress={openAddSheet}

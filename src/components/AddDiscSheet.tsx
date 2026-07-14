@@ -11,7 +11,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { DISC_CATEGORIES, type DiscCategory } from '../db/types';
+import { CATEGORY_LABELS, DISC_CATEGORIES, type DiscCategory } from '../db/types';
 import { DISC_SWATCHES, INBAG_GREEN, UI } from '../theme/colors';
 import { createTag, listTags, type Tag } from '../db/tags';
 import type { DiscWithTags, NewDiscInput } from '../db/discs';
@@ -334,7 +334,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
                         {d.model}
                       </Text>
                       <Text style={styles.suggestMeta} numberOfLines={1}>
-                        {d.manufacturer} · {d.category}
+                        {d.manufacturer} · {CATEGORY_LABELS[d.category]}
                       </Text>
                     </View>
                     <Text style={styles.suggestFlight}>

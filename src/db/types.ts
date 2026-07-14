@@ -19,6 +19,16 @@ export const OVERHAND_SHOT_SHAPES: readonly ShotShape[] = ['Thumber', 'Tomahawk'
 export const DISC_CATEGORIES = ['DD', 'FWD', 'MID', 'P&A'] as const;
 export type DiscCategory = (typeof DISC_CATEGORIES)[number];
 
+// Full-word display labels. The stored values stay the short codes; these are
+// shown wherever there's room (bag list, disc picker, caddie card). The
+// Add-Disc segmented control keeps the short codes for space.
+export const CATEGORY_LABELS: Record<DiscCategory, string> = {
+  DD: 'Distance',
+  FWD: 'Fairway',
+  MID: 'Midrange',
+  'P&A': 'Putter',
+};
+
 export const DISC_SORTS = [
   'bag-order',
   'alphabetical',

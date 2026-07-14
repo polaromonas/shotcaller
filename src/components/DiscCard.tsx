@@ -5,6 +5,7 @@ import ReanimatedSwipeable, {
 } from 'react-native-gesture-handler/ReanimatedSwipeable';
 import { UI } from '../theme/colors';
 import { discDisplayName, type DiscWithTags } from '../db/discs';
+import { CATEGORY_LABELS } from '../db/types';
 import { InBagButton } from './InBagButton';
 
 // Subtitle disambiguates the disc without repeating the display name or showing
@@ -68,7 +69,7 @@ export function DiscCard({
             <Text style={styles.model} numberOfLines={1}>
               {discDisplayName(disc)}
             </Text>
-            <Text style={styles.category}>{disc.category}</Text>
+            <Text style={styles.category}>{CATEGORY_LABELS[disc.category]}</Text>
           </View>
           <Text style={styles.manufacturer} numberOfLines={1}>
             {discSubtitle(disc)}

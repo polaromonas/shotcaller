@@ -1,6 +1,6 @@
 import { getDb } from './index';
 import { getDiscSort } from './settings';
-import type { DiscCategory, DiscSort } from './types';
+import { CATEGORY_LABELS, type DiscCategory, type DiscSort } from './types';
 
 export type Disc = {
   id: number;
@@ -51,11 +51,12 @@ export function discSubline(d: {
 }): string {
   const plastic = d.plastic && d.plastic.trim().length > 0 ? d.plastic.trim() : null;
   const nicknamed = !!(d.nickname && d.nickname.trim().length > 0);
+  const category = CATEGORY_LABELS[d.category];
   if (nicknamed) {
     const mold = plastic ? `${plastic} ${d.model}` : d.model;
-    return `${mold} · ${d.category}`;
+    return `${mold} · ${category}`;
   }
-  return plastic ? `${plastic} · ${d.category}` : d.category;
+  return plastic ? `${plastic} · ${category}` : category;
 }
 
 export type NewDiscInput = {
