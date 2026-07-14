@@ -21,9 +21,8 @@ export function AboutScreen() {
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.tagline}>You call the shots.</Text>
         <Text style={styles.body}>
-          ShotCaller is a game-planning app for disc golf. It doesn't keep
-          score — UDisc or the PDGA app does that. It's the second screen you
-          glance at on the tee: what disc, what shape, where to aim.
+          ShotCaller is a game-planning app for disc golf. It's the second screen
+          you glance at on the tee: what disc, what shape, where to aim.
         </Text>
 
         <Section
