@@ -121,7 +121,8 @@ INSERT OR IGNORE INTO shape (name, is_overhand, is_builtin, sort_order) VALUES $
 
 CREATE TABLE IF NOT EXISTS app_settings (
   id INTEGER PRIMARY KEY CHECK (id = 1),
-  disc_sort TEXT NOT NULL DEFAULT 'bag-order' CHECK (${DISC_SORT_CHECK})
+  disc_sort TEXT NOT NULL DEFAULT 'bag-order' CHECK (${DISC_SORT_CHECK}),
+  bag_color TEXT
 );
 INSERT OR IGNORE INTO app_settings (id, disc_sort) VALUES (1, 'bag-order');
 `;

@@ -12,12 +12,24 @@ let dbPromise: Promise<SQLite.SQLiteDatabase> | null = null;
 export async function getDb(): Promise<SQLite.SQLiteDatabase> {
   if (!dbPromise) {
     dbPromise = SQLite.openDatabaseAsync(DB_NAME).then(async (db) => {
+      await migrate(db);
       await db.execAsync(SCHEMA_SQL);
       await seedDefaultTags(db);
       return db;
     });
   }
   return dbPromise;
+}
+
+// Additive, data-preserving migrations (ADD COLUMN is safe in SQLite). Runs
+// before SCHEMA_SQL. Guard each with a column/table check so it's idempotent.
+async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
+  const settingsCols = await db.getAllAsync<{ name: string }>(
+    "PRAGMA table_info('app_settings')"
+  );
+  if (settingsCols.length > 0 && !settingsCols.some((c) => c.name === 'bag_color')) {
+    await db.execAsync('ALTER TABLE app_settings ADD COLUMN bag_color TEXT');
+  }
 }
 
 async function seedDefaultTags(db: SQLite.SQLiteDatabase): Promise<void> {

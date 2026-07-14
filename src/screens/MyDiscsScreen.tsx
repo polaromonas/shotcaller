@@ -4,6 +4,7 @@ import {
   FlatList,
   Modal,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -24,9 +25,9 @@ import {
   type DiscWithTags,
   type NewDiscInput,
 } from '../db/discs';
-import { getDiscSort, setDiscSort } from '../db/settings';
+import { getDiscSort, setDiscSort, getBagColor, setBagColor } from '../db/settings';
 import { DEFAULT_DISC_SORT, type DiscSort } from '../db/types';
-import { UI } from '../theme/colors';
+import { DISC_SWATCHES, UI } from '../theme/colors';
 import { confirmAction } from '../util/confirm';
 import type { RootStackParamList } from '../navigation/types';
 
@@ -62,15 +63,26 @@ export function MyDiscsScreen() {
   const navigation = useNavigation<Nav>();
   const [discs, setDiscs] = useState<DiscWithTags[] | null>(null);
   const [sortValue, setSortValue] = useState<DiscSort>(DEFAULT_DISC_SORT);
+  const [bagColor, setBagColorState] = useState<string | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [editingDisc, setEditingDisc] = useState<DiscWithTags | null>(null);
   const [sortPickerOpen, setSortPickerOpen] = useState(false);
   const openRow = useRef<SwipeableMethods | null>(null);
 
   const refresh = useCallback(async () => {
-    const [rows, sort] = await Promise.all([listDiscs(), getDiscSort()]);
+    const [rows, sort, color] = await Promise.all([
+      listDiscs(),
+      getDiscSort(),
+      getBagColor(),
+    ]);
     setDiscs(rows);
     setSortValue(sort);
+    setBagColorState(color);
+  }, []);
+
+  const pickBagColor = useCallback(async (color: string | null) => {
+    setBagColorState(color);
+    await setBagColor(color);
   }, []);
 
   useEffect(() => {
@@ -171,6 +183,35 @@ export function MyDiscsScreen() {
         >
           <Text style={styles.addBtnLabel}>+ Add</Text>
         </Pressable>
+      </View>
+
+      <View style={styles.bagColorRow}>
+        <Text style={styles.bagColorLabel}>Bag color</Text>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.swatchStrip}
+        >
+          <Pressable
+            onPress={() => void pickBagColor(null)}
+            style={[styles.swatchNone, bagColor === null && styles.swatchSel]}
+            accessibilityLabel="Default bag color"
+          >
+            <Text style={styles.swatchNoneLabel}>None</Text>
+          </Pressable>
+          {DISC_SWATCHES.map((hex) => (
+            <Pressable
+              key={hex}
+              onPress={() => void pickBagColor(hex)}
+              style={[
+                styles.swatch,
+                { backgroundColor: hex },
+                bagColor === hex && styles.swatchSel,
+              ]}
+              accessibilityLabel={`Bag color ${hex}`}
+            />
+          ))}
+        </ScrollView>
       </View>
 
       {discs !== null && discs.length > 0 && (
@@ -309,6 +350,42 @@ const styles = StyleSheet.create({
     borderColor: UI.border,
   },
   addBtnLabel: { fontSize: 14, fontWeight: '600', color: UI.text },
+  bagColorRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: UI.border,
+  },
+  bagColorLabel: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: UI.textMuted,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  swatchStrip: { gap: 8, alignItems: 'center', paddingRight: 8 },
+  swatch: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.15)',
+  },
+  swatchNone: {
+    height: 28,
+    paddingHorizontal: 12,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: UI.border,
+    backgroundColor: UI.surface,
+  },
+  swatchNoneLabel: { fontSize: 12, fontWeight: '600', color: UI.textMuted },
+  swatchSel: { borderWidth: 3, borderColor: UI.text },
   sortBar: {
     flexDirection: 'row',
     alignItems: 'center',

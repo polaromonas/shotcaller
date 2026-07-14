@@ -17,6 +17,17 @@ export const MODE_TINT = {
 
 export const INBAG_GREEN = '#3a9e5c';
 
+// Readable text (dark ink or white) for a colored background, by perceived
+// luminance. Used for the user-colored My Bag card on Home.
+export function contrastText(hex: string): string {
+  const h = hex.replace('#', '');
+  if (h.length < 6) return '#ffffff';
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  return 0.299 * r + 0.587 * g + 0.114 * b > 150 ? '#101216' : '#ffffff';
+}
+
 // Dark shell — the V2 design's default surface for every screen except the
 // Play caddie card (which gets its own sunlight-first light theme). Values from
 // design_handoff_shotcaller_v2/README.md. Introduced with the Plan-a-Hole

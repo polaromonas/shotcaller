@@ -10,7 +10,8 @@ import {
   mostRecentlyPlayed,
   type PlayableLayout,
 } from '../db/play';
-import { FONT, MODE, SHELL } from '../theme/colors';
+import { getBagColor } from '../db/settings';
+import { contrastText, FONT, MODE, SHELL } from '../theme/colors';
 import type { RootStackParamList } from '../navigation/types';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'Home'>;
@@ -19,11 +20,17 @@ export function HomeScreen() {
   const navigation = useNavigation<Nav>();
   const [resume, setResume] = useState<PlayableLayout | null>(null);
   const [discCount, setDiscCount] = useState<number | null>(null);
+  const [bagColor, setBagColor] = useState<string | null>(null);
 
   const load = useCallback(async () => {
-    const [layouts, count] = await Promise.all([listPlayableLayouts(), countDiscs()]);
+    const [layouts, count, color] = await Promise.all([
+      listPlayableLayouts(),
+      countDiscs(),
+      getBagColor(),
+    ]);
     setResume(mostRecentlyPlayed(layouts));
     setDiscCount(count);
+    setBagColor(color);
   }, []);
 
   useFocusEffect(
@@ -94,9 +101,26 @@ export function HomeScreen() {
           </LinearGradient>
         </Pressable>
 
-        <Pressable style={styles.bagCard} onPress={openBag}>
-          <Text style={styles.bagLabel}>My Bag</Text>
-          <Text style={styles.bagMeta}>
+        <Pressable
+          style={[
+            styles.bagCard,
+            bagColor
+              ? { backgroundColor: bagColor, borderColor: bagColor }
+              : null,
+          ]}
+          onPress={openBag}
+        >
+          <Text
+            style={[styles.bagLabel, bagColor ? { color: contrastText(bagColor) } : null]}
+          >
+            My Bag
+          </Text>
+          <Text
+            style={[
+              styles.bagMeta,
+              bagColor ? { color: contrastText(bagColor), opacity: 0.75 } : null,
+            ]}
+          >
             {discCount === null ? '' : `${discCount} ${discCount === 1 ? 'disc' : 'discs'} ›`}
           </Text>
         </Pressable>
