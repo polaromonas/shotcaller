@@ -94,7 +94,7 @@ export function LayoutHolesScreen() {
           {holes.map((h) => {
             const plan = plansByHole.get(h.id);
             const isCurrent = h.id === lastEditedHole;
-            const facts = `P${h.par}·${h.distance_ft > 0 ? h.distance_ft : '—'}`;
+            const facts = `Par ${h.par} · ${h.distance_ft > 0 ? h.distance_ft : '—'}`;
             const summary = plan
               ? planSummary(plan, plan.disc_id ? discNames.get(plan.disc_id) ?? null : null)
               : null;
@@ -112,7 +112,9 @@ export function LayoutHolesScreen() {
                 ]}
               >
                 <Text style={styles.cellNumber}>{h.hole_number}</Text>
-                <Text style={styles.cellFacts}>{facts}</Text>
+                <Text style={styles.cellFacts} numberOfLines={1}>
+                  {facts}
+                </Text>
                 {plan ? (
                   <Text style={styles.cellSummary} numberOfLines={2}>
                     {summary}

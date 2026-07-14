@@ -185,7 +185,6 @@ export function PlayLayoutScreen() {
           </Pressable>
         )}
       </View>
-      <Text style={styles.swipeHint}>or swipe anywhere</Text>
     </SafeAreaView>
   );
 }
@@ -263,11 +262,4 @@ const styles = StyleSheet.create({
     backgroundColor: P.ink,
   },
   nextLabel: { fontFamily: FONT.bc800, fontSize: 30, color: '#fff' },
-  swipeHint: {
-    textAlign: 'center',
-    fontFamily: FONT.b500,
-    fontSize: 12,
-    color: P.muted,
-    paddingVertical: 10,
-  },
 });

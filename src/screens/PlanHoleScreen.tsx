@@ -277,7 +277,6 @@ export function PlanHoleScreen() {
             <View style={styles.chipWrap}>
               {SHOT_SHAPES.map((s) => {
                 const on = shotShape === s;
-                const oh = OVERHAND_SHOT_SHAPES.includes(s);
                 return (
                   <Pressable
                     key={s}
@@ -286,7 +285,6 @@ export function PlanHoleScreen() {
                   >
                     <Text style={[styles.shapeLabel, on && styles.shapeLabelOn]}>
                       {s}
-                      {oh ? ' ⇒OH' : ''}
                     </Text>
                   </Pressable>
                 );
@@ -294,7 +292,7 @@ export function PlanHoleScreen() {
             </View>
           </Section>
 
-          <Section label="Aim — what would your caddie say?">
+          <Section label="Note">
             <TextInput
               style={styles.aimInput}
               value={aim}
@@ -305,11 +303,6 @@ export function PlanHoleScreen() {
               textAlignVertical="top"
             />
           </Section>
-
-          <View style={styles.photoSlot}>
-            <Text style={styles.photoText}>📷  Add tee photo</Text>
-            <Text style={styles.photoSoon}>coming soon</Text>
-          </View>
         </ScrollView>
 
         <View style={styles.footer}>
@@ -468,19 +461,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: SHELL.border,
   },
-  photoSlot: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    paddingVertical: 16,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: SHELL.dashed,
-    borderStyle: 'dashed',
-  },
-  photoText: { fontFamily: FONT.b600, fontSize: 15, color: SHELL.textMuted },
-  photoSoon: { fontFamily: FONT.b500, fontSize: 12, color: SHELL.textFaint },
   footer: {
     paddingHorizontal: 20,
     paddingTop: 10,
