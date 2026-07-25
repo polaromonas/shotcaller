@@ -30,6 +30,15 @@ async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
   if (settingsCols.length > 0 && !settingsCols.some((c) => c.name === 'bag_color')) {
     await db.execAsync('ALTER TABLE app_settings ADD COLUMN bag_color TEXT');
   }
+
+  const holePlanCols = await db.getAllAsync<{ name: string }>(
+    "PRAGMA table_info('hole_plan')"
+  );
+  if (holePlanCols.length > 0 && !holePlanCols.some((c) => c.name === 'needs_review')) {
+    await db.execAsync(
+      'ALTER TABLE hole_plan ADD COLUMN needs_review INTEGER NOT NULL DEFAULT 0'
+    );
+  }
 }
 
 async function seedDefaultTags(db: SQLite.SQLiteDatabase): Promise<void> {

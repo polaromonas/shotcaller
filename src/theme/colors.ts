@@ -17,6 +17,12 @@ export const MODE_TINT = {
 
 export const INBAG_GREEN = '#3a9e5c';
 
+// Semantic "needs attention" amber for the Play→Plan revise flag. Deliberately
+// NOT a mode color (mode colors are identity, never reused for unrelated UI) —
+// this reads as a to-do marker across both the dark shell and the Play light
+// card. Used only for the "flag to revise" affordance.
+export const REVIEW_AMBER = '#E0932B';
+
 // Readable text (dark ink or white) for a colored background, by perceived
 // luminance. Used for the user-colored My Bag card on Home.
 export function contrastText(hex: string): string {

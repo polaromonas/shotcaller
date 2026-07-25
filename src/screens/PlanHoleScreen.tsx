@@ -31,12 +31,12 @@ import {
   type DiscWithTags,
   type NewDiscInput,
 } from '../db/discs';
-import { getHolePlan, saveHolePlan } from '../db/plans';
+import { getHolePlan, saveHolePlan, setHolePlanReview } from '../db/plans';
 import { listShapes, createShape, deleteShape, type Shape } from '../db/shapes';
 import { DiscPickerSheet } from '../components/DiscPickerSheet';
 import { AddDiscSheet } from '../components/AddDiscSheet';
 import { confirmAction } from '../util/confirm';
-import { FONT, MODE, SHELL } from '../theme/colors';
+import { FONT, MODE, REVIEW_AMBER, SHELL } from '../theme/colors';
 import type { RootStackParamList } from '../navigation/types';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'PlanHole'>;
@@ -58,6 +58,7 @@ export function PlanHoleScreen() {
   const [shotShape, setShotShape] = useState<string | null>(null);
   const [shapes, setShapes] = useState<Shape[]>([]);
   const [aim, setAim] = useState('');
+  const [needsReview, setNeedsReview] = useState(false);
   const [par, setPar] = useState(3);
   const [distance, setDistance] = useState('');
   const [editingFacts, setEditingFacts] = useState(false);
@@ -89,6 +90,7 @@ export function PlanHoleScreen() {
       setThrowType(plan?.throw_type ?? null);
       setShotShape(plan?.shot_shape ?? null);
       setAim(plan?.aim_note ?? '');
+      setNeedsReview(plan?.needs_review ?? false);
       setEditingFacts(false);
       setLoading(false);
     })();
@@ -196,6 +198,13 @@ export function PlanHoleScreen() {
     }
   }, [layoutId, holeId, discId, throwType, shotShape, aim, hole, par, distance, nextHole, navigation]);
 
+  // Clear the revise flag once you've addressed it. Manual only — opening a
+  // plan to look at it shouldn't dismiss the reminder.
+  const handleResolveReview = useCallback(async () => {
+    setNeedsReview(false);
+    await setHolePlanReview(holeId, false);
+  }, [holeId]);
+
   if (loading || !layout || !hole) {
     return (
       <View style={styles.center}>
@@ -222,6 +231,20 @@ export function PlanHoleScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
         <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+          {needsReview && (
+            <View style={styles.reviewBanner}>
+              <Ionicons name="flag" size={16} color={REVIEW_AMBER} />
+              <Text style={styles.reviewBannerText}>Flagged to revise.</Text>
+              <Pressable
+                onPress={() => void handleResolveReview()}
+                hitSlop={8}
+                style={styles.resolveBtn}
+              >
+                <Text style={styles.resolveLabel}>Resolve</Text>
+              </Pressable>
+            </View>
+          )}
+
           <View style={styles.holeRow}>
             <Text style={styles.holeNumeral}>HOLE {hole.hole_number}</Text>
             <Pressable
@@ -479,6 +502,25 @@ const styles = StyleSheet.create({
   },
   badgeLabel: { fontFamily: FONT.bc700, fontSize: 13, letterSpacing: 1.5, color: '#fff' },
   content: { paddingHorizontal: 20, paddingBottom: 32, gap: 22 },
+  reviewBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    borderRadius: 14,
+    backgroundColor: 'rgba(224,147,43,0.12)',
+    borderWidth: 1,
+    borderColor: 'rgba(224,147,43,0.45)',
+  },
+  reviewBannerText: { flex: 1, fontFamily: FONT.b600, fontSize: 14, color: SHELL.text },
+  resolveBtn: {
+    backgroundColor: REVIEW_AMBER,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 10,
+  },
+  resolveLabel: { fontFamily: FONT.bc700, fontSize: 14, letterSpacing: 0.4, color: '#1a1200' },
   holeRow: { flexDirection: 'row', alignItems: 'center', gap: 14, flexWrap: 'wrap' },
   holeNumeral: { fontFamily: FONT.bc800, fontSize: 44, color: SHELL.text },
   factsBtn: {

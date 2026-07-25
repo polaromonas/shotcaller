@@ -20,7 +20,7 @@ import {
 } from '../db/courses';
 import { discDisplayName, listDiscs } from '../db/discs';
 import { listHolePlans, planSummary, type HolePlan } from '../db/plans';
-import { FONT, MODE, SHELL } from '../theme/colors';
+import { FONT, MODE, REVIEW_AMBER, SHELL } from '../theme/colors';
 import type { RootStackParamList } from '../navigation/types';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'LayoutDetail'>;
@@ -72,6 +72,7 @@ export function LayoutHolesScreen() {
   }
 
   const planned = plansByHole.size;
+  const reviewCount = [...plansByHole.values()].filter((p) => p.needs_review).length;
   const cellWidth = (width - 40 - 20) / 3; // screen padding 20*2, two 10px gaps
 
   return (
@@ -89,6 +90,7 @@ export function LayoutHolesScreen() {
         <Text style={styles.title}>{heading.layoutName.toUpperCase()}</Text>
         <Text style={styles.subtitle}>
           {planned} of {holes.length} holes planned
+          {reviewCount > 0 ? ` · ${reviewCount} to revise` : ''}
         </Text>
 
         <View style={styles.grid}>
@@ -112,6 +114,11 @@ export function LayoutHolesScreen() {
                   isCurrent && styles.cellCurrent,
                 ]}
               >
+                {plan?.needs_review && (
+                  <View style={styles.reviewBadge}>
+                    <Ionicons name="flag" size={13} color={REVIEW_AMBER} />
+                  </View>
+                )}
                 <Text style={styles.cellNumber}>{h.hole_number}</Text>
                 <Text style={styles.cellFacts} numberOfLines={1}>
                   {facts}
@@ -187,6 +194,7 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
   },
   cellCurrent: { borderWidth: 2, borderColor: MODE.plan },
+  reviewBadge: { position: 'absolute', top: 7, right: 8 },
   cellNumber: { fontFamily: FONT.bc800, fontSize: 24, color: SHELL.text },
   cellFacts: { fontFamily: FONT.b600, fontSize: 12, color: SHELL.textMuted },
   cellSummary: { fontFamily: FONT.b500, fontSize: 12, color: SHELL.textSecondary, marginTop: 2 },

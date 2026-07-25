@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
+import { Ionicons } from '@expo/vector-icons';
 import type { RouteProp } from '@react-navigation/native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -20,8 +21,9 @@ import {
   setPlayHoleNumber,
   type PlayHole,
 } from '../db/play';
+import { setHolePlanReview } from '../db/plans';
 import type { ThrowType } from '../db/types';
-import { FONT, MODE, PLAY_LIGHT as P } from '../theme/colors';
+import { FONT, MODE, PLAY_LIGHT as P, REVIEW_AMBER } from '../theme/colors';
 import type { RootStackParamList } from '../navigation/types';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'PlayLayout'>;
@@ -85,6 +87,23 @@ export function PlayLayoutScreen() {
     [deck, layoutId]
   );
 
+  // Flag/unflag the current hole's plan for revision. Optimistically flips the
+  // in-memory deck so the flag reacts instantly, then persists. Only holes that
+  // already have a plan can be flagged (you're marking a plan to revise).
+  const toggleReview = useCallback(() => {
+    const cur = deck[index];
+    if (!cur?.plan) return;
+    const nextVal = !cur.plan.needs_review;
+    setDeck((d) =>
+      d.map((h, i) =>
+        i === index && h.plan
+          ? { ...h, plan: { ...h.plan, needs_review: nextVal } }
+          : h
+      )
+    );
+    void setHolePlanReview(cur.hole.id, nextVal);
+  }, [deck, index]);
+
   // The PanResponder is created once (useRef), so it would otherwise capture the
   // first-render `go` — when deck is still empty — and drive index to -1 on
   // swipe, blanking the card into a spinner. Route swipes through a ref that
@@ -134,6 +153,24 @@ export function PlayLayoutScreen() {
         <Text style={styles.caption} numberOfLines={1}>
           {heading.courseName.toUpperCase()} · {heading.layoutName.toUpperCase()}
         </Text>
+        {plan && (
+          <Pressable
+            onPress={toggleReview}
+            hitSlop={12}
+            style={styles.flagBtn}
+            accessibilityRole="switch"
+            accessibilityState={{ checked: plan.needs_review }}
+            accessibilityLabel={
+              plan.needs_review ? 'Unflag this hole' : 'Flag this hole to revise later'
+            }
+          >
+            <Ionicons
+              name={plan.needs_review ? 'flag' : 'flag-outline'}
+              size={22}
+              color={plan.needs_review ? REVIEW_AMBER : P.secondary}
+            />
+          </Pressable>
+        )}
         <Pressable onPress={() => navigation.goBack()} hitSlop={12}>
           <Text style={styles.exit}>✕</Text>
         </Pressable>
@@ -145,6 +182,12 @@ export function PlayLayoutScreen() {
           PAR {hole.par} · {distanceLabel}
         </Text>
       </View>
+      {plan?.needs_review && (
+        <View style={styles.reviewTag}>
+          <Ionicons name="flag" size={13} color={REVIEW_AMBER} />
+          <Text style={styles.reviewTagLabel}>TO REVISE</Text>
+        </View>
+      )}
 
       <View style={styles.center2} {...pan.panHandlers}>
         {hasContent ? (
@@ -222,7 +265,20 @@ const styles = StyleSheet.create({
     color: P.muted,
     marginHorizontal: 8,
   },
+  flagBtn: { paddingHorizontal: 4 },
   exit: { fontSize: 20, color: P.secondary },
+  reviewTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 8,
+  },
+  reviewTagLabel: {
+    fontFamily: FONT.bc700,
+    fontSize: 12,
+    letterSpacing: 1.4,
+    color: REVIEW_AMBER,
+  },
   holeRow: { flexDirection: 'row', alignItems: 'flex-end', gap: 14, marginTop: 4 },
   holeNumeral: { fontFamily: FONT.bc800, fontSize: 58, lineHeight: 58, color: P.ink },
   holeFacts: { fontFamily: FONT.b600, fontSize: 17, color: P.secondary, paddingBottom: 8 },

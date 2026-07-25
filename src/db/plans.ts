@@ -40,8 +40,19 @@ export type HolePlan = {
   throw_type: ThrowType | null;
   shot_shape: string | null;
   aim_note: string | null;
+  // Set from Play when a hole's plan didn't work out — a note-to-self to revise
+  // it back in Plan mode. Stored as 0/1 in SQLite; mapped to a boolean here.
+  needs_review: boolean;
   updated_at: string;
 };
+
+// SQLite has no boolean type, so needs_review comes back as 0/1. Map rows
+// through here so callers get a real boolean.
+type HolePlanRow = Omit<HolePlan, 'needs_review'> & { needs_review: number };
+const mapPlan = (row: HolePlanRow): HolePlan => ({
+  ...row,
+  needs_review: row.needs_review === 1,
+});
 
 export type HolePlanInput = {
   disc_id: number | null;
@@ -52,21 +63,36 @@ export type HolePlanInput = {
 
 export async function getHolePlan(holeId: number): Promise<HolePlan | null> {
   const db = await getDb();
-  const row = await db.getFirstAsync<HolePlan>(
+  const row = await db.getFirstAsync<HolePlanRow>(
     'SELECT * FROM hole_plan WHERE hole_id = $hole_id',
     { $hole_id: holeId }
   );
-  return row ?? null;
+  return row ? mapPlan(row) : null;
 }
 
 export async function listHolePlans(layoutId: number): Promise<HolePlan[]> {
   const db = await getDb();
-  return db.getAllAsync<HolePlan>(
+  const rows = await db.getAllAsync<HolePlanRow>(
     `SELECT hp.* FROM hole_plan hp
        JOIN hole h ON h.id = hp.hole_id
       WHERE hp.layout_id = $layout_id
       ORDER BY h.hole_number ASC`,
     { $layout_id: layoutId }
+  );
+  return rows.map(mapPlan);
+}
+
+// Flag/unflag a hole's plan for revision — the Play → Plan note-to-self. Only
+// the flag is touched; the rest of the plan is left exactly as it was. A no-op
+// if the hole has no plan row (you can only flag a plan that exists).
+export async function setHolePlanReview(
+  holeId: number,
+  value: boolean
+): Promise<void> {
+  const db = await getDb();
+  await db.runAsync(
+    'UPDATE hole_plan SET needs_review = $value WHERE hole_id = $hole_id',
+    { $value: value ? 1 : 0, $hole_id: holeId }
   );
 }
 
