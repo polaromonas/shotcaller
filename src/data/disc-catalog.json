@@ -54,6 +54,15 @@
     "fade": 3
   },
   {
+    "model": "Juniper",
+    "manufacturer": "Above Ground Level",
+    "category": "MID",
+    "speed": 5,
+    "glide": 6,
+    "turn": -2,
+    "fade": 1
+  },
+  {
     "model": "Koa",
     "manufacturer": "Above Ground Level",
     "category": "P&A",
@@ -160,15 +169,6 @@
     "glide": 4,
     "turn": -3,
     "fade": 1
-  },
-  {
-    "model": "Osprey",
-    "manufacturer": "AquaFlight",
-    "category": "DD",
-    "speed": 12,
-    "glide": 4,
-    "turn": -1,
-    "fade": 2
   },
   {
     "model": "Peace Frog",
@@ -459,6 +459,42 @@
     "fade": 2
   },
   {
+    "model": "Bernoulli Putter",
+    "manufacturer": "Bernoulli Disc Golf",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 5,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Einstein",
+    "manufacturer": "Bernoulli Disc Golf",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": -1,
+    "fade": 1
+  },
+  {
+    "model": "Hubble",
+    "manufacturer": "Bernoulli Disc Golf",
+    "category": "DD",
+    "speed": 13,
+    "glide": 6,
+    "turn": -3,
+    "fade": 2
+  },
+  {
+    "model": "Johnson",
+    "manufacturer": "Bernoulli Disc Golf",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 6,
+    "turn": -3,
+    "fade": 1
+  },
+  {
     "model": "Marvel",
     "manufacturer": "Birdie",
     "category": "P&A",
@@ -735,6 +771,15 @@
     "speed": 2,
     "glide": 3,
     "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Coast",
+    "manufacturer": "Climo Disc Golf",
+    "category": "MID",
+    "speed": 6,
+    "glide": 6,
+    "turn": -1,
     "fade": 1
   },
   {
@@ -1845,6 +1890,15 @@
     "fade": 3
   },
   {
+    "model": "Premier Cloudbreaker",
+    "manufacturer": "Discmania",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": 0,
+    "fade": 3
+  },
+  {
     "model": "Premier FD",
     "manufacturer": "Discmania",
     "category": "FWD",
@@ -1852,6 +1906,15 @@
     "glide": 7,
     "turn": 0,
     "fade": 1
+  },
+  {
+    "model": "Premier MD3",
+    "manufacturer": "Discmania",
+    "category": "MID",
+    "speed": 5,
+    "glide": 6,
+    "turn": 0,
+    "fade": 2
   },
   {
     "model": "Rainmaker",
@@ -2871,6 +2934,24 @@
     "fade": 1
   },
   {
+    "model": "Bologna",
+    "manufacturer": "Doomsday Discs",
+    "category": "P&A",
+    "speed": 4,
+    "glide": 3,
+    "turn": 0,
+    "fade": 2.5
+  },
+  {
+    "model": "Cardiac Arrest",
+    "manufacturer": "Doomsday Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 2,
+    "turn": -3,
+    "fade": 1
+  },
+  {
     "model": "Cataclysm",
     "manufacturer": "Doomsday Discs",
     "category": "DD",
@@ -2932,6 +3013,24 @@
     "glide": 4,
     "turn": -1,
     "fade": 1
+  },
+  {
+    "model": "Dread",
+    "manufacturer": "Doomsday Discs",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 4,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Dystopia",
+    "manufacturer": "Doomsday Discs",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
   },
   {
     "model": "Famine",
@@ -3026,10 +3125,10 @@
   {
     "model": "Scavenger",
     "manufacturer": "Doomsday Discs",
-    "category": "P&A",
-    "speed": 2,
-    "glide": 4,
-    "turn": 0,
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -2,
     "fade": 1
   },
   {
@@ -3238,6 +3337,15 @@
     "glide": 5,
     "turn": -1.5,
     "fade": 2
+  },
+  {
+    "model": "Intent",
+    "manufacturer": "Dynamic Discs",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": 0.5,
+    "fade": 3
   },
   {
     "model": "Judge",
@@ -3528,6 +3636,15 @@
     "fade": 3.5
   },
   {
+    "model": "Groundhog",
+    "manufacturer": "Elevation Disc Golf",
+    "category": "P&A",
+    "speed": 1,
+    "glide": 1,
+    "turn": 0,
+    "fade": 2
+  },
+  {
     "model": "Interceptor",
     "manufacturer": "Elevation Disc Golf",
     "category": "MID",
@@ -3582,6 +3699,15 @@
     "fade": 4
   },
   {
+    "model": "Uktena",
+    "manufacturer": "Elevation Disc Golf",
+    "category": "DD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -2,
+    "fade": 2
+  },
+  {
     "model": "Agera",
     "manufacturer": "EV-7",
     "category": "P&A",
@@ -3589,6 +3715,24 @@
     "glide": 5,
     "turn": -2,
     "fade": 1
+  },
+  {
+    "model": "Ethos",
+    "manufacturer": "EV-7",
+    "category": "MID",
+    "speed": 5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Kairos",
+    "manufacturer": "EV-7",
+    "category": "DD",
+    "speed": 12,
+    "glide": 5,
+    "turn": -1,
+    "fade": 3
   },
   {
     "model": "Mobius",
@@ -3624,6 +3768,15 @@
     "speed": 3,
     "glide": 4,
     "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "Protos",
+    "manufacturer": "EV-7",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 6,
+    "turn": -3,
     "fade": 1
   },
   {
@@ -4129,6 +4282,15 @@
     "glide": 4,
     "turn": 0,
     "fade": 3
+  },
+  {
+    "model": "Witch Doctor",
+    "manufacturer": "Gateway",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2.5
   },
   {
     "model": "Wizard",
@@ -5373,6 +5535,15 @@
     "fade": 2
   },
   {
+    "model": "Sync",
+    "manufacturer": "Innova",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
     "model": "Teebird",
     "manufacturer": "Innova",
     "category": "FWD",
@@ -5616,6 +5787,15 @@
     "fade": 1.5
   },
   {
+    "model": "Iris",
+    "manufacturer": "Jester Disc Golf",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 4,
+    "turn": -2,
+    "fade": 0
+  },
+  {
     "model": "Love",
     "manufacturer": "Jester Disc Golf",
     "category": "P&A",
@@ -5677,6 +5857,15 @@
     "glide": 6,
     "turn": -2,
     "fade": 1
+  },
+  {
+    "model": "Gadd",
+    "manufacturer": "Kastaplast",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": 0,
+    "fade": 2
   },
   {
     "model": "Gote",
@@ -5841,6 +6030,15 @@
     "fade": 3
   },
   {
+    "model": "Sten",
+    "manufacturer": "Kastaplast",
+    "category": "P&A",
+    "speed": 1,
+    "glide": 1,
+    "turn": 0,
+    "fade": 2
+  },
+  {
     "model": "Stig",
     "manufacturer": "Kastaplast",
     "category": "MID",
@@ -5874,6 +6072,15 @@
     "speed": 12,
     "glide": 5,
     "turn": -1.5,
+    "fade": 2
+  },
+  {
+    "model": "Amber",
+    "manufacturer": "Latitude 64",
+    "category": "DD",
+    "speed": 11,
+    "glide": 6,
+    "turn": -3,
     "fade": 2
   },
   {
@@ -6165,6 +6372,15 @@
     "fade": 1
   },
   {
+    "model": "Mighty",
+    "manufacturer": "Latitude 64",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
     "model": "Missilen (OOP)",
     "manufacturer": "Latitude 64",
     "category": "DD",
@@ -6352,6 +6568,15 @@
     "glide": 5,
     "turn": -1,
     "fade": 3
+  },
+  {
+    "model": "sweep",
+    "manufacturer": "Latitude 64",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 6,
+    "turn": -0.05,
+    "fade": 2
   },
   {
     "model": "Trident",
@@ -7551,6 +7776,15 @@
     "fade": 1.5
   },
   {
+    "model": "Pizza",
+    "manufacturer": "Mint Discs",
+    "category": "FWD",
+    "speed": 8,
+    "glide": 5,
+    "turn": -1,
+    "fade": 2
+  },
+  {
     "model": "Profit",
     "manufacturer": "Mint Discs",
     "category": "P&A",
@@ -7611,6 +7845,15 @@
     "speed": 13,
     "glide": 5.5,
     "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "Control",
+    "manufacturer": "MVP",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 5,
+    "turn": -0.5,
     "fade": 2
   },
   {
@@ -8496,6 +8739,15 @@
     "fade": 1
   },
   {
+    "model": "h6",
+    "manufacturer": "Prodigy",
+    "category": "DD",
+    "speed": 11,
+    "glide": 5,
+    "turn": -3,
+    "fade": 1
+  },
+  {
     "model": "H7",
     "manufacturer": "Prodigy",
     "category": "FWD",
@@ -8593,6 +8845,42 @@
     "glide": 4,
     "turn": 0,
     "fade": 1
+  },
+  {
+    "model": "NERF Driver",
+    "manufacturer": "Prodigy",
+    "category": "FWD",
+    "speed": 9,
+    "glide": 4,
+    "turn": -2,
+    "fade": 2
+  },
+  {
+    "model": "NERF Midrange",
+    "manufacturer": "Prodigy",
+    "category": "MID",
+    "speed": 4,
+    "glide": 5,
+    "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "NERF Putter",
+    "manufacturer": "Prodigy",
+    "category": "P&A",
+    "speed": 2,
+    "glide": 2,
+    "turn": 0,
+    "fade": 1
+  },
+  {
+    "model": "NERF Ultimate",
+    "manufacturer": "Prodigy",
+    "category": "P&A",
+    "speed": 1,
+    "glide": 2,
+    "turn": -3,
+    "fade": 0.5
   },
   {
     "model": "P Model OS",
@@ -9207,6 +9495,15 @@
     "fade": 0.5
   },
   {
+    "model": "Boost",
+    "manufacturer": "Streamline",
+    "category": "FWD",
+    "speed": 9.5,
+    "glide": 4,
+    "turn": 0,
+    "fade": 2.5
+  },
+  {
     "model": "Drift",
     "manufacturer": "Streamline",
     "category": "FWD",
@@ -9402,6 +9699,15 @@
     "speed": 9,
     "glide": 6,
     "turn": -2,
+    "fade": 1
+  },
+  {
+    "model": "Mellow",
+    "manufacturer": "Thought Space Athletics",
+    "category": "P&A",
+    "speed": 1,
+    "glide": 5,
+    "turn": 0,
     "fade": 1
   },
   {
@@ -9927,6 +10233,15 @@
     "fade": 3.5
   },
   {
+    "model": "Giant Reborn",
+    "manufacturer": "Westside Discs",
+    "category": "DD",
+    "speed": 12,
+    "glide": 6,
+    "turn": -0.5,
+    "fade": 2
+  },
+  {
     "model": "Harp",
     "manufacturer": "Westside Discs",
     "category": "MID",
@@ -10116,6 +10431,15 @@
     "fade": 1
   },
   {
+    "model": "Vellamo",
+    "manufacturer": "Westside Discs",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5.5,
+    "turn": 0,
+    "fade": 1.5
+  },
+  {
     "model": "War Horse",
     "manufacturer": "Westside Discs",
     "category": "DD",
@@ -10206,6 +10530,15 @@
     "fade": 4
   },
   {
+    "model": "Bai Ze",
+    "manufacturer": "Yikun",
+    "category": "FWD",
+    "speed": 7,
+    "glide": 6,
+    "turn": -0.5,
+    "fade": 1
+  },
+  {
     "model": "Bi",
     "manufacturer": "Yikun",
     "category": "FWD",
@@ -10242,12 +10575,30 @@
     "fade": 3
   },
   {
+    "model": "Frey Ja",
+    "manufacturer": "Yikun",
+    "category": "P&A",
+    "speed": 3,
+    "glide": 3,
+    "turn": 0,
+    "fade": 1
+  },
+  {
     "model": "Fu",
     "manufacturer": "Yikun",
     "category": "FWD",
     "speed": 7,
     "glide": 5,
     "turn": 0,
+    "fade": 2
+  },
+  {
+    "model": "Fu Xi",
+    "manufacturer": "Yikun",
+    "category": "DD",
+    "speed": 12,
+    "glide": 6,
+    "turn": -1,
     "fade": 2
   },
   {
@@ -10276,6 +10627,15 @@
     "glide": 2.5,
     "turn": 0,
     "fade": 3
+  },
+  {
+    "model": "Hou Yi",
+    "manufacturer": "Yikun",
+    "category": "FWD",
+    "speed": 10,
+    "glide": 6,
+    "turn": -1,
+    "fade": 2
   },
   {
     "model": "Hu",
@@ -10359,6 +10719,15 @@
     "fade": 0
   },
   {
+    "model": "Ne Zha",
+    "manufacturer": "Yikun",
+    "category": "MID",
+    "speed": 5,
+    "glide": 5,
+    "turn": -2,
+    "fade": 0
+  },
+  {
     "model": "Qi",
     "manufacturer": "Yikun",
     "category": "DD",
@@ -10375,6 +10744,15 @@
     "glide": 5,
     "turn": -3,
     "fade": 1
+  },
+  {
+    "model": "She Gong",
+    "manufacturer": "Yikun",
+    "category": "DD",
+    "speed": 13,
+    "glide": 5,
+    "turn": -1.5,
+    "fade": 2
   },
   {
     "model": "Shu",

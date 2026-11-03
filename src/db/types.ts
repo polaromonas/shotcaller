@@ -29,6 +29,16 @@ export const CATEGORY_LABELS: Record<DiscCategory, string> = {
   'P&A': 'Putter',
 };
 
+// Section-header form for lists grouped by category (My Bag, disc picker):
+// abbreviation + long label. The code stays uppercase — it is an abbreviation,
+// not display styling.
+export const CATEGORY_GROUP_LABELS: Record<DiscCategory, string> = {
+  DD: 'DD — Distance drivers',
+  FWD: 'FWD — Fairway drivers',
+  MID: 'MID — Midranges',
+  'P&A': 'P&A — Putt & approach',
+};
+
 export const DISC_SORTS = [
   'bag-order',
   'alphabetical',

@@ -7,7 +7,11 @@ import {
   Text,
   View,
 } from 'react-native';
-import { DISC_CATEGORIES, type DiscCategory } from '../db/types';
+import {
+  CATEGORY_GROUP_LABELS,
+  DISC_CATEGORIES,
+  type DiscCategory,
+} from '../db/types';
 import { discDisplayName, discSubline, type DiscWithTags } from '../db/discs';
 import { FONT, MODE, SHELL } from '../theme/colors';
 
@@ -21,13 +25,6 @@ type Props = {
 };
 
 type Filter = 'All' | DiscCategory;
-
-const CATEGORY_LABELS: Record<DiscCategory, string> = {
-  DD: 'DD — Distance drivers',
-  FWD: 'FWD — Fairway drivers',
-  MID: 'MID — Midranges',
-  'P&A': 'P&A — Putt & approach',
-};
 
 function flightText(d: DiscWithTags): string | null {
   const nums = [d.speed, d.glide, d.turn, d.fade];
@@ -69,7 +66,7 @@ export function DiscPickerSheet({
       <View style={styles.sheet}>
         <View style={styles.grabber} />
         <View style={styles.header}>
-          <Text style={styles.title}>PICK A DISC</Text>
+          <Text style={styles.title}>Pick a disc</Text>
           <View style={styles.headerActions}>
             {onAddDisc && (
               <Pressable onPress={onAddDisc} hitSlop={8}>
@@ -109,7 +106,7 @@ export function DiscPickerSheet({
           ) : (
             groups.map((g) => (
               <View key={g.cat} style={styles.group}>
-                <Text style={styles.sectionLabel}>{CATEGORY_LABELS[g.cat]}</Text>
+                <Text style={styles.sectionLabel}>{CATEGORY_GROUP_LABELS[g.cat]}</Text>
                 {g.discs.map((d) => {
                   const on = d.id === selectedId;
                   const flight = flightText(d);
@@ -180,7 +177,6 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: FONT.bc700,
     fontSize: 15,
-    letterSpacing: 2,
     color: SHELL.text,
   },
   headerActions: { flexDirection: 'row', alignItems: 'center', gap: 18 },
@@ -211,8 +207,6 @@ const styles = StyleSheet.create({
   sectionLabel: {
     fontFamily: FONT.bc700,
     fontSize: 12,
-    letterSpacing: 1.8,
-    textTransform: 'uppercase',
     color: SHELL.textMuted,
     marginBottom: 2,
   },

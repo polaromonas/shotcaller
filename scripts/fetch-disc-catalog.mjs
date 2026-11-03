@@ -41,8 +41,10 @@ async function main() {
   console.log(`  received ${raw.length} entries`);
 
   const slim = [];
+  const seen = new Set();
   let skippedCategory = 0;
   let skippedFlight = 0;
+  let skippedDuplicate = 0;
   for (const d of raw) {
     const category = CATEGORY_MAP[d.category];
     if (!category) {
@@ -62,6 +64,15 @@ async function main() {
       skippedFlight += 1;
       continue;
     }
+    // Upstream has shipped every disc twice (identical ids) at least once.
+    // Without this, each duplicate becomes a second autocomplete row.
+    const key = String(d.id ?? `${d.brand}/${d.name}`).toLowerCase();
+    if (seen.has(key)) {
+      skippedDuplicate += 1;
+      continue;
+    }
+    seen.add(key);
+
     slim.push({
       model: d.name,
       manufacturer: d.brand,
@@ -82,7 +93,8 @@ async function main() {
   await writeFile(OUT_PATH, JSON.stringify(slim, null, 2) + '\n');
   console.log(
     `wrote ${slim.length} discs to ${OUT_PATH}` +
-      ` (skipped ${skippedCategory} unmapped categories, ${skippedFlight} bad flight numbers)`
+      ` (skipped ${skippedCategory} unmapped categories,` +
+      ` ${skippedFlight} bad flight numbers, ${skippedDuplicate} duplicates)`
   );
 }
 

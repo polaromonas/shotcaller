@@ -43,20 +43,44 @@ export function discDisplayName(d: {
 // - nicknamed    → "{plastic} {model} · {category}"  e.g. "Star Firebird · FWD"
 // - not nicknamed → "{plastic} · {category}" or "{category}" (model is already
 //   the big name — never repeat it).
-export function discSubline(d: {
-  nickname: string | null;
-  model: string;
-  plastic: string | null;
-  category: DiscCategory;
-}): string {
+// Pass `withCategory: false` where a category section header already states it
+// (My Bag's grouped list) — the result may then be empty, so callers must skip
+// rendering a blank line.
+export function discSubline(
+  d: {
+    nickname: string | null;
+    model: string;
+    plastic: string | null;
+    category: DiscCategory;
+  },
+  opts: { withCategory?: boolean } = {}
+): string {
+  const withCategory = opts.withCategory ?? true;
   const plastic = d.plastic && d.plastic.trim().length > 0 ? d.plastic.trim() : null;
   const nicknamed = !!(d.nickname && d.nickname.trim().length > 0);
   const category = CATEGORY_LABELS[d.category];
   if (nicknamed) {
     const mold = plastic ? `${plastic} ${d.model}` : d.model;
-    return `${mold} · ${category}`;
+    return withCategory ? `${mold} · ${category}` : mold;
   }
+  if (!withCategory) return plastic ?? '';
   return plastic ? `${plastic} · ${category}` : category;
+}
+
+// Flight numbers as one glanceable string, e.g. "12 / 5 / -1 / 3". Null unless
+// all four are set — a partial flight line reads as missing data.
+export function discFlightText(
+  d: {
+    speed: number | null;
+    glide: number | null;
+    turn: number | null;
+    fade: number | null;
+  },
+  sep = ' / '
+): string | null {
+  const nums = [d.speed, d.glide, d.turn, d.fade];
+  if (nums.some((n) => n === null)) return null;
+  return nums.map((n) => String(n)).join(sep);
 }
 
 export type NewDiscInput = {

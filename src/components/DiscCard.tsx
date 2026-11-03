@@ -3,20 +3,14 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import ReanimatedSwipeable, {
   type SwipeableMethods,
 } from 'react-native-gesture-handler/ReanimatedSwipeable';
-import { UI } from '../theme/colors';
-import { discDisplayName, type DiscWithTags } from '../db/discs';
-import { CATEGORY_LABELS } from '../db/types';
+import { FONT, SHELL, UI } from '../theme/colors';
+import {
+  discDisplayName,
+  discFlightText,
+  discSubline,
+  type DiscWithTags,
+} from '../db/discs';
 import { InBagButton } from './InBagButton';
-
-// Subtitle disambiguates the disc without repeating the display name or showing
-// the manufacturer (never displayed in V2). When nicknamed, surface the model
-// so the player still knows the mold; plastic type is appended when set.
-const discSubtitle = (disc: DiscWithTags): string => {
-  const parts: string[] = [];
-  if (disc.nickname) parts.push(disc.model);
-  if (disc.plastic) parts.push(disc.plastic);
-  return parts.join(' · ');
-};
 
 type Props = {
   disc: DiscWithTags;
@@ -36,6 +30,11 @@ export function DiscCard({
   bagColor,
 }: Props) {
   const ref = useRef<SwipeableMethods>(null);
+  const name = discDisplayName(disc);
+  // The category section header above this card already names the category, so
+  // the subline carries plastic (+ model when nicknamed) and nothing else.
+  const subline = discSubline(disc, { withCategory: false });
+  const flight = discFlightText(disc);
 
   const renderRightActions = () => (
     <Pressable
@@ -44,7 +43,7 @@ export function DiscCard({
         ref.current?.close();
         onDelete();
       }}
-      accessibilityLabel={`Delete ${disc.manufacturer} ${disc.model}`}
+      accessibilityLabel={`Delete ${name}`}
     >
       <Text style={styles.deleteLabel}>Delete</Text>
     </Pressable>
@@ -62,93 +61,128 @@ export function DiscCard({
     >
       <Pressable
         onPress={onPress}
-        style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
-        accessibilityLabel={`Edit ${disc.manufacturer} ${disc.model}`}
+        style={({ pressed }) => [
+          styles.card,
+          !disc.in_bag && styles.cardShelved,
+          pressed && styles.cardPressed,
+        ]}
+        accessibilityLabel={`Edit ${name}`}
       >
-        <View style={[styles.swatch, { backgroundColor: disc.color }]} />
-        <View style={styles.body}>
-          <View style={styles.headerRow}>
-            <Text style={styles.model} numberOfLines={1}>
-              {discDisplayName(disc)}
+        <View style={styles.row}>
+          <View style={[styles.dot, { backgroundColor: disc.color }]} />
+
+          <View style={styles.body}>
+            <Text style={styles.name} numberOfLines={1}>
+              {name}
             </Text>
-            <Text style={styles.category}>{CATEGORY_LABELS[disc.category]}</Text>
+
+            {(subline.length > 0 || flight !== null) && (
+              <View style={styles.metaRow}>
+                <Text style={styles.subline} numberOfLines={1}>
+                  {subline}
+                </Text>
+                {flight !== null && (
+                  <Text style={styles.flight}>{flight}</Text>
+                )}
+              </View>
+            )}
+
+            {disc.tags.length > 0 && (
+              <View style={styles.tagsRow}>
+                {disc.tags.map((t) => (
+                  <View key={t.id} style={styles.tagChip}>
+                    <Text style={styles.tagText}>{t.name}</Text>
+                  </View>
+                ))}
+              </View>
+            )}
           </View>
-          <Text style={styles.manufacturer} numberOfLines={1}>
-            {discSubtitle(disc)}
-          </Text>
-          {disc.tags.length > 0 && (
-            <View style={styles.tagsRow}>
-              {disc.tags.map((t) => (
-                <View key={t.id} style={styles.tagChip}>
-                  <Text style={styles.tagText}>{t.name}</Text>
-                </View>
-              ))}
-            </View>
-          )}
+
+          {/* Centered against the whole text block, so the card has one
+              right-hand anchor however many lines the left column runs to. */}
+          <View style={styles.action}>
+            <InBagButton
+              inBag={disc.in_bag}
+              onToggle={onToggleInBag}
+              bagColor={bagColor}
+            />
+          </View>
         </View>
-        <InBagButton
-          inBag={disc.in_bag}
-          onToggle={onToggleInBag}
-          bagColor={bagColor}
-        />
       </Pressable>
     </ReanimatedSwipeable>
   );
 }
 
+const DOT = 22;
+
 const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: UI.bg,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: UI.border,
-    gap: 12,
-  },
-  rowPressed: {
-    backgroundColor: UI.surface,
-  },
-  swatch: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+  card: {
+    backgroundColor: SHELL.card,
     borderWidth: 1,
-    borderColor: UI.border,
+    borderColor: SHELL.border,
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    marginHorizontal: 16,
+    marginBottom: 8,
+  },
+  cardPressed: { backgroundColor: SHELL.selectedFill },
+  // Shelved discs stay visible but recede — they're out of the pickers.
+  cardShelved: { opacity: 0.55 },
+  row: { flexDirection: 'row', alignItems: 'flex-start', gap: 10 },
+  dot: {
+    width: DOT,
+    height: DOT,
+    borderRadius: DOT / 2,
+    borderWidth: 2,
+    borderColor: 'rgba(255,255,255,0.25)',
+    marginTop: 3,
   },
   body: { flex: 1, minWidth: 0 },
-  headerRow: {
+  name: { fontFamily: FONT.bc700, fontSize: 20, color: SHELL.text },
+  metaRow: {
     flexDirection: 'row',
     alignItems: 'baseline',
     justifyContent: 'space-between',
-    gap: 8,
+    gap: 10,
+    marginTop: 2,
   },
-  model: { fontSize: 16, fontWeight: '600', color: UI.text, flexShrink: 1 },
-  category: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: UI.textMuted,
-    letterSpacing: 0.5,
+  subline: {
+    flexShrink: 1,
+    fontFamily: FONT.b500,
+    fontSize: 13,
+    color: SHELL.textSecondary,
   },
-  manufacturer: { fontSize: 13, color: UI.textMuted, marginTop: 1 },
-  tagsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 4, marginTop: 6 },
+  flight: {
+    flexShrink: 0,
+    fontFamily: FONT.bc700,
+    fontSize: 14,
+    color: SHELL.textMuted,
+  },
+  tagsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 7 },
   tagChip: {
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 10,
-    backgroundColor: UI.surface,
+    paddingHorizontal: 9,
+    paddingVertical: 3,
+    borderRadius: 999,
+    backgroundColor: SHELL.bg,
+    borderWidth: 1,
+    borderColor: SHELL.border,
   },
-  tagText: { fontSize: 11, color: UI.textMuted },
+  tagText: { fontFamily: FONT.b500, fontSize: 11, color: SHELL.textMuted },
+  action: { alignSelf: 'center' },
   deleteAction: {
     backgroundColor: UI.dangerBg,
     justifyContent: 'center',
     alignItems: 'center',
     width: 88,
+    marginRight: 16,
+    marginBottom: 8,
+    borderTopRightRadius: 12,
+    borderBottomRightRadius: 12,
   },
   deleteLabel: {
+    fontFamily: FONT.b600,
     color: UI.textInverse,
     fontSize: 15,
-    fontWeight: '600',
   },
 });

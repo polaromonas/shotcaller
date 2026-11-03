@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
-  FlatList,
   Modal,
   Pressable,
   ScrollView,
+  SectionList,
   StyleSheet,
   Text,
   View,
@@ -26,8 +26,13 @@ import {
   type NewDiscInput,
 } from '../db/discs';
 import { getDiscSort, setDiscSort, getBagColor, setBagColor } from '../db/settings';
-import { DEFAULT_DISC_SORT, type DiscSort } from '../db/types';
-import { DISC_SWATCHES, UI } from '../theme/colors';
+import {
+  CATEGORY_GROUP_LABELS,
+  DEFAULT_DISC_SORT,
+  DISC_CATEGORIES,
+  type DiscSort,
+} from '../db/types';
+import { DISC_SWATCHES, FONT, SHELL, UI } from '../theme/colors';
 import { confirmAction } from '../util/confirm';
 import type { RootStackParamList } from '../navigation/types';
 
@@ -59,6 +64,26 @@ const SORT_OPTIONS: { value: DiscSort; label: string; hint: string }[] = [
 const labelFor = (s: DiscSort): string =>
   SORT_OPTIONS.find((o) => o.value === s)?.label ?? s;
 
+type DiscSection = { key: string; title: string; data: DiscWithTags[] };
+
+// Grouped by category in bag order (drivers → fairways → mids → putters), with
+// shelved discs in their own section at the bottom. The active sort still
+// applies — it just orders discs *within* each group now.
+function buildSections(rows: DiscWithTags[]): DiscSection[] {
+  const sections: DiscSection[] = [];
+  for (const cat of DISC_CATEGORIES) {
+    const data = rows.filter((d) => d.in_bag && d.category === cat);
+    if (data.length > 0) {
+      sections.push({ key: cat, title: CATEGORY_GROUP_LABELS[cat], data });
+    }
+  }
+  const shelved = rows.filter((d) => !d.in_bag);
+  if (shelved.length > 0) {
+    sections.push({ key: 'shelved', title: 'Shelved', data: shelved });
+  }
+  return sections;
+}
+
 export function MyDiscsScreen() {
   const navigation = useNavigation<Nav>();
   const [discs, setDiscs] = useState<DiscWithTags[] | null>(null);
@@ -79,6 +104,15 @@ export function MyDiscsScreen() {
     setSortValue(sort);
     setBagColorState(color);
   }, []);
+
+  const sections = useMemo(() => buildSections(discs ?? []), [discs]);
+  const caption = useMemo(() => {
+    if (discs === null) return '';
+    const inBag = discs.filter((d) => d.in_bag).length;
+    const shelved = discs.length - inBag;
+    const bag = `${inBag} in bag`;
+    return shelved > 0 ? `${bag} · ${shelved} shelved` : bag;
+  }, [discs]);
 
   const pickBagColor = useCallback(async (color: string | null) => {
     setBagColorState(color);
@@ -173,7 +207,12 @@ export function MyDiscsScreen() {
           <Pressable onPress={() => navigation.goBack()} hitSlop={12}>
             <Text style={styles.back}>‹</Text>
           </Pressable>
-          <Text style={styles.title}>My Bag</Text>
+          <View>
+            <Text style={styles.title}>My Bag</Text>
+            {caption.length > 0 && (
+              <Text style={styles.caption}>{caption}</Text>
+            )}
+          </View>
         </View>
         <Pressable
           onPress={openAddSheet}
@@ -235,10 +274,15 @@ export function MyDiscsScreen() {
       ) : discs.length === 0 ? (
         <EmptyState onAdd={openAddSheet} />
       ) : (
-        <FlatList
-          data={discs}
+        <SectionList
+          sections={sections}
           extraData={bagColor}
           keyExtractor={(d) => String(d.id)}
+          stickySectionHeadersEnabled={false}
+          contentContainerStyle={styles.listContent}
+          renderSectionHeader={({ section }) => (
+            <Text style={styles.sectionLabel}>{section.title}</Text>
+          )}
           renderItem={({ item }) => (
             <DiscCard
               disc={item}
@@ -342,7 +386,17 @@ const styles = StyleSheet.create({
   },
   headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   back: { fontSize: 28, color: UI.textMuted, lineHeight: 30 },
-  title: { fontSize: 22, fontWeight: '700', color: UI.text },
+  title: { fontFamily: FONT.bc800, fontSize: 28, color: SHELL.text },
+  caption: { fontFamily: FONT.b500, fontSize: 13, color: SHELL.textMuted, marginTop: -2 },
+  listContent: { paddingTop: 4, paddingBottom: 24 },
+  sectionLabel: {
+    fontFamily: FONT.bc700,
+    fontSize: 12,
+    color: SHELL.textMuted,
+    marginHorizontal: 16,
+    marginTop: 14,
+    marginBottom: 6,
+  },
   addBtn: {
     paddingHorizontal: 12,
     paddingVertical: 6,
@@ -351,7 +405,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: UI.border,
   },
-  addBtnLabel: { fontSize: 14, fontWeight: '600', color: UI.text },
+  addBtnLabel: { fontFamily: FONT.b600, fontSize: 14, color: SHELL.text },
   bagColorRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -361,13 +415,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: UI.border,
   },
-  bagColorLabel: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: UI.textMuted,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
+  bagColorLabel: { fontFamily: FONT.bc700, fontSize: 13, color: SHELL.textMuted },
   swatchStrip: { gap: 8, alignItems: 'center', paddingRight: 8 },
   swatch: {
     width: 28,
@@ -386,7 +434,7 @@ const styles = StyleSheet.create({
     borderColor: UI.border,
     backgroundColor: UI.surface,
   },
-  swatchNoneLabel: { fontSize: 12, fontWeight: '600', color: UI.textMuted },
+  swatchNoneLabel: { fontFamily: FONT.b600, fontSize: 12, color: SHELL.textMuted },
   swatchSel: { borderWidth: 3, borderColor: UI.text },
   sortBar: {
     flexDirection: 'row',
@@ -398,7 +446,7 @@ const styles = StyleSheet.create({
     borderBottomColor: UI.border,
     backgroundColor: UI.bg,
   },
-  sortLabel: { fontSize: 12, color: UI.textMuted },
+  sortLabel: { fontFamily: FONT.b500, fontSize: 12, color: SHELL.textMuted },
   sortPill: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -410,7 +458,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: UI.border,
   },
-  sortPillLabel: { fontSize: 12, fontWeight: '600', color: UI.text },
+  sortPillLabel: { fontFamily: FONT.b600, fontSize: 12, color: SHELL.text },
   sortPillCaret: { fontSize: 10, color: UI.textMuted },
   center: {
     flex: 1,
@@ -419,10 +467,11 @@ const styles = StyleSheet.create({
     padding: 32,
     gap: 12,
   },
-  emptyTitle: { fontSize: 18, fontWeight: '600', color: UI.text },
+  emptyTitle: { fontFamily: FONT.bc800, fontSize: 26, color: SHELL.text },
   emptyBody: {
-    fontSize: 14,
-    color: UI.textMuted,
+    fontFamily: FONT.b500,
+    fontSize: 15,
+    color: SHELL.textMuted,
     textAlign: 'center',
     lineHeight: 20,
   },
@@ -433,7 +482,7 @@ const styles = StyleSheet.create({
     backgroundColor: UI.text,
     borderRadius: 12,
   },
-  emptyBtnLabel: { color: UI.bg, fontSize: 15, fontWeight: '600' },
+  emptyBtnLabel: { fontFamily: FONT.b600, color: UI.bg, fontSize: 15 },
   modalBackdrop: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.4)',
@@ -447,11 +496,9 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   modalTitle: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: UI.textMuted,
-    letterSpacing: 0.5,
-    textTransform: 'uppercase',
+    fontFamily: FONT.bc700,
+    fontSize: 13,
+    color: SHELL.textMuted,
     marginBottom: 4,
   },
   optionRow: {
@@ -464,7 +511,7 @@ const styles = StyleSheet.create({
   },
   optionRowPressed: { backgroundColor: UI.surface },
   optionText: { flex: 1, minWidth: 0, gap: 2 },
-  optionLabel: { fontSize: 15, fontWeight: '600', color: UI.text },
-  optionHint: { fontSize: 12, color: UI.textMuted },
-  optionCheck: { fontSize: 18, color: UI.text, fontWeight: '700' },
+  optionLabel: { fontFamily: FONT.b600, fontSize: 15, color: SHELL.text },
+  optionHint: { fontFamily: FONT.b400, fontSize: 12, color: SHELL.textMuted },
+  optionCheck: { fontFamily: FONT.b700, fontSize: 18, color: SHELL.text },
 });

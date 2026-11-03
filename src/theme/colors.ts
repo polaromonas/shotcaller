@@ -34,6 +34,13 @@ export function contrastText(hex: string): string {
   return 0.299 * r + 0.587 * g + 0.114 * b > 150 ? '#101216' : '#ffffff';
 }
 
+// A user color used as TEXT on the dark shell, falling back when it is too dark
+// to read there. Paired with contrastText, which solves the inverse case
+// (text ON a colored fill).
+export function readableOnDark(hex: string, fallback: string): string {
+  return contrastText(hex) === '#101216' ? hex : fallback;
+}
+
 // Dark shell — the V2 design's default surface for every screen except the
 // Play caddie card (which gets its own sunlight-first light theme). Values from
 // design_handoff_shotcaller_v2/README.md. Introduced with the Plan-a-Hole

@@ -1,11 +1,18 @@
 import { Pressable, StyleSheet, Text } from 'react-native';
-import { contrastText, INBAG_GREEN, UI } from '../theme/colors';
+import {
+  contrastText,
+  FONT,
+  INBAG_GREEN,
+  readableOnDark,
+  SHELL,
+} from '../theme/colors';
 
 type Props = {
   inBag: boolean;
   onToggle: () => void;
-  /** The user's bag color; the "In bag" pill takes it (falling back to the
-   * default green when unset) so the color reads as their bag identity. */
+  /** The user's bag color. Carries BOTH states: a solid fill once bagged, and
+   * the label color while unbagged — so "+ Bag" still reads as an action
+   * rather than a disabled control. */
   bagColor?: string | null;
 };
 
@@ -14,8 +21,11 @@ export function InBagButton({ inBag, onToggle, bagColor }: Props) {
   return (
     <Pressable
       onPress={onToggle}
-      hitSlop={6}
-      style={[styles.btn, inBag ? { backgroundColor: fill } : styles.off]}
+      hitSlop={8}
+      style={[
+        styles.pill,
+        inBag ? { backgroundColor: fill, borderColor: fill } : styles.off,
+      ]}
       accessibilityRole="switch"
       accessibilityState={{ checked: inBag }}
       accessibilityLabel={inBag ? 'Remove from bag' : 'Add to bag'}
@@ -23,24 +33,25 @@ export function InBagButton({ inBag, onToggle, bagColor }: Props) {
       <Text
         style={[
           styles.label,
-          inBag ? { color: contrastText(fill) } : styles.labelOff,
+          { color: inBag ? contrastText(fill) : readableOnDark(fill, SHELL.text) },
         ]}
       >
-        {inBag ? 'In bag' : 'Add to bag'}
+        {inBag ? 'In Bag' : '+ Bag'}
       </Text>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  btn: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 14,
-    minWidth: 92,
+  pill: {
+    minWidth: 68,
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+    borderRadius: 999,
+    borderWidth: 1,
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  off: { backgroundColor: UI.surface, borderWidth: 1, borderColor: UI.border },
-  label: { fontSize: 13, fontWeight: '600' },
-  labelOff: { color: UI.textMuted },
+  off: { backgroundColor: SHELL.bg, borderColor: SHELL.border },
+  label: { fontFamily: FONT.b700, fontSize: 14 },
 });
