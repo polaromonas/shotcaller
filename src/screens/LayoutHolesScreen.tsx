@@ -82,12 +82,12 @@ export function LayoutHolesScreen() {
           <Text style={styles.back}>‹ {heading.courseName}</Text>
         </Pressable>
         <View style={styles.badge}>
-          <Text style={styles.badgeLabel}>PLAN</Text>
+          <Text style={styles.badgeLabel}>Plan</Text>
         </View>
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>{heading.layoutName.toUpperCase()}</Text>
+        <Text style={styles.title}>{heading.layoutName}</Text>
         <Text style={styles.subtitle}>
           {planned} of {holes.length} holes planned
           {reviewCount > 0 ? ` · ${reviewCount} to revise` : ''}
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderRadius: 6,
   },
-  badgeLabel: { fontFamily: FONT.bc700, fontSize: 13, letterSpacing: 1.5, color: '#fff' },
+  badgeLabel: { fontFamily: FONT.bc700, fontSize: 13, color: '#fff' },
   content: { paddingHorizontal: 20, paddingBottom: 24 },
   title: { fontFamily: FONT.bc800, fontSize: 34, color: SHELL.text },
   subtitle: { fontFamily: FONT.b500, fontSize: 15, color: SHELL.textMuted, marginTop: 2, marginBottom: 18 },

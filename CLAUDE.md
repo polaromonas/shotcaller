@@ -23,8 +23,9 @@ Build the UI from this — recreate the designs with RN/Expo patterns, don't por
 HTML. When a screen is ambiguous in prose, the canvas/PNG wins.
 
 **Approved deviations from the delivered design (product-owner overrides).** The
-design bundle omitted three things V1 had and the owner wants kept — implement these
-instead of the bare design where they conflict:
+design bundle omitted three things V1 had and the owner wants kept (1–3), and the
+owner has since overridden two Home-screen decisions (4–5) — implement these instead
+of the bare design where they conflict:
 1. **Add-Disc keeps the disc-catalog autocomplete** (`searchCatalog` over the
    1,164-disc JSON) plus **Manufacturer** and **Plastic** fields. The design's 7a
    manual form is the visual style, not a spec to strip features down to.
@@ -32,6 +33,24 @@ instead of the bare design where they conflict:
    (9b) per the disc display rule below — the design's "Firebird · FWD" becomes
    "Star Firebird · FWD" / "Star · FWD".
 3. **Manufacturer stays in the schema** (catalog search); just never rendered.
+4. **No all-caps display type anywhere — sentence case app-wide.** This retires the
+   design README's letter-spaced uppercase *section-label* pattern (`700 12px,
+   letter-spacing .16em`) completely. Wordmark is "ShotCaller"; mode tiles and badges
+   read "Plan" / "Play"; section labels, screen titles, button labels and card labels
+   are sentence case ("Pick a layout", "All layouts — most planned first", "To revise",
+   "New shape", "Bag color"). The tracking that went with the caps is gone too — it
+   existed to open up uppercase and reads loose on mixed case. Use `FONT.bc700` +
+   muted color (no tracking, no `textTransform`) for a section label.
+   **Caps that are DATA stay caps**, and must not be "fixed": disc category codes
+   (`DD`, `FWD`, `MID`, `P&A`), throw-type abbreviations (`BH`, `FH`), and anything a
+   user typed. Course, layout, and disc names render exactly as entered — never
+   `.toUpperCase()`. The Play caddie card's throw+shape phrase is "FH Flex", not
+   "FH FLEX" (matches the phrasing documented under Architecture notes).
+5. **My Bag is a header pill on Home, not a bottom tile.** The design's bottom
+   "My Bag · {n} discs" card is gone; the bag lives top-right as a neutral pill
+   (bag-color dot + "My Bag" + disc count). The two mode tiles take the reclaimed
+   height. "About ShotCaller" stays the small centered link at the bottom (the
+   design put About top-right; the bag took that slot).
 
 Locked design decisions (these override anything vaguer elsewhere):
 - **Mode colors:** PLAN indigo `#5B4FC7`, PLAY teal `#0E8C8C`. Applied to badges,

@@ -60,7 +60,7 @@ export function PlayPickerScreen() {
           <Text style={styles.back}>‹ Home</Text>
         </Pressable>
         <View style={styles.badge}>
-          <Text style={styles.badgeLabel}>PLAY</Text>
+          <Text style={styles.badgeLabel}>Play</Text>
         </View>
       </View>
 
@@ -81,13 +81,13 @@ export function PlayPickerScreen() {
         </View>
       ) : (
         <ScrollView contentContainerStyle={styles.content}>
-          <Text style={styles.title}>PICK A LAYOUT</Text>
+          <Text style={styles.title}>Pick a layout</Text>
 
           {resume && (
             <Pressable style={styles.resume} onPress={() => play(resume.layoutId)}>
               <View style={styles.resumeTop}>
                 <Text style={styles.resumeLabel}>
-                  RESUME — YOU WERE ON HOLE {resume.lastHole}
+                  Resume — you were on hole {resume.lastHole}
                 </Text>
                 <Pressable
                   onPress={() => endRound(resume.layoutId)}
@@ -105,13 +105,13 @@ export function PlayPickerScreen() {
                   {resume.plannedCount}/{resume.holeCount} planned
                 </Text>
                 <View style={styles.resumeBtn}>
-                  <Text style={styles.resumeBtnLabel}>RESUME ›</Text>
+                  <Text style={styles.resumeBtnLabel}>Resume ›</Text>
                 </View>
               </View>
             </Pressable>
           )}
 
-          <Text style={styles.sectionLabel}>ALL LAYOUTS — MOST PLANNED FIRST</Text>
+          <Text style={styles.sectionLabel}>All layouts — most planned first</Text>
 
           {layouts.map((l) => {
             const planned = l.plannedCount > 0;
@@ -140,11 +140,11 @@ export function PlayPickerScreen() {
                 </View>
                 {planned ? (
                   <Pressable style={styles.playBtn} onPress={() => play(l.layoutId)}>
-                    <Text style={styles.playLabel}>PLAY ›</Text>
+                    <Text style={styles.playLabel}>Play ›</Text>
                   </Pressable>
                 ) : (
                   <Pressable style={styles.planBtn} onPress={() => plan(l.layoutId)}>
-                    <Text style={styles.planLabel}>PLAN IT ›</Text>
+                    <Text style={styles.planLabel}>Plan it ›</Text>
                   </Pressable>
                 )}
               </View>
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderRadius: 6,
   },
-  badgeLabel: { fontFamily: FONT.bc700, fontSize: 13, letterSpacing: 1.5, color: '#fff' },
+  badgeLabel: { fontFamily: FONT.bc700, fontSize: 13, color: '#fff' },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24, gap: 8 },
   emptyTitle: { fontFamily: FONT.bc800, fontSize: 24, color: SHELL.text },
   emptyBody: { fontFamily: FONT.b500, fontSize: 14, color: SHELL.textMuted, textAlign: 'center' },
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   resumeTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  resumeLabel: { fontFamily: FONT.bc700, fontSize: 12, letterSpacing: 1, color: 'rgba(255,255,255,0.85)' },
+  resumeLabel: { fontFamily: FONT.bc700, fontSize: 13, color: 'rgba(255,255,255,0.85)' },
   resumeDismiss: { fontSize: 16, color: 'rgba(255,255,255,0.75)' },
   resumeTitle: { fontFamily: FONT.bc800, fontSize: 22, color: '#fff' },
   resumeRow: {
@@ -208,7 +208,6 @@ const styles = StyleSheet.create({
   sectionLabel: {
     fontFamily: FONT.bc700,
     fontSize: 12,
-    letterSpacing: 1.4,
     color: SHELL.textMuted,
     marginTop: 8,
   },

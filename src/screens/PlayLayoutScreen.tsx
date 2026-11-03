@@ -41,7 +41,7 @@ function shapePhrase(item: PlayHole): string | null {
   const phrase = [p.throw_type ? THROW_ABBREV[p.throw_type] : null, p.shot_shape]
     .filter(Boolean)
     .join(' ');
-  return phrase.length > 0 ? phrase.toUpperCase() : null;
+  return phrase.length > 0 ? phrase : null;
 }
 
 export function PlayLayoutScreen() {
@@ -148,10 +148,10 @@ export function PlayLayoutScreen() {
       <StatusBar style="dark" />
       <View style={styles.header}>
         <View style={styles.badge}>
-          <Text style={styles.badgeLabel}>PLAY</Text>
+          <Text style={styles.badgeLabel}>Play</Text>
         </View>
         <Text style={styles.caption} numberOfLines={1}>
-          {heading.courseName.toUpperCase()} · {heading.layoutName.toUpperCase()}
+          {heading.courseName} · {heading.layoutName}
         </Text>
         {plan && (
           <Pressable
@@ -185,7 +185,7 @@ export function PlayLayoutScreen() {
       {plan?.needs_review && (
         <View style={styles.reviewTag}>
           <Ionicons name="flag" size={13} color={REVIEW_AMBER} />
-          <Text style={styles.reviewTagLabel}>TO REVISE</Text>
+          <Text style={styles.reviewTagLabel}>To revise</Text>
         </View>
       )}
 
@@ -255,13 +255,12 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderRadius: 6,
   },
-  badgeLabel: { fontFamily: FONT.bc700, fontSize: 13, letterSpacing: 1.6, color: '#fff' },
+  badgeLabel: { fontFamily: FONT.bc700, fontSize: 13, color: '#fff' },
   caption: {
     flex: 1,
     textAlign: 'center',
     fontFamily: FONT.bc700,
     fontSize: 12,
-    letterSpacing: 1.4,
     color: P.muted,
     marginHorizontal: 8,
   },
@@ -276,7 +275,6 @@ const styles = StyleSheet.create({
   reviewTagLabel: {
     fontFamily: FONT.bc700,
     fontSize: 12,
-    letterSpacing: 1.4,
     color: REVIEW_AMBER,
   },
   holeRow: { flexDirection: 'row', alignItems: 'flex-end', gap: 14, marginTop: 4 },
@@ -300,7 +298,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     paddingVertical: 12,
   },
-  pillLabel: { fontFamily: FONT.bc700, fontSize: 26, letterSpacing: 1.4, color: '#fff' },
+  pillLabel: { fontFamily: FONT.bc700, fontSize: 26, color: '#fff' },
   aim: { fontFamily: FONT.b600, fontSize: 27, lineHeight: 35, color: P.ink },
   empty: { gap: 8 },
   emptyTitle: { fontFamily: FONT.bc800, fontSize: 34, color: P.ink },

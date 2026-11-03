@@ -13,7 +13,7 @@ import {
 } from '../db/play';
 import { getBagColor } from '../db/settings';
 import { confirmAction } from '../util/confirm';
-import { contrastText, FONT, MODE, SHELL } from '../theme/colors';
+import { FONT, MODE, SHELL } from '../theme/colors';
 import type { RootStackParamList } from '../navigation/types';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'Home'>;
@@ -63,15 +63,36 @@ export function HomeScreen() {
   return (
     <SafeAreaView style={styles.root} edges={['top']}>
       <View style={styles.header}>
-        <Text style={styles.wordmark}>SHOTCALLER</Text>
-        <Text style={styles.tagline}>You call the shots.</Text>
+        <View style={styles.headerText}>
+          <Text style={styles.wordmark}>ShotCaller</Text>
+          <Text style={styles.tagline}>You call the shots.</Text>
+        </View>
+
+        <Pressable
+          style={styles.bagBtn}
+          onPress={openBag}
+          hitSlop={8}
+          accessibilityRole="button"
+          accessibilityLabel={
+            discCount === null ? 'My Bag' : `My Bag, ${discCount} discs`
+          }
+        >
+          <View
+            style={[
+              styles.bagDot,
+              bagColor ? { backgroundColor: bagColor, borderColor: bagColor } : null,
+            ]}
+          />
+          <Text style={styles.bagBtnLabel}>My Bag</Text>
+          {discCount !== null && <Text style={styles.bagBtnCount}>{discCount}</Text>}
+        </Pressable>
       </View>
 
       <View style={styles.body}>
         {resume && (
           <Pressable style={styles.resume} onPress={resumeRound}>
             <View style={styles.resumeTop}>
-              <Text style={styles.resumeLabel}>RESUME ROUND</Text>
+              <Text style={styles.resumeLabel}>Resume round</Text>
               <Pressable
                 onPress={() => endRound(resume.layoutId)}
                 hitSlop={12}
@@ -88,7 +109,7 @@ export function HomeScreen() {
                 On hole {resume.lastHole} of {resume.holeCount}
               </Text>
               <View style={styles.resumeBtn}>
-                <Text style={styles.resumeBtnLabel}>PLAY ›</Text>
+                <Text style={styles.resumeBtnLabel}>Play ›</Text>
               </View>
             </View>
           </Pressable>
@@ -101,7 +122,7 @@ export function HomeScreen() {
             end={{ x: 0.85, y: 1 }}
             style={styles.tile}
           >
-            <Text style={styles.tileLabel}>PLAN</Text>
+            <Text style={styles.tileLabel}>Plan</Text>
             <View>
               <Text style={styles.tileDesc}>Build a hole-by-hole game plan at home.</Text>
               <Text style={styles.tileLink}>Open courses ›</Text>
@@ -116,36 +137,12 @@ export function HomeScreen() {
             end={{ x: 0.85, y: 1 }}
             style={styles.tile}
           >
-            <Text style={styles.tileLabel}>PLAY</Text>
+            <Text style={styles.tileLabel}>Play</Text>
             <View>
               <Text style={styles.tileDesc}>Read your plan on the tee. One glance, one throw.</Text>
               <Text style={styles.tileLink}>Pick a layout ›</Text>
             </View>
           </LinearGradient>
-        </Pressable>
-
-        <Pressable
-          style={[
-            styles.bagCard,
-            bagColor
-              ? { backgroundColor: bagColor, borderColor: bagColor }
-              : null,
-          ]}
-          onPress={openBag}
-        >
-          <Text
-            style={[styles.bagLabel, bagColor ? { color: contrastText(bagColor) } : null]}
-          >
-            My Bag
-          </Text>
-          <Text
-            style={[
-              styles.bagMeta,
-              bagColor ? { color: contrastText(bagColor), opacity: 0.75 } : null,
-            ]}
-          >
-            {discCount === null ? '' : `${discCount} ${discCount === 1 ? 'disc' : 'discs'} ›`}
-          </Text>
         </Pressable>
 
         <Pressable onPress={openAbout} hitSlop={8} style={styles.aboutLink}>
@@ -158,8 +155,17 @@ export function HomeScreen() {
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: SHELL.bg },
-  header: { paddingHorizontal: 20, paddingTop: 8, paddingBottom: 12 },
-  wordmark: { fontFamily: FONT.bc800, fontSize: 30, letterSpacing: 0.5, color: SHELL.text },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 12,
+    paddingHorizontal: 20,
+    paddingTop: 8,
+    paddingBottom: 12,
+  },
+  headerText: { flexShrink: 1 },
+  wordmark: { fontFamily: FONT.bc800, fontSize: 30, color: SHELL.text },
   tagline: { fontFamily: FONT.b500, fontSize: 14, color: SHELL.textMuted, marginTop: -2 },
   body: { flex: 1, paddingHorizontal: 20, paddingBottom: 16, gap: 12 },
   resume: {
@@ -169,7 +175,7 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   resumeTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  resumeLabel: { fontFamily: FONT.bc700, fontSize: 12, letterSpacing: 1.2, color: 'rgba(255,255,255,0.85)' },
+  resumeLabel: { fontFamily: FONT.bc700, fontSize: 13, color: 'rgba(255,255,255,0.85)' },
   resumeDismiss: { fontSize: 16, color: 'rgba(255,255,255,0.75)' },
   resumeTitle: { fontFamily: FONT.bc800, fontSize: 22, color: '#fff' },
   resumeRow: {
@@ -186,19 +192,29 @@ const styles = StyleSheet.create({
   tileLabel: { fontFamily: FONT.bc800, fontSize: 40, color: '#fff' },
   tileDesc: { fontFamily: FONT.b500, fontSize: 15, color: 'rgba(255,255,255,0.92)' },
   tileLink: { fontFamily: FONT.bc700, fontSize: 15, letterSpacing: 0.5, color: '#fff', marginTop: 8 },
-  bagCard: {
+  // Neutral pill — the bag is not a mode surface, so it never takes a mode
+  // color. The user's bag color rides on the dot only.
+  bagBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 18,
-    paddingVertical: 16,
-    borderRadius: 14,
+    gap: 7,
+    paddingLeft: 10,
+    paddingRight: 12,
+    paddingVertical: 8,
+    borderRadius: 999,
     backgroundColor: SHELL.card,
     borderWidth: 1,
     borderColor: SHELL.border,
   },
-  bagLabel: { fontFamily: FONT.bc700, fontSize: 17, color: SHELL.text },
-  bagMeta: { fontFamily: FONT.b600, fontSize: 14, color: SHELL.textMuted },
+  bagDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: SHELL.dashed,
+  },
+  bagBtnLabel: { fontFamily: FONT.bc700, fontSize: 15, color: SHELL.text },
+  bagBtnCount: { fontFamily: FONT.b600, fontSize: 13, color: SHELL.textMuted },
   aboutLink: { alignSelf: 'center', paddingVertical: 4 },
   aboutLabel: { fontFamily: FONT.b500, fontSize: 13, color: SHELL.textFaint },
 });

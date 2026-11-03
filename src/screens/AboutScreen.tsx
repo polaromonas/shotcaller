@@ -98,7 +98,6 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '700',
     letterSpacing: 0.5,
-    textTransform: 'uppercase',
   },
   sectionBody: { fontSize: 14, color: UI.text, lineHeight: 20 },
   privacyCard: {
@@ -115,7 +114,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: UI.textMuted,
     letterSpacing: 0.5,
-    textTransform: 'uppercase',
   },
   privacyBody: { fontSize: 13, color: UI.text, lineHeight: 18 },
 });

@@ -165,7 +165,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: UI.textMuted,
     letterSpacing: 0.3,
-    textTransform: 'uppercase',
   },
   input: {
     backgroundColor: UI.surface,

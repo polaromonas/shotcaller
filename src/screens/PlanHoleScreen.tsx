@@ -222,7 +222,7 @@ export function PlanHoleScreen() {
           <Text style={styles.back}>‹ {layout.name}</Text>
         </Pressable>
         <View style={styles.badge}>
-          <Text style={styles.badgeLabel}>PLAN</Text>
+          <Text style={styles.badgeLabel}>Plan</Text>
         </View>
       </View>
 
@@ -442,7 +442,7 @@ export function PlanHoleScreen() {
             onPress={() => setAddShapeOpen(false)}
           />
           <View style={styles.modalCard}>
-            <Text style={styles.modalTitle}>NEW SHAPE</Text>
+            <Text style={styles.modalTitle}>New shape</Text>
             <TextInput
               style={styles.modalInput}
               value={newShapeName}
@@ -476,7 +476,7 @@ export function PlanHoleScreen() {
 function Section({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <View style={styles.section}>
-      <Text style={styles.sectionLabel}>{label.toUpperCase()}</Text>
+      <Text style={styles.sectionLabel}>{label}</Text>
       {children}
     </View>
   );
@@ -500,7 +500,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderRadius: 6,
   },
-  badgeLabel: { fontFamily: FONT.bc700, fontSize: 13, letterSpacing: 1.5, color: '#fff' },
+  badgeLabel: { fontFamily: FONT.bc700, fontSize: 13, color: '#fff' },
   content: { paddingHorizontal: 20, paddingBottom: 32, gap: 22 },
   reviewBanner: {
     flexDirection: 'row',
@@ -562,7 +562,6 @@ const styles = StyleSheet.create({
   sectionLabel: {
     fontFamily: FONT.bc700,
     fontSize: 12,
-    letterSpacing: 1.8,
     color: SHELL.textMuted,
   },
   chipWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
@@ -647,7 +646,7 @@ const styles = StyleSheet.create({
     borderColor: SHELL.border,
     gap: 14,
   },
-  modalTitle: { fontFamily: FONT.bc700, fontSize: 14, letterSpacing: 1.6, color: SHELL.textMuted },
+  modalTitle: { fontFamily: FONT.bc700, fontSize: 14, color: SHELL.textMuted },
   modalInput: {
     backgroundColor: SHELL.bg,
     borderRadius: 12,
