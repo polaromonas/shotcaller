@@ -34,7 +34,7 @@
       "expo-font"
     ],
     "experiments": {
-      "baseUrl": "/shotcaller-v2"
+      "baseUrl": "/shotcaller"
     },
     "extra": {
       "eas": {
