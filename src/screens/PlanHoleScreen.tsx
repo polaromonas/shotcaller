@@ -246,7 +246,7 @@ export function PlanHoleScreen() {
           )}
 
           <View style={styles.holeRow}>
-            <Text style={styles.holeNumeral}>HOLE {hole.hole_number}</Text>
+            <Text style={styles.holeNumeral}>Hole {hole.hole_number}</Text>
             <Pressable
               style={styles.factsBtn}
               onPress={() => setEditingFacts((v) => !v)}
@@ -407,7 +407,7 @@ export function PlanHoleScreen() {
         <View style={styles.footer}>
           <Pressable style={styles.saveBtn} onPress={() => void handleSave()}>
             <Text style={styles.saveLabel}>
-              {nextHole ? 'SAVE · NEXT HOLE ›' : 'SAVE · DONE ›'}
+              {nextHole ? 'Save · next hole ›' : 'Save · done ›'}
             </Text>
           </Pressable>
         </View>
@@ -524,7 +524,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 10,
   },
-  resolveLabel: { fontFamily: FONT.bc700, fontSize: 14, letterSpacing: 0.4, color: '#1a1200' },
+  resolveLabel: { fontFamily: FONT.bc700, fontSize: 14, color: '#1a1200' },
   holeRow: { flexDirection: 'row', alignItems: 'center', gap: 14, flexWrap: 'wrap' },
   holeNumeral: { fontFamily: FONT.bc800, fontSize: 44, color: SHELL.text },
   factsBtn: {
@@ -698,5 +698,5 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     alignItems: 'center',
   },
-  saveLabel: { fontFamily: FONT.bc800, fontSize: 18, letterSpacing: 0.5, color: '#fff' },
+  saveLabel: { fontFamily: FONT.bc800, fontSize: 18, color: '#fff' },
 });

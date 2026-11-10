@@ -209,7 +209,6 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '600',
     color: UI.textMuted,
-    letterSpacing: 0.3,
     width: 60,
   },
   parSegmented: {

@@ -14,6 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { SwipeableMethods } from 'react-native-gesture-handler/ReanimatedSwipeable';
 import { AddDiscSheet } from '../components/AddDiscSheet';
+import { DeleteDiscSheet } from '../components/DeleteDiscSheet';
 import { DiscCard } from '../components/DiscCard';
 import { countPlansUsingDisc } from '../db/plans';
 import {
@@ -33,7 +34,6 @@ import {
   type DiscSort,
 } from '../db/types';
 import { DISC_SWATCHES, FONT, SHELL, UI } from '../theme/colors';
-import { confirmAction } from '../util/confirm';
 import type { RootStackParamList } from '../navigation/types';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'MyDiscs'>;
@@ -178,26 +178,28 @@ export function MyDiscsScreen() {
     [refresh]
   );
 
-  const handleDelete = useCallback(
-    async (disc: DiscWithTags) => {
-      const plans = await countPlansUsingDisc(disc.id);
-      const planNote =
-        plans > 0
-          ? ` ${plans} hole ${plans === 1 ? 'plan uses' : 'plans use'} this disc — deleting clears it from ${plans === 1 ? 'that plan' : 'those plans'}, but the rest of each plan stays.`
-          : '';
-      confirmAction({
-        title: `Delete ${disc.nickname ?? disc.model}?`,
-        message: `Remove ${disc.model} from your collection.${planNote} This cannot be undone.`,
-        confirmLabel: 'Delete',
-        destructive: true,
-        onConfirm: async () => {
-          await deleteDisc(disc.id);
-          openRow.current = null;
-          await refresh();
-        },
-      });
+  // Delete opens the 8b sheet; shelving is offered first as the safe option.
+  const [pendingDelete, setPendingDelete] = useState<{
+    disc: DiscWithTags;
+    planCount: number;
+  } | null>(null);
+
+  const handleDelete = useCallback(async (disc: DiscWithTags) => {
+    setPendingDelete({ disc, planCount: await countPlansUsingDisc(disc.id) });
+  }, []);
+
+  const finishDelete = useCallback(
+    async (action: 'shelve' | 'delete') => {
+      if (!pendingDelete) return;
+      const { disc } = pendingDelete;
+      setPendingDelete(null);
+      if (action === 'shelve') await setInBag(disc.id, false);
+      else await deleteDisc(disc.id);
+      openRow.current?.close();
+      openRow.current = null;
+      await refresh();
     },
-    [refresh]
+    [pendingDelete, refresh]
   );
 
   return (
@@ -301,6 +303,14 @@ export function MyDiscsScreen() {
         disc={editingDisc}
         onClose={closeSheet}
         onSubmit={handleSubmit}
+      />
+
+      <DeleteDiscSheet
+        disc={pendingDelete?.disc ?? null}
+        planCount={pendingDelete?.planCount ?? 0}
+        onShelve={() => void finishDelete('shelve')}
+        onDelete={() => void finishDelete('delete')}
+        onClose={() => setPendingDelete(null)}
       />
 
       <SortPicker

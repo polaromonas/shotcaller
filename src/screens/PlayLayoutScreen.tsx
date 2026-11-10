@@ -145,7 +145,7 @@ export function PlayLayoutScreen() {
   }
 
   const { hole, plan, disc } = item;
-  const distanceLabel = hole.distance_ft > 0 ? `${hole.distance_ft} FT` : 'DISTANCE —';
+  const distanceLabel = hole.distance_ft > 0 ? `${hole.distance_ft} ft` : 'Distance —';
   const aim = plan?.aim_note?.trim() || null;
   const hasContent = !!(disc || phrase || aim);
 
@@ -185,7 +185,7 @@ export function PlayLayoutScreen() {
       <View style={styles.holeRow}>
         <Text style={styles.holeNumeral}>{hole.hole_number}</Text>
         <Text style={styles.holeFacts}>
-          PAR {hole.par} · {distanceLabel}
+          Par {hole.par} · {distanceLabel}
         </Text>
       </View>
       {plan?.needs_review && (
@@ -234,7 +234,7 @@ export function PlayLayoutScreen() {
         </Pressable>
         {next ? (
           <Pressable style={styles.nextBar} onPress={() => go(1)}>
-            <Text style={styles.nextLabel}>HOLE {next.hole.hole_number} ›</Text>
+            <Text style={styles.nextLabel}>Hole {next.hole.hole_number} ›</Text>
           </Pressable>
         ) : (
           <Pressable
@@ -245,7 +245,7 @@ export function PlayLayoutScreen() {
               navigation.goBack();
             }}
           >
-            <Text style={styles.nextLabel}>DONE ✓</Text>
+            <Text style={styles.nextLabel}>Done ✓</Text>
           </Pressable>
         )}
       </View>

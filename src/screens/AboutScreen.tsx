@@ -97,7 +97,6 @@ const styles = StyleSheet.create({
     color: UI.textInverse,
     fontSize: 11,
     fontWeight: '700',
-    letterSpacing: 0.5,
   },
   sectionBody: { fontSize: 14, color: UI.text, lineHeight: 20 },
   privacyCard: {
@@ -113,7 +112,6 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '700',
     color: UI.textMuted,
-    letterSpacing: 0.5,
   },
   privacyBody: { fontSize: 13, color: UI.text, lineHeight: 18 },
 });

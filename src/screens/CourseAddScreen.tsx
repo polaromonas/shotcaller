@@ -308,7 +308,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '600',
     color: UI.textMuted,
-    letterSpacing: 0.3,
   },
   input: {
     backgroundColor: UI.surface,

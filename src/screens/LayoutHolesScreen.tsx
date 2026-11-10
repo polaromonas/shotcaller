@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: SHELL.border,
   },
-  editLabel: { fontFamily: FONT.bc700, fontSize: 15, letterSpacing: 0.5, color: SHELL.textSecondary },
+  editLabel: { fontFamily: FONT.bc700, fontSize: 15, color: SHELL.textSecondary },
   playBtn: {
     flex: 1,
     flexDirection: 'row',
@@ -228,5 +228,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: MODE.play,
   },
-  playLabel: { fontFamily: FONT.bc800, fontSize: 16, letterSpacing: 0.5, color: '#fff' },
+  playLabel: { fontFamily: FONT.bc800, fontSize: 16, color: '#fff' },
 });

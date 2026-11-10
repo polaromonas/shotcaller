@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
   tile: { flex: 1, padding: 22, justifyContent: 'space-between' },
   tileLabel: { fontFamily: FONT.bc800, fontSize: 40, color: '#fff' },
   tileDesc: { fontFamily: FONT.b500, fontSize: 15, color: 'rgba(255,255,255,0.92)' },
-  tileLink: { fontFamily: FONT.bc700, fontSize: 15, letterSpacing: 0.5, color: '#fff', marginTop: 8 },
+  tileLink: { fontFamily: FONT.bc700, fontSize: 15, color: '#fff', marginTop: 8 },
   // Neutral pill — the bag is not a mode surface, so it never takes a mode
   // color. The user's bag color rides on the dot only.
   bagBtn: {
