@@ -2,32 +2,31 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-> **This is ShotCaller V2.** V2 is a focused **game-planning** app with two modes,
-> **Plan** and **Play**. It is a deliberate pivot away from V1 (which did practice
-> logging, per-hole stats, a recommendation engine, and a third Tournament mode —
-> all removed). If you find V1-era code (throw logging, stats, tournament), it is
-> being torn out, not extended. See "What V1 left behind" below.
+> **ShotCaller** is a focused disc golf **game-planning** app with two modes, **Plan**
+> and **Play**. It began as a practice-logging/stats prototype (git tag `v1-final`);
+> that was cut, and there is now one app and one codebase. Don't reintroduce
+> throw logging, stats, recommendations or a Tournament mode — see the handoff's §7.
 
 ## Source of truth
 
 `SHOTCALLER_HANDOFF.md` at the repo root is the authoritative product + engineering
-document. `V2_DESIGN_HANDOFF.md` is the UI/design brief. Read both before writing
+document. `design/BRIEF.md` is the original UI/design brief. Read both before writing
 code. If a doc and this file disagree, the handoff wins — update CLAUDE.md to match.
 
 ## Design source of truth (UI)
 
-**`design_handoff_shotcaller_v2/`** is the delivered, product-owner-approved UI. Its
+**`design/`** is the delivered, product-owner-approved UI. Its
 `README.md` documents every screen, token, and copy decision; `screens/` has the 13
-canonical PNGs; `ShotCaller V2.dc.html` is the pan/zoom design canvas (exact values).
+canonical PNGs; `ShotCaller.dc.html` is the pan/zoom design canvas (exact values).
 Build the UI from this — recreate the designs with RN/Expo patterns, don't port the
 HTML. When a screen is ambiguous in prose, the canvas/PNG wins.
 
 **Approved deviations from the delivered design (product-owner overrides).** The
-design bundle omitted three things V1 had and the owner wants kept (1–3), and the
+design bundle omitted three things the prototype had and the owner wants kept (1–3), and the
 owner has since overridden two Home-screen decisions (4–5) — implement these instead
 of the bare design where they conflict:
 1. **Add-Disc keeps the disc-catalog autocomplete** (`searchCatalog` over the
-   1,164-disc JSON) plus **Manufacturer** and **Plastic** fields. The design's 7a
+   ~1,200-disc JSON) plus **Manufacturer** and **Plastic** fields. The design's 7a
    manual form is the visual style, not a spec to strip features down to.
 2. **Plastic type is shown** on disc-picker rows (5a) and the **caddie card** subline
    (9b) per the disc display rule below — the design's "Firebird · FWD" becomes
@@ -62,7 +61,7 @@ Locked design decisions (these override anything vaguer elsewhere):
 - **Fonts:** Barlow Condensed (display: disc names, hole numerals, titles, labels)
   + Barlow (body/chips/notes). Add via `@expo-google-fonts/*` + `expo-font`.
 - **Icons:** replace the design's placeholder glyphs with the codebase's icon set
-  (v1 used Ionicons).
+  (Ionicons).
 - **Disc display rule (single source of truth):** primary (big) name =
   `nickname ?? model`; secondary line = nickname set → `"{plastic} {model} · {category}"`,
   else → `plastic ? "{plastic} · {category}" : "{category}"`. **Manufacturer is never
@@ -94,7 +93,10 @@ Locked design decisions (these override anything vaguer elsewhere):
 - `npx expo install <pkg>` — add a native module at the SDK-matched version; prefer
   this over `npm install` for anything native
 
-No test runner or linter is wired up yet. Add one deliberately when first needed.
+- `npm test` — Jest SQL smoke tests against an in-memory better-sqlite3 shim
+  (`test/mocks/expo-sqlite.ts`). The GitHub Pages deploy runs these first.
+
+No linter is wired up yet. Add one deliberately when first needed.
 
 ## Database
 
@@ -104,18 +106,18 @@ No test runner or linter is wired up yet. Add one deliberately when first needed
 - Schema lives in `src/db/schema.ts`; SQL `CHECK` constraints enforce every enum.
   Enum values are defined once in `src/db/types.ts` and reused in both the DDL and
   the TypeScript types — **do not duplicate enum string literals elsewhere.**
-- **V2 uses a fresh DB filename.** V2 was seeded from V1 code, so the practice/stats
-  tables must not carry forward. Bump the DB filename and define a V2-only
-  `SCHEMA_SQL`. There are no V1 users and no practice data worth migrating.
+- **DB filename is `shotcaller-v2b.db` — never rename it.** The "v2b" is
+  historical; renaming would silently start every existing player on an empty DB.
 - `resetDb()` exists for dev use; it deletes the DB file and clears the cached
   handle. Don't ship a path that calls it from the UI.
-- No migration framework yet. If the schema changes again before ship, bump the
-  filename or add a migration step — don't silently mutate an existing DB.
+- Schema changes go through `migrate()` in `src/db/index.ts`: additive,
+  idempotent steps (guarded `ALTER TABLE … ADD COLUMN`) that run before
+  `SCHEMA_SQL`. Don't drop or rewrite existing tables.
 
 ## Architecture notes worth knowing before editing
 
 **Two modes, two different screens.** Plan (authoring) and Play (reading) are NOT
-one shared screen — that was V1. Plan is calm, thumb-friendly, dense-is-ok. Play is
+one shared screen. Plan is calm, thumb-friendly, dense-is-ok. Play is
 a glanceable caddie card. Don't let Play inherit Plan's density or interaction
 patterns.
 
@@ -124,13 +126,11 @@ the largest thing on screen; throw type + shot shape render as one compact phras
 (e.g. "FH Flex"); the aim note sits below. Advance holes by swipe or a giant tap
 target — never a dropdown or scroll-to-find. High-contrast **light** theme by
 default (sunlight is the enemy), even if the rest of the app is darker. Play must
-**reopen on the last hole played** (`app_settings.last_play_layout_id` /
-`last_play_hole_number`) because players constantly background the app for UDisc.
+**reopen on the last hole played** (`play_state`, one row per layout) because players constantly background the app for UDisc.
 The bar: answer "what am I throwing and where?" in under 2 seconds, one-handed.
 
 **Mode color is identity, not decoration.** PLAN indigo `#5B4FC7`, PLAY teal
-`#0E8C8C`, on badges, selected pills, and primary buttons. The V1 three-color palette
-(Blue/Green/Pink) is retired. Don't reuse mode colors for unrelated UI.
+`#0E8C8C`, on badges, selected pills, and primary buttons. Don't reuse mode colors for unrelated UI.
 
 **HOLE belongs to LAYOUT, not COURSE.** A course has many layouts (Short / Long /
 Tournament); holes live under a layout. Plans reference `layout_id` / `hole_id`,
@@ -138,15 +138,14 @@ never `course_id` directly. Easy to get wrong in joins.
 
 **Plans attach to LAYOUTS/holes.** `hole_plan` is one row per hole
 (`UNIQUE(hole_id)`), carrying the disc, throw type, shot shape, and a free-text
-`aim_note`. It replaces V1's `game_plan_shot` and drops the recommendation-era
-`is_manual_override`.
+`aim_note`.
 
 **Progressive authoring is intentional.** Every `hole_plan` field is nullable. A
 player can jot an aim note before committing a disc; a hole is "planned" if it has
 any content. This is what makes it feel like a better *note*, not a rigid form.
 Don't add NOT NULL guards that force a full plan before saving.
 
-**No scorekeeping, no stats, no recommendation engine.** V2 sits alongside
+**No scorekeeping, no stats, no recommendation engine.** ShotCaller sits alongside
 UDisc/PDGA and never tracks score, strokes, results, or throw-by-throw data. There
 is no "best disc" suggestion and no stats screen. If a request smells like ranking
 or analytics, check it against the handoff before building.
@@ -156,8 +155,7 @@ or analytics, check it against the handoff before building.
 table seeds the 9 built-ins and users add/delete their own, so `hole_plan.shot_shape`
 is free TEXT (no CHECK), and its display type is `string`, not a union. The
 Thumber/Tomahawk→Overhand lock is driven by `shape.is_overhand`; built-ins are
-protected from deletion by `shape.is_builtin`. The V1 `result`/`session mode` enums
-are gone. `aim_note` is still free text.
+protected from deletion by `shape.is_builtin`. `aim_note` is free text.
 
 **Thumber/Tomahawk coupling.** Selecting `Thumber` or `Tomahawk` as `shot_shape`
 must auto-set `throw_type = Overhand` and disable the throw_type selector.
@@ -168,15 +166,6 @@ plan, or disc gets a confirmation whose button restates the cost; **courses are 
 deletable**. In-bag discs and the current/most-recent layout sort to the top of
 their lists.
 
-## What V1 left behind (remove, don't extend)
-
-The repo was copied from V1's final state. These are being **deleted**: the
-`practice_session`, `throw`, `throw_tag`, `shot_tag`, `game_plan_shot_tag` tables;
-`src/db/stats.ts` and the combo breakdown / confidence tiers; the Practice and
-Tournament throw screens and their start screens; the Stats screen and tab. If you
-touch a file that imports these, you're probably in code that should be removed —
-confirm against §7 of the handoff before adding to it.
-
 ## Reserved extension points (design around, don't build in MVP)
 
 - **Tee-pad photo + aim-line annotation** — the post-MVP hero feature. Will add a
@@ -185,9 +174,3 @@ confirm against §7 of the handoff before adding to it.
 - **Plan B (conditional alternative)** — fast-follow. Will add a `condition` column
   and relax `UNIQUE(hole_id)` to allow a secondary plan per hole. One plan per hole
   for MVP, but don't assume it's forever.
-
-## Build order
-
-Follow the handoff's §8: strip V1 → V2 schema → Plan a Hole → Layout→Holes overview
-→ Play (caddie card) → Home → polish. Each step assumes the previous. Play is
-meaningless until Plan authoring writes real `hole_plan` rows.

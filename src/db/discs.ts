@@ -38,7 +38,7 @@ export function discDisplayName(d: {
   return d.model;
 }
 
-// Secondary line under the display name (V2 disc display rule). Plastic type is
+// Secondary line under the display name (disc display rule, see CLAUDE.md). Plastic type is
 // shown (a mold is bagged in different plastics); manufacturer never is.
 // - nicknamed    → "{plastic} {model} · {category}"  e.g. "Star Firebird · FWD"
 // - not nicknamed → "{plastic} · {category}" or "{category}" (model is already

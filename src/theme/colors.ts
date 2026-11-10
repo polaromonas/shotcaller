@@ -1,7 +1,7 @@
-// Mode identity (V2). Two modes, two signature colors — PLAN indigo for
+// Mode identity. Two modes, two signature colors — PLAN indigo for
 // authoring surfaces, PLAY teal for the on-course caddie card. Applied to
 // badges, selected pills/segments, and primary buttons; never reused for
-// unrelated UI. (V1's three-color practice/gamePlan/tournament palette is gone.)
+// unrelated UI.
 export const MODE = {
   plan: '#5B4FC7',
   play: '#0E8C8C',
@@ -41,10 +41,9 @@ export function readableOnDark(hex: string, fallback: string): string {
   return contrastText(hex) === '#101216' ? hex : fallback;
 }
 
-// Dark shell — the V2 design's default surface for every screen except the
+// Dark shell — the design's default surface for every screen except the
 // Play caddie card (which gets its own sunlight-first light theme). Values from
-// design_handoff_shotcaller_v2/README.md. Introduced with the Plan-a-Hole
-// screen; other screens migrate onto it as they're rebuilt.
+// design/README.md.
 export const SHELL = {
   bg: '#101216',
   card: '#171A20',
@@ -82,7 +81,7 @@ export const FONT = {
   b700: 'Barlow_700Bold',
 } as const;
 
-// V2 is dark-shell across the board. UI mirrors the SHELL palette so the
+// The app is dark-shell across the board. UI mirrors the SHELL palette so the
 // screens still written against `UI` (Courses, My Bag, Add Disc, About, …) read
 // as the same dark theme as the Plan/Play surfaces. `textInverse` stays white —
 // it's used for label text on colored buttons (green in-bag, indigo/teal CTAs).

@@ -1,12 +1,12 @@
-# Handoff: ShotCaller V2 — Full App UI
+# Handoff: ShotCaller — Full App UI
 
 ## Overview
 ShotCaller is a disc golf **game-planning** app (tagline: *You call the shots*). The player authors a hole-by-hole plan at home (**Plan mode**) and reads it glanceably on the course (**Play mode**). It is NOT a scorekeeping or stats app — it runs alongside UDisc/PDGA as a "second screen." This handoff covers the complete MVP UI: both modes, all navigation surfaces, the disc bag, pickers, and destructive-action patterns.
 
-The original product brief is included as `V2_DESIGN_HANDOFF.md` — read it for product rationale and constraints. This README documents the **design decisions made and approved by the product owner** during design review.
+The original product brief is included as `BRIEF.md` — read it for product rationale and constraints. This README documents the **design decisions made and approved by the product owner** during design review.
 
 ## About the Design Files
-The files in this bundle are **design references created in HTML** — they show intended look and behavior, they are not production code. `ShotCaller V2.dc.html` is a design-review canvas containing every iteration; the **canonical screens** (listed below) are what to build. The target is **React Native + Expo** (per the brief; a web build exists as a demo channel). Recreate the designs using that codebase's established patterns — do not port the HTML.
+The files in this bundle are **design references created in HTML** — they show intended look and behavior, they are not production code. `ShotCaller.dc.html` is a design-review canvas containing every iteration; the **canonical screens** (listed below) are what to build. The target is **React Native + Expo** (per the brief; a web build exists as a demo channel). Recreate the designs using that codebase's established patterns — do not port the HTML.
 
 ## Fidelity
 **High-fidelity.** Colors, typography, spacing, and copy are final unless noted. Recreate pixel-faithfully at 390×844 reference size, scaling for other devices.
@@ -114,7 +114,7 @@ Dark shell, teal accents. "‹ Home", title "PICK A LAYOUT" + PLAY badge.
 - Footer hint: "Playing starts at hole 1 — or long-press PLAY to start elsewhere" (long-press start-at-hole is optional; drop if scope-tight).
 
 ### My Bag (9a)
-Dark shell, **neutral** (no mode color). "22 in bag · 3 shelved" caption. Rows grouped by category section labels; each row = 22px color dot + display name (+ "· Model" if nicknamed) + flight numbers "S / G / T / F" right. Footer outlined "+ ADD DISC". Shelved discs live at the bottom (dimmed) — brief allows v1's bag as baseline; don't over-invest here.
+Dark shell, **neutral** (no mode color). "22 in bag · 3 shelved" caption. Rows grouped by category section labels; each row = 22px color dot + display name (+ "· Model" if nicknamed) + flight numbers "S / G / T / F" right. Footer outlined "+ ADD DISC". Shelved discs live at the bottom (dimmed) — the brief allows the earlier bag screen as a baseline; don't over-invest here.
 
 ### Add disc (7a)
 Dark shell, neutral. Fields top→bottom:
@@ -161,7 +161,7 @@ Dark shell. "YOU CALL THE SHOTS." display type; positioning copy (plan ≠ score
 
 ## Assets
 - **Fonts:** Barlow + Barlow Condensed (Google Fonts, OFL).
-- No images/icons required for MVP; glyphs shown (‹ › ⌃ ⌄ ✕ ✓ ✎ 📷 ▶ ●) should be replaced with the codebase's icon set (v1 used Ionicons).
+- No images/icons required for MVP; glyphs shown (‹ › ⌃ ⌄ ✕ ✓ ✎ 📷 ▶ ●) should be replaced with the codebase's icon set (Ionicons).
 
 ## Out of scope (design around, don't build)
 - Tee-pad photo + aim-line annotation (slot reserved on Plan card; Play would show a tappable photo).
@@ -169,6 +169,6 @@ Dark shell. "YOU CALL THE SHOTS." display type; positioning copy (plan ≠ score
 - Scorekeeping, stats, recommendations — never.
 
 ## Files
-- `ShotCaller V2.dc.html` — the design canvas (all iterations; canonical cards per the table above). Open in a browser; it's pan/zoomable.
-- `V2_DESIGN_HANDOFF.md` — the original product brief.
+- `ShotCaller.dc.html` — the design canvas (all iterations; canonical cards per the table above). Open in a browser; it's pan/zoomable.
+- `BRIEF.md` — the original product brief.
 - `screens/` — PNG screenshots of the 13 canonical screens, named `NN-surface-cardid.png` in the manifest order. The HTML canvas remains the source of truth for exact values.

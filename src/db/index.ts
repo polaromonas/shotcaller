@@ -2,9 +2,9 @@ import * as SQLite from 'expo-sqlite';
 import { SCHEMA_SQL } from './schema';
 import { DEFAULT_TAGS } from './types';
 
-// Filename is bumped on schema changes pre-release (no migration framework yet).
-// v2b: shot_shape is no longer a fixed enum — the `shape` table makes it
-// user-extensible, so hole_plan.shot_shape dropped its CHECK constraint.
+// The "v2b" in the name is historical. Do NOT rename it: players already have
+// data in this file, and a new name would silently start them on an empty DB.
+// Evolve the schema through the additive steps in migrate() below.
 const DB_NAME = 'shotcaller-v2b.db';
 
 let dbPromise: Promise<SQLite.SQLiteDatabase> | null = null;

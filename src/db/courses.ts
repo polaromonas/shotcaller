@@ -128,7 +128,7 @@ export async function getLayoutImpact(
 }
 
 // Hard delete a layout. Its holes cascade via the layout FK (ON DELETE
-// CASCADE), so a single DELETE is enough. Courses are not deletable in V2 —
+// CASCADE), so a single DELETE is enough. Courses are not deletable —
 // only layouts.
 export async function deleteLayout(layoutId: number): Promise<void> {
   const db = await getDb();

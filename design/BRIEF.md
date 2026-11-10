@@ -1,13 +1,13 @@
-# ShotCaller V2 — UI Design Handoff
+# ShotCaller — UI Design Brief
 
-> For **Claude Design** (or any designer) to produce the V2 UI independently.
+> For **Claude Design** (or any designer) to produce the UI independently.
 > This is a **design brief**, not an engineering spec. It tells you what the
 > product is, who uses it and where, what each screen must accomplish, and the
 > non-negotiable principles — then hands you the freedom to design the rest.
 
 ---
 
-## 1. What ShotCaller V2 is
+## 1. What ShotCaller is
 
 **One line:** A disc golf **game-planning** app. You author a hole-by-hole plan
 at home; you read it, glanceably, while you play.
@@ -44,9 +44,9 @@ Plan mode's density.
 
 ## 3. The two modes
 
-Mode is a core identity in this app — like v1, **each mode has a signature color**
+Mode is a core identity in this app — **each mode has a signature color**
 that appears on its badges, selected controls, and primary actions so the player
-always knows which mode they're in. V2 has **two** modes (v1 had three). Pick two
+always knows which mode they're in. There are **two** modes. Pick two
 clearly distinct colors; propose them.
 
 ### PLAN (authoring)
@@ -110,11 +110,11 @@ Feel free to merge, split, or rename — justify departures.
    hole 1 → N, swipeable.
 6. **My Bag / Discs** — the player's disc collection (see §5); used as the
    source list when picking a disc in a plan.
-7. **About / how it works** — short explainer (carry the spirit of v1's About).
+7. **About / how it works** — short explainer (carry the spirit of the prototype's About).
 
 ---
 
-## 5. The disc bag (kept from v1 — it's a structural advantage)
+## 5. The disc bag (kept from the prototype — it's a structural advantage)
 
 Plans reference **real discs from the player's bag**, not free text. This is a
 key reason ShotCaller beats a note: the player picks "Destroyer" from a list
@@ -124,7 +124,7 @@ instead of retyping it 18 times. A disc has: **model name**, optional
 **P&A** = putt & approach), and flight-number-ish metadata. Keep disc selection
 in a plan **fast** — recently/ in-bag discs first.
 
-You don't need to redesign the whole bag manager from scratch; v1's disc list is
+You don't need to redesign the whole bag manager from scratch; the prototype's disc list is
 a reasonable baseline. Focus your energy on Plan and Play.
 
 ---
@@ -135,9 +135,9 @@ a reasonable baseline. Focus your energy on Plan and Play.
   badges / selected pills / primary buttons. Don't reuse them for unrelated UI.
 - **Play mode = caddie card.** Restated because it's the whole game (see §3).
 - **Sort "active" items first.** In-bag discs, the currently-selected/most-recent
-  layout — surface them at the top of their lists. (Established v1 preference.)
+  layout — surface them at the top of their lists. (Established preference.)
 - **Keep destructive actions confirmed.** Deleting a course, layout, plan, or disc
-  gets a confirmation step. (Established v1 preference.)
+  gets a confirmation step. (Established preference.)
 - **Disc-golf-native vocabulary, fixed lists.** Throw type and shot shape are the
   fixed enums above — never free-text dropdowns. The aim note is the one free
   field.
@@ -161,18 +161,18 @@ a reasonable baseline. Focus your energy on Plan and Play.
   but if it's into the wind, forehand roller."* A **fast-follow** right after MVP,
   not in it. One primary line now; leave conceptual room for a secondary
   conditional line (shown in Play as a small secondary card / swipe-up) later.
-- **Scorekeeping, stats, practice logging, recommendations.** Cut from V2
+- **Scorekeeping, stats, practice logging, recommendations.** Cut
   entirely. UDisc/PDGA keep score; ShotCaller never does. Do not add score fields,
   result tracking, or any "best disc" suggestion.
 
 ---
 
-## 8. What V1 looked like (aesthetic baseline)
+## 8. What the prototype looked like (aesthetic baseline)
 
-V2 lives in the same codebase lineage as V1 (React Native + Expo). V1's visual
+The app lives in the same codebase as the prototype (React Native + Expo). Its visual
 language — clean cards, Ionicons, a considered color palette — is a fine starting
 point, not a constraint. There is a palette exploration at `mockups/palettes.html`.
-You are free to re-skin V2; just keep the mode-color-as-identity principle and the
+You are free to re-skin the app; just keep the mode-color-as-identity principle and the
 sunlight-first Play mode.
 
 ---

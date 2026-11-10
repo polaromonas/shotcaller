@@ -27,9 +27,8 @@ const SHAPE_SEED = SHOT_SHAPES.map(
     }, 1, ${i + 1})`
 ).join(', ');
 
-// V2 schema. Practice logging, throws, stats, and the old game_plan_shot were
-// removed in the V2 strip; the hole plan table lands in the next step. This is
-// the disc/course/layout/hole foundation the V2 Plan/Play modes build on.
+// The full schema: discs and tags, courses → layouts → holes, the per-hole plan,
+// per-layout play position, user shot shapes, and app settings.
 export const SCHEMA_SQL = `
 PRAGMA foreign_keys = ON;
 

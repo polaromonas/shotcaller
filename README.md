@@ -2,57 +2,63 @@
 
 > You call the shots.
 
-ShotCaller is a disc golf tournament-prep app. Build your disc collection,
-log practice throws, lock in a hole-by-hole game plan, and execute it
-during the tournament — all on one device, fully offline.
+ShotCaller is a disc golf game-planning app. Write a hole-by-hole plan at
+home, then read it on the tee — big, glanceable, one-handed, in sunlight.
+It runs alongside your scorekeeping app (UDisc, PDGA); it never keeps score.
 
 **Live demo:** <https://polaromonas.github.io/shotcaller/>
 
 ## How it works
 
-Three connected modes that share one throw-logging UI:
+Two modes, each with its own color:
 
-1. **Practice round.** Walk up to a course, pick (or create) the layout,
-   log throws as you play. Par and distance are filled in at each tee box.
-   You can leave and resume later.
-2. **Game plan.** After enough practice on a layout, the app ranks your
-   most reliable disc + throw type + shot shape per hole and surfaces
-   it as a recommendation. Override anything you want, then lock it in.
-3. **Tournament round.** Each hole shows the locked-in plan as a
-   read-only card with the planned disc and shot shape pre-selected.
-   One tap logs a throw if you executed as planned. Override per
-   throw without modifying the plan.
+1. **Plan** (indigo). Pick a course and layout, then plan each hole: the
+   disc, the throw (backhand / forehand / overhand), the shot shape, and a
+   note on where to aim. Partial plans are fine — jot what you know. While
+   playing you can flag a hole "to revise" and fix the plan later.
+2. **Play** (teal). One hole per screen on a high-contrast light card: the
+   disc name is the biggest thing, the throw and shape read as one phrase
+   ("FH Flex"), the aim note sits below. Swipe to the next tee. When you
+   come back from your scorekeeping app it reopens on the hole you were on.
 
-The recommendation engine weighs Basket and C1 equally (a reliable
-inside-circle shot is as good as an ace for tournament planning) and
-weighs OB at −1 — a combo that occasionally goes OB ranks below a
-slightly less spectacular combo that never does.
+**My Bag** holds your discs. Adding one is fast: type a model and the
+built-in catalog of ~1,200 molds fills in the manufacturer, category and
+flight numbers.
 
 ## Stack
 
-- **React Native + Expo (SDK 54)** — single codebase, runs on iOS,
-  Android, and the web.
-- **Expo SQLite (wa-sqlite on web)** — every disc, course, throw, and
-  game plan is stored on-device. No account, no server, no cloud sync.
+- **React Native + Expo (SDK 54)** — one codebase for iOS, Android and the
+  web. Native is the primary target; the web build is a demo.
+- **Expo SQLite** (wa-sqlite in the browser) — everything is stored
+  on-device. No account, no server, no sync.
 - **TypeScript**, strict.
 
-## Privacy & persistence
+## Privacy and storage
 
-All your data stays in your browser's local storage (OPFS on web,
-SQLite on native). Nothing is uploaded anywhere. The flip side:
-clearing your browser data, switching devices, or being on iOS Safari
-without cross-origin isolation headers means the data may be lost.
-Game plans can be exported to plain text as a hedge.
+Your discs, courses and plans never leave your device. On the web demo they
+live in your browser's storage, so clearing site data or switching browsers
+starts you fresh.
 
 ## Development
 
 ```
 npm install
-npx expo install
-npm start            # opens the dev server
-npm test             # SQL smoke tests against an in-memory better-sqlite3
-npx expo export --platform web   # produces dist/ for static deploy
+npm start                        # Expo dev server (QR code for a device)
+npm run web                      # run in the browser
+npm test                         # SQL smoke tests (in-memory SQLite)
+npx tsc --noEmit                 # type-check
+npx expo export --platform web   # static build in dist/
 ```
 
-The full design rationale lives in [`SHOTCALLER_HANDOFF.md`](./SHOTCALLER_HANDOFF.md).
-Codebase conventions live in [`CLAUDE.md`](./CLAUDE.md).
+Every push to `main` runs the tests and deploys the web build to GitHub
+Pages (`.github/workflows/deploy.yml`).
+
+Product and data-model decisions live in
+[`SHOTCALLER_HANDOFF.md`](./SHOTCALLER_HANDOFF.md); the approved UI is in
+[`design/`](./design/); codebase conventions are in [`CLAUDE.md`](./CLAUDE.md).
+
+## History
+
+ShotCaller started as a practice-logging and stats prototype (git tag
+[`v1-final`](https://github.com/polaromonas/shotcaller/tree/v1-final)). It
+was rebuilt as this focused planning app; the handoff's §7 lists what was cut.
