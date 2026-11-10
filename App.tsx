@@ -35,7 +35,7 @@ const navTheme = {
 
 export default function App() {
   const [state, setState] = useState<InitState>({ status: 'loading' });
-  const [fontsLoaded] = useFonts({
+  const [fontsLoaded, fontError] = useFonts({
     Barlow_400Regular,
     Barlow_500Medium,
     Barlow_600SemiBold,
@@ -62,7 +62,7 @@ export default function App() {
   return (
     <GestureHandlerRootView style={styles.root}>
       <SafeAreaProvider>
-        {state.status === 'ready' && fontsLoaded ? (
+        {state.status === 'ready' && (fontsLoaded || fontError) ? (
           <NavigationContainer theme={navTheme}>
             <RootStack />
           </NavigationContainer>

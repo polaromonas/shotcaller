@@ -29,7 +29,7 @@ const toDisc = (row: DiscRow): Disc => ({
 // Single source of truth for "what to display as a disc's primary name."
 // Falls back to model when no nickname is set. Use this everywhere a disc is
 // rendered to the user; it lets a player call their Destroyer "My Roller" and
-// see that label in the picker, throw history, plan card, etc.
+// see that label in the picker, plan card, etc.
 export function discDisplayName(d: {
   nickname: string | null;
   model: string;

@@ -86,7 +86,8 @@ export function LayoutEditScreen() {
       destructive: true,
       onConfirm: async () => {
         await deleteLayout(layout.id);
-        navigation.goBack();
+        // Pop past LayoutDetail too — it shows the layout we just deleted.
+        navigation.pop(2);
       },
     });
   };

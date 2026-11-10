@@ -180,7 +180,7 @@ export function PlanHoleScreen() {
   const handleSave = useCallback(async () => {
     await saveHolePlan(layoutId, holeId, {
       disc_id: discId,
-      throw_type: throwType,
+      throw_type: overhandLocked ? 'Overhand' : throwType,
       shot_shape: shotShape,
       aim_note: aim,
     });
@@ -196,7 +196,7 @@ export function PlanHoleScreen() {
     } else {
       navigation.goBack();
     }
-  }, [layoutId, holeId, discId, throwType, shotShape, aim, hole, par, distance, nextHole, navigation]);
+  }, [layoutId, holeId, discId, throwType, overhandLocked, shotShape, aim, hole, par, distance, nextHole, navigation]);
 
   // Clear the revise flag once you've addressed it. Manual only — opening a
   // plan to look at it shouldn't dismiss the reminder.
@@ -335,7 +335,11 @@ export function PlanHoleScreen() {
                   <Pressable
                     key={t}
                     disabled={disabled}
-                    onPress={() => setThrowType(on ? null : t)}
+                    onPress={() => {
+                      // Overhand is mandatory for an overhand shape — no deselect.
+                      if (overhandLocked) return;
+                      setThrowType(on ? null : t);
+                    }}
                     style={[
                       styles.segment,
                       on && styles.segmentOn,

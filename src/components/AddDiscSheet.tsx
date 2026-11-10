@@ -132,7 +132,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
     confirmAction({
       title: 'Replace this disc?',
       message:
-        'Fill in the new disc that takes this slot. Throws and game plans stay attached. Color carries over; everything else clears.',
+        'Fill in the new disc that takes this slot. Hole plans stay attached. Color carries over; everything else clears.',
       confirmLabel: 'Replace',
       onConfirm: () => {
         setManufacturer('');

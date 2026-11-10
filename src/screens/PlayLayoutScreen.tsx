@@ -16,6 +16,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { getLayoutHeading } from '../db/courses';
 import { discDisplayName, discSubline } from '../db/discs';
 import {
+  clearPlayState,
   getPlayHoleNumber,
   loadPlayDeck,
   setPlayHoleNumber,
@@ -66,8 +67,13 @@ export function PlayLayoutScreen() {
       setDeck(d);
       const startIdx =
         savedHole != null ? d.findIndex((x) => x.hole.hole_number === savedHole) : -1;
-      setIndex(startIdx >= 0 ? startIdx : 0);
+      const idx = startIdx >= 0 ? startIdx : 0;
+      setIndex(idx);
       setLoading(false);
+      // Record the position as soon as the round opens, so reading hole 1 and
+      // leaving still leaves a round to resume.
+      const openHole = d[idx]?.hole.hole_number;
+      if (openHole != null) void setPlayHoleNumber(layoutId, openHole);
     })();
     return () => {
       alive = false;
@@ -231,7 +237,14 @@ export function PlayLayoutScreen() {
             <Text style={styles.nextLabel}>HOLE {next.hole.hole_number} ›</Text>
           </Pressable>
         ) : (
-          <Pressable style={styles.nextBar} onPress={() => navigation.goBack()}>
+          <Pressable
+            style={styles.nextBar}
+            onPress={async () => {
+              // Finished the round — stop offering it as a resume.
+              await clearPlayState(layoutId);
+              navigation.goBack();
+            }}
+          >
             <Text style={styles.nextLabel}>DONE ✓</Text>
           </Pressable>
         )}
