@@ -22,12 +22,27 @@ const stripDollarKeys = (params: BindParams): BindParams => {
 const asNumber = (n: number | bigint): number =>
   typeof n === 'bigint' ? Number(n) : n;
 
+// better-sqlite3 is a native addon, loaded once per Jest process. Its errors
+// are built with the Error class of whichever test file loaded it first, so
+// in later files `instanceof Error` is false and `rejects.toThrow()` reports
+// "did not throw" even though SQLite rejected the statement. Re-throw every
+// error as an Error from the current test file's realm.
+const native = <T>(fn: () => T): T => {
+  try {
+    return fn();
+  } catch (e) {
+    const err = new Error((e as { message?: string })?.message ?? String(e));
+    (err as Error & { code?: unknown }).code = (e as { code?: unknown })?.code;
+    throw err;
+  }
+};
+
 class ShimStatement {
   constructor(private stmt: Statement) {}
 
   async executeAsync(params?: BindParams): Promise<{ lastInsertRowId: number }> {
     const bind = stripDollarKeys(params);
-    const result = bind === undefined ? this.stmt.run() : this.stmt.run(bind);
+    const result = native(() => (bind === undefined ? this.stmt.run() : this.stmt.run(bind)));
     return { lastInsertRowId: asNumber(result.lastInsertRowid) };
   }
 
@@ -40,16 +55,18 @@ class ShimDatabase {
   constructor(public raw: BSDatabase) {}
 
   async execAsync(sql: string): Promise<void> {
-    this.raw.exec(sql);
+    native(() => this.raw.exec(sql));
   }
 
   async runAsync(
     sql: string,
     params?: BindParams
   ): Promise<{ lastInsertRowId: number }> {
-    const stmt = this.raw.prepare(sql);
     const bind = stripDollarKeys(params);
-    const result = bind === undefined ? stmt.run() : stmt.run(bind);
+    const result = native(() => {
+      const stmt = this.raw.prepare(sql);
+      return bind === undefined ? stmt.run() : stmt.run(bind);
+    });
     return { lastInsertRowId: asNumber(result.lastInsertRowid) };
   }
 
@@ -57,9 +74,11 @@ class ShimDatabase {
     sql: string,
     params?: BindParams
   ): Promise<T | null> {
-    const stmt = this.raw.prepare(sql);
     const bind = stripDollarKeys(params);
-    const row = bind === undefined ? stmt.get() : stmt.get(bind);
+    const row = native(() => {
+      const stmt = this.raw.prepare(sql);
+      return bind === undefined ? stmt.get() : stmt.get(bind);
+    });
     return (row as T) ?? null;
   }
 
@@ -67,14 +86,16 @@ class ShimDatabase {
     sql: string,
     params?: BindParams
   ): Promise<T[]> {
-    const stmt = this.raw.prepare(sql);
     const bind = stripDollarKeys(params);
-    const rows = bind === undefined ? stmt.all() : stmt.all(bind);
+    const rows = native(() => {
+      const stmt = this.raw.prepare(sql);
+      return bind === undefined ? stmt.all() : stmt.all(bind);
+    });
     return rows as T[];
   }
 
   async prepareAsync(sql: string): Promise<ShimStatement> {
-    return new ShimStatement(this.raw.prepare(sql));
+    return new ShimStatement(native(() => this.raw.prepare(sql)));
   }
 
   async withTransactionAsync(cb: () => Promise<void>): Promise<void> {
