@@ -57,6 +57,15 @@ Product and data-model decisions live in
 [`SHOTCALLER_HANDOFF.md`](./SHOTCALLER_HANDOFF.md); the approved UI is in
 [`design/`](./design/); codebase conventions are in [`CLAUDE.md`](./CLAUDE.md).
 
+## Credits
+
+The disc catalog behind Add Disc search (names, brands and flight numbers)
+comes from the [Marshall Street Disc Golf Interactive Flight Guide](https://www.marshallstreetdiscgolf.com/flightguide),
+collected by the [DiscIt API](https://github.com/DiscIt-API/discit-api).
+It ships as a snapshot in `src/data/disc-catalog.json`; refresh it with
+`node scripts/fetch-disc-catalog.mjs`. Fonts: Barlow and Barlow Condensed
+(SIL Open Font License).
+
 ## History
 
 ShotCaller started as a practice-logging and stats prototype (git tag

@@ -1,4 +1,4 @@
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -6,6 +6,9 @@ import { MODE, UI } from '../theme/colors';
 import type { RootStackParamList } from '../navigation/types';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'About'>;
+
+const FLIGHT_GUIDE_URL = 'https://www.marshallstreetdiscgolf.com/flightguide';
+const DISCIT_URL = 'https://github.com/DiscIt-API/discit-api';
 
 export function AboutScreen() {
   const navigation = useNavigation<Nav>();
@@ -42,6 +45,29 @@ export function AboutScreen() {
           <Text style={styles.privacyBody}>
             Everything — discs, courses, plans — lives on this device only.
             No account, no upload, no server.
+          </Text>
+        </View>
+
+        <View style={styles.creditsCard}>
+          <Text style={styles.privacyLabel}>Credits</Text>
+          <Text style={styles.privacyBody}>
+            Disc names and flight numbers in the Add Disc search come from the{' '}
+            <Text
+              style={styles.link}
+              accessibilityRole="link"
+              onPress={() => void Linking.openURL(FLIGHT_GUIDE_URL)}
+            >
+              Marshall Street Disc Golf Interactive Flight Guide
+            </Text>
+            , collected by the{' '}
+            <Text
+              style={styles.link}
+              accessibilityRole="link"
+              onPress={() => void Linking.openURL(DISCIT_URL)}
+            >
+              DiscIt API
+            </Text>
+            . Thank you to both.
           </Text>
         </View>
       </ScrollView>
@@ -114,4 +140,8 @@ const styles = StyleSheet.create({
     color: UI.textMuted,
   },
   privacyBody: { fontSize: 13, color: UI.text, lineHeight: 18 },
+  // Plain, unboxed credits under the privacy card — present, not loud.
+  creditsCard: { gap: 4, paddingHorizontal: 2 },
+  // Underlined body color: mode colors are reserved for Plan/Play.
+  link: { textDecorationLine: 'underline' },
 });
