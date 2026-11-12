@@ -132,7 +132,7 @@ export function HomeScreen() {
 
         <Pressable style={styles.tileWrap} onPress={openPlay}>
           <LinearGradient
-            colors={['#0E8C8C', '#0A6E6E']}
+            colors={['#0C8080', '#0A6E6E']}
             start={{ x: 0.15, y: 0 }}
             end={{ x: 0.85, y: 1 }}
             style={styles.tile}

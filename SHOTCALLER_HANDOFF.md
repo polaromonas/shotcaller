@@ -59,7 +59,7 @@ actions so the player always knows which mode they're in. The two colors are
 | Mode | Color | Purpose | Where used |
 |------|-------|---------|-----------|
 | **Plan** | Indigo `#5B4FC7` | Author the plan for each Course → Layout → Hole. Calm, deliberate, thumb-friendly. Dark shell. | At home / off the course. |
-| **Play** | Teal `#0E8C8C` | Read the plan on the tee: one hole per screen, glanceable in under 2 seconds. A **caddie card**, not a form. **Sunlight-first light theme.** | On the course, one-handed, in sun. |
+| **Play** | Teal `#0C8080` | Read the plan on the tee: one hole per screen, glanceable in under 2 seconds. A **caddie card**, not a form. **Sunlight-first light theme.** | On the course, one-handed, in sun. |
 
 These are **not one shared screen** — Plan (authoring) and Play
 (reading) are designed for two very different moments and should not share density

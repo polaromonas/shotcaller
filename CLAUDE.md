@@ -23,7 +23,7 @@ HTML. When a screen is ambiguous in prose, the canvas/PNG wins.
 
 **Approved deviations from the delivered design (product-owner overrides).** The
 design bundle omitted three things the prototype had and the owner wants kept (1–3), and the
-owner has since overridden two Home-screen decisions (4–5) — implement these instead
+owner has since overridden two Home-screen decisions (4–5) and the teal (6) — implement these instead
 of the bare design where they conflict:
 1. **Add-Disc keeps the disc-catalog autocomplete** (`searchCatalog` over the
    ~1,200-disc JSON) plus **Manufacturer** and **Plastic** fields. The design's 7a
@@ -50,9 +50,14 @@ of the bare design where they conflict:
    (bag-color dot + "My Bag" + disc count). The two mode tiles take the reclaimed
    height. "About ShotCaller" stays the small centered link at the bottom (the
    design put About top-right; the bag took that slot).
+6. **Play teal is `#0C8080`, not the design's `#0E8C8C`.** Darkened slightly so
+   small white text on teal buttons meets WCAG AA (4.8:1; the original was 4.1:1).
+   Mode is never signalled by color alone — every mode color sits next to a
+   "Plan"/"Play" word — because indigo and teal are close in lightness (they blur
+   together in grayscale, in sun glare, and for blue-yellow color blindness).
 
 Locked design decisions (these override anything vaguer elsewhere):
-- **Mode colors:** PLAN indigo `#5B4FC7`, PLAY teal `#0E8C8C`. Applied to badges,
+- **Mode colors:** PLAN indigo `#5B4FC7`, PLAY teal `#0C8080`. Applied to badges,
   selected chips/segments, primary buttons, Home mode tiles (gradients per README).
   Neutral surfaces (Bag, Add disc) use white/neutral selection — never a mode color.
 - **Two themes:** dark shell everywhere (`bg #101216`, card `#171A20`) **except**
@@ -130,7 +135,7 @@ default (sunlight is the enemy), even if the rest of the app is darker. Play mus
 The bar: answer "what am I throwing and where?" in under 2 seconds, one-handed.
 
 **Mode color is identity, not decoration.** PLAN indigo `#5B4FC7`, PLAY teal
-`#0E8C8C`, on badges, selected pills, and primary buttons. Don't reuse mode colors for unrelated UI.
+`#0C8080`, on badges, selected pills, and primary buttons. Don't reuse mode colors for unrelated UI.
 
 **HOLE belongs to LAYOUT, not COURSE.** A course has many layouts (Short / Long /
 Tournament); holes live under a layout. Plans reference `layout_id` / `hole_id`,

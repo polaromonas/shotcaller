@@ -4,7 +4,7 @@
 // unrelated UI.
 export const MODE = {
   plan: '#5B4FC7',
-  play: '#0E8C8C',
+  play: '#0C8080', // darkened from the design's #0E8C8C so white text passes 4.5:1
 } as const;
 
 // Light-tinted backgrounds derived from each mode color, for selected pills,

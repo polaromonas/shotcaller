@@ -23,7 +23,7 @@ const font = (pkg, file) =>
 const shot = (name) => pathToFileURL(join(PITCH, 'framed', `${name}.png`)).href;
 
 const PLAN = '#5B4FC7';
-const PLAY = '#0E8C8C';
+const PLAY = '#0C8080';
 const DEMO_URL = 'polaromonas.github.io/shotcaller';
 
 // A phone with an optional caption under it. `h` is the phone's height in px.
