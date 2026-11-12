@@ -1,5 +1,7 @@
 import {
   DISC_CATEGORIES,
+  DISC_WEIGHT_MAX_G,
+  DISC_WEIGHT_MIN_G,
   DISC_SORTS,
   OVERHAND_SHOT_SHAPES,
   SHOT_SHAPES,
@@ -11,6 +13,8 @@ const quote = (values: readonly string[]) =>
 
 const DISC_CATEGORY_CHECK = `category IN (${quote(DISC_CATEGORIES)})`;
 const DISC_SORT_CHECK = `disc_sort IN (${quote(DISC_SORTS)})`;
+// Exported so migrate() adds the column with the same constraint.
+export const DISC_WEIGHT_CHECK = `weight_g IS NULL OR weight_g BETWEEN ${DISC_WEIGHT_MIN_G} AND ${DISC_WEIGHT_MAX_G}`;
 // hole_plan enums are nullable (progressive authoring). A SQL CHECK passes on
 // NULL — `NULL IN (...)` is NULL, not false — so these constants work as-is for
 // the nullable columns.
@@ -44,7 +48,8 @@ CREATE TABLE IF NOT EXISTS disc (
   turn REAL,
   fade REAL,
   plastic TEXT,
-  nickname TEXT
+  nickname TEXT,
+  weight_g INTEGER CHECK (${DISC_WEIGHT_CHECK})
 );
 
 CREATE TABLE IF NOT EXISTS tag (

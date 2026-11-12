@@ -18,21 +18,21 @@ type DiscKey =
   | 'volt' | 'buzzz' | 'roc' | 'mako' | 'zone' | 'envy' | 'judge' | 'luna';
 
 const BAG: Record<DiscKey, NewDiscInput> = {
-  destroyer: { manufacturer: 'Innova', model: 'Destroyer', plastic: 'Star', color: '#e63946', category: 'DD', speed: 12, glide: 5, turn: -1, fade: 3 },
-  zeus:      { manufacturer: 'Discraft', model: 'Zeus', plastic: 'ESP', color: '#1d3557', category: 'DD', speed: 12, glide: 5, turn: -1, fade: 3, nickname: 'Big Blue' },
-  wraith:    { manufacturer: 'Innova', model: 'Wraith', plastic: 'Champion', color: '#9b5de5', category: 'FWD', speed: 11, glide: 5, turn: -1, fade: 3 },
-  tbird:     { manufacturer: 'Innova', model: 'Thunderbird', plastic: 'Star', color: '#ff6b35', category: 'FWD', speed: 9, glide: 5, turn: 0, fade: 2 },
-  firebird:  { manufacturer: 'Innova', model: 'Firebird', plastic: 'Champion', color: '#ffdd00', category: 'FWD', speed: 9, glide: 3, turn: 0, fade: 4, nickname: 'Old Faithful' },
-  teebird:   { manufacturer: 'Innova', model: 'Teebird', plastic: 'Star', color: '#6ab04c', category: 'FWD', speed: 7, glide: 5, turn: 0, fade: 2 },
-  leopard:   { manufacturer: 'Innova', model: 'Leopard3', plastic: 'DX', color: '#00b4d8', category: 'FWD', speed: 7, glide: 5, turn: -2, fade: 1 },
-  volt:      { manufacturer: 'MVP', model: 'Volt', plastic: 'Neutron', color: '#ff006e', category: 'FWD', speed: 8, glide: 5, turn: -0.5, fade: 2 },
-  buzzz:     { manufacturer: 'Discraft', model: 'Buzzz', plastic: 'ESP', color: '#2a9d8f', category: 'MID', speed: 5, glide: 4, turn: -1, fade: 1 },
-  roc:       { manufacturer: 'Innova', model: 'Roc3', plastic: 'Star', color: '#f4a261', category: 'MID', speed: 5, glide: 4, turn: 0, fade: 3 },
-  mako:      { manufacturer: 'Innova', model: 'Mako3', plastic: 'Champion', color: '#ff99c8', category: 'MID', speed: 5, glide: 5, turn: 0, fade: 0 },
-  zone:      { manufacturer: 'Discraft', model: 'Zone', plastic: 'ESP', color: '#ffffff', category: 'MID', speed: 4, glide: 3, turn: 0, fade: 3 },
-  envy:      { manufacturer: 'Axiom Discs', model: 'Envy', plastic: 'Electron', color: '#457b9d', category: 'P&A', speed: 3, glide: 3, turn: 0, fade: 2 },
-  judge:     { manufacturer: 'Dynamic Discs', model: 'Judge', plastic: 'Classic', color: '#cccccc', category: 'P&A', speed: 2, glide: 4, turn: 0, fade: 1, nickname: 'Putter' },
-  luna:      { manufacturer: 'Discraft', model: 'Luna', plastic: 'Jawbreaker', color: '#7f5539', category: 'P&A', speed: 3, glide: 3, turn: 0, fade: 3 },
+  destroyer: { manufacturer: 'Innova', model: 'Destroyer', plastic: 'Star', color: '#e63946', category: 'DD', speed: 12, glide: 5, turn: -1, fade: 3, weight_g: 175 },
+  zeus:      { manufacturer: 'Discraft', model: 'Zeus', plastic: 'ESP', color: '#1d3557', category: 'DD', speed: 12, glide: 5, turn: -1, fade: 3, nickname: 'Big Blue', weight_g: 174 },
+  wraith:    { manufacturer: 'Innova', model: 'Wraith', plastic: 'Champion', color: '#9b5de5', category: 'FWD', speed: 11, glide: 5, turn: -1, fade: 3, weight_g: 173 },
+  tbird:     { manufacturer: 'Innova', model: 'Thunderbird', plastic: 'Star', color: '#ff6b35', category: 'FWD', speed: 9, glide: 5, turn: 0, fade: 2, weight_g: 172 },
+  firebird:  { manufacturer: 'Innova', model: 'Firebird', plastic: 'Champion', color: '#ffdd00', category: 'FWD', speed: 9, glide: 3, turn: 0, fade: 4, nickname: 'Old Faithful', weight_g: 175 },
+  teebird:   { manufacturer: 'Innova', model: 'Teebird', plastic: 'Star', color: '#6ab04c', category: 'FWD', speed: 7, glide: 5, turn: 0, fade: 2, weight_g: 170 },
+  leopard:   { manufacturer: 'Innova', model: 'Leopard3', plastic: 'DX', color: '#00b4d8', category: 'FWD', speed: 7, glide: 5, turn: -2, fade: 1, weight_g: 168 },
+  volt:      { manufacturer: 'MVP', model: 'Volt', plastic: 'Neutron', color: '#ff006e', category: 'FWD', speed: 8, glide: 5, turn: -0.5, fade: 2, weight_g: 173 },
+  buzzz:     { manufacturer: 'Discraft', model: 'Buzzz', plastic: 'ESP', color: '#2a9d8f', category: 'MID', speed: 5, glide: 4, turn: -1, fade: 1, weight_g: 177 },
+  roc:       { manufacturer: 'Innova', model: 'Roc3', plastic: 'Star', color: '#f4a261', category: 'MID', speed: 5, glide: 4, turn: 0, fade: 3, weight_g: 180 },
+  mako:      { manufacturer: 'Innova', model: 'Mako3', plastic: 'Champion', color: '#ff99c8', category: 'MID', speed: 5, glide: 5, turn: 0, fade: 0, weight_g: 178 },
+  zone:      { manufacturer: 'Discraft', model: 'Zone', plastic: 'ESP', color: '#ffffff', category: 'MID', speed: 4, glide: 3, turn: 0, fade: 3, weight_g: 174 },
+  envy:      { manufacturer: 'Axiom Discs', model: 'Envy', plastic: 'Electron', color: '#457b9d', category: 'P&A', speed: 3, glide: 3, turn: 0, fade: 2, weight_g: 173 },
+  judge:     { manufacturer: 'Dynamic Discs', model: 'Judge', plastic: 'Classic', color: '#cccccc', category: 'P&A', speed: 2, glide: 4, turn: 0, fade: 1, nickname: 'Putter', weight_g: 172 },
+  luna:      { manufacturer: 'Discraft', model: 'Luna', plastic: 'Jawbreaker', color: '#7f5539', category: 'P&A', speed: 3, glide: 3, turn: 0, fade: 3, weight_g: 174 },
 };
 // Shelved: owned but not bagged — shows the "shelved" section in My Bag.
 const SHELVED: NewDiscInput[] = [

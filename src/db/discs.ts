@@ -15,6 +15,7 @@ export type Disc = {
   fade: number | null;
   plastic: string | null;
   nickname: string | null;
+  weight_g: number | null;
 };
 
 export type DiscWithTags = Disc & { tags: { id: number; name: string }[] };
@@ -95,6 +96,7 @@ export type NewDiscInput = {
   fade?: number | null;
   plastic?: string | null;
   nickname?: string | null;
+  weight_g?: number | null;
   tagIds?: number[];
 };
 
@@ -169,8 +171,8 @@ export async function listDiscs(): Promise<DiscWithTags[]> {
 export async function createDisc(input: NewDiscInput): Promise<number> {
   const db = await getDb();
   const result = await db.runAsync(
-    `INSERT INTO disc (manufacturer, model, color, category, in_bag, speed, glide, turn, fade, plastic, nickname)
-     VALUES ($manufacturer, $model, $color, $category, $in_bag, $speed, $glide, $turn, $fade, $plastic, $nickname)`,
+    `INSERT INTO disc (manufacturer, model, color, category, in_bag, speed, glide, turn, fade, plastic, nickname, weight_g)
+     VALUES ($manufacturer, $model, $color, $category, $in_bag, $speed, $glide, $turn, $fade, $plastic, $nickname, $weight_g)`,
     {
       $manufacturer: input.manufacturer.trim(),
       $model: input.model.trim(),
@@ -183,6 +185,7 @@ export async function createDisc(input: NewDiscInput): Promise<number> {
       $fade: input.fade ?? null,
       $plastic: input.plastic?.trim() || null,
       $nickname: input.nickname?.trim() || null,
+      $weight_g: input.weight_g ?? null,
     }
   );
 
@@ -230,7 +233,8 @@ export async function updateDisc(
        turn = $turn,
        fade = $fade,
        plastic = $plastic,
-       nickname = $nickname
+       nickname = $nickname,
+       weight_g = $weight_g
      WHERE id = $id`,
     {
       $manufacturer: input.manufacturer.trim(),
@@ -243,6 +247,7 @@ export async function updateDisc(
       $fade: input.fade ?? null,
       $plastic: input.plastic?.trim() || null,
       $nickname: input.nickname?.trim() || null,
+      $weight_g: input.weight_g ?? null,
       $id: discId,
     }
   );

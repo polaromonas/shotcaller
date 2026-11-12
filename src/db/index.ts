@@ -1,5 +1,5 @@
 import * as SQLite from 'expo-sqlite';
-import { SCHEMA_SQL } from './schema';
+import { DISC_WEIGHT_CHECK, SCHEMA_SQL } from './schema';
 import { DEFAULT_TAGS } from './types';
 
 // The "v2b" in the name is historical. Do NOT rename it: players already have
@@ -23,12 +23,19 @@ export async function getDb(): Promise<SQLite.SQLiteDatabase> {
 
 // Additive, data-preserving migrations (ADD COLUMN is safe in SQLite). Runs
 // before SCHEMA_SQL. Guard each with a column/table check so it's idempotent.
-async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
+export async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
   const settingsCols = await db.getAllAsync<{ name: string }>(
     "PRAGMA table_info('app_settings')"
   );
   if (settingsCols.length > 0 && !settingsCols.some((c) => c.name === 'bag_color')) {
     await db.execAsync('ALTER TABLE app_settings ADD COLUMN bag_color TEXT');
+  }
+
+  const discCols = await db.getAllAsync<{ name: string }>("PRAGMA table_info('disc')");
+  if (discCols.length > 0 && !discCols.some((c) => c.name === 'weight_g')) {
+    await db.execAsync(
+      `ALTER TABLE disc ADD COLUMN weight_g INTEGER CHECK (${DISC_WEIGHT_CHECK})`
+    );
   }
 
   const holePlanCols = await db.getAllAsync<{ name: string }>(

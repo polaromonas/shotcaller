@@ -39,6 +39,11 @@ export const CATEGORY_GROUP_LABELS: Record<DiscCategory, string> = {
   'P&A': 'P&A — Putt & approach',
 };
 
+// Disc weight in whole grams. Generous bounds — PDGA-legal discs top out
+// around 200 g — so a typo is caught without second-guessing real discs.
+export const DISC_WEIGHT_MIN_G = 1;
+export const DISC_WEIGHT_MAX_G = 250;
+
 export const DISC_SORTS = [
   'bag-order',
   'alphabetical',

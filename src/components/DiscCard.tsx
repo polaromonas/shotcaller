@@ -72,9 +72,18 @@ export function DiscCard({
           <View style={[styles.dot, { backgroundColor: disc.color }]} />
 
           <View style={styles.body}>
-            <Text style={styles.name} numberOfLines={1}>
-              {name}
-            </Text>
+            {/* Specs form a right-hand column: weight on the name line,
+                flight numbers on the line below. */}
+            <View style={styles.nameRow}>
+              <Text style={styles.name} numberOfLines={1}>
+                {name}
+              </Text>
+              {disc.weight_g != null && (
+                <Text style={styles.spec} accessibilityLabel={`${disc.weight_g} grams`}>
+                  {disc.weight_g}g
+                </Text>
+              )}
+            </View>
 
             {(subline.length > 0 || flight !== null) && (
               <View style={styles.metaRow}>
@@ -82,7 +91,7 @@ export function DiscCard({
                   {subline}
                 </Text>
                 {flight !== null && (
-                  <Text style={styles.flight}>{flight}</Text>
+                  <Text style={styles.spec}>{flight}</Text>
                 )}
               </View>
             )}
@@ -139,7 +148,13 @@ const styles = StyleSheet.create({
     marginTop: 3,
   },
   body: { flex: 1, minWidth: 0 },
-  name: { fontFamily: FONT.bc700, fontSize: 20, color: SHELL.text },
+  nameRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    justifyContent: 'space-between',
+    gap: 10,
+  },
+  name: { flexShrink: 1, fontFamily: FONT.bc700, fontSize: 20, color: SHELL.text },
   metaRow: {
     flexDirection: 'row',
     alignItems: 'baseline',
@@ -153,7 +168,8 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: SHELL.textSecondary,
   },
-  flight: {
+  // Weight and flight numbers share one style so they read as one column.
+  spec: {
     flexShrink: 0,
     fontFamily: FONT.bc700,
     fontSize: 14,

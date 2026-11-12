@@ -11,7 +11,13 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { CATEGORY_LABELS, DISC_CATEGORIES, type DiscCategory } from '../db/types';
+import {
+  CATEGORY_LABELS,
+  DISC_CATEGORIES,
+  DISC_WEIGHT_MAX_G,
+  DISC_WEIGHT_MIN_G,
+  type DiscCategory,
+} from '../db/types';
 import { DISC_SWATCHES, INBAG_GREEN, UI } from '../theme/colors';
 import { createTag, listTags, type Tag } from '../db/tags';
 import type { DiscWithTags, NewDiscInput } from '../db/discs';
@@ -43,6 +49,8 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
   const [manufacturer, setManufacturer] = useState('');
   const [model, setModel] = useState('');
   const [plastic, setPlastic] = useState('');
+  // Whole grams, kept as text while typing; digits only (see the field).
+  const [weight, setWeight] = useState('');
   const [nickname, setNickname] = useState('');
   const [category, setCategory] = useState<DiscCategory | null>(null);
   const [color, setColor] = useState<string | null>(null);
@@ -77,6 +85,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
       setManufacturer(disc.manufacturer);
       setModel(disc.model);
       setPlastic(disc.plastic ?? '');
+      setWeight(disc.weight_g != null ? String(disc.weight_g) : '');
       setNickname(disc.nickname ?? '');
       setCategory(disc.category);
       setColor(disc.color);
@@ -95,6 +104,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
       setManufacturer('');
       setModel('');
       setPlastic('');
+      setWeight('');
       setNickname('');
       setCategory(null);
       setColor(null);
@@ -113,6 +123,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
     setManufacturer('');
     setModel('');
     setPlastic('');
+    setWeight('');
     setNickname('');
     setCategory(null);
     setColor(null);
@@ -138,6 +149,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
         setManufacturer('');
         setModel('');
         setPlastic('');
+        setWeight('');
         setNickname('');
         setCategory(null);
         setFlight({ speed: '', glide: '', turn: '', fade: '' });
@@ -228,6 +240,15 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
 
   const handleSubmit = async () => {
     if (!canSubmit || !category || !color) return;
+    let weight_g: number | null = null;
+    if (weight.trim().length > 0) {
+      const n = Number(weight.trim());
+      if (!Number.isInteger(n) || n < DISC_WEIGHT_MIN_G || n > DISC_WEIGHT_MAX_G) {
+        setError(`Weight should be in grams, ${DISC_WEIGHT_MIN_G}–${DISC_WEIGHT_MAX_G} (e.g. 175).`);
+        return;
+      }
+      weight_g = n;
+    }
     setSubmitting(true);
     setError(null);
     try {
@@ -236,6 +257,7 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
         model: model.trim(),
         plastic: plastic.trim() || null,
         nickname: nickname.trim() || null,
+        weight_g,
         category,
         color,
         in_bag: inBag,
@@ -373,6 +395,22 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
               onChangeText={setPlastic}
               autoCapitalize="words"
               returnKeyType="next"
+            />
+          </Field>
+
+          <Field label="Weight (g)">
+            <TextInput
+              style={styles.input}
+              value={weight}
+              // Digits only, so a pasted "175g" or a hardware keyboard can't
+              // sneak in letters or a decimal point.
+              onChangeText={(t) => setWeight(t.replace(/[^0-9]/g, '').slice(0, 3))}
+              inputMode="numeric"
+              keyboardType="number-pad"
+              maxLength={3}
+              placeholder="e.g. 175"
+              returnKeyType="done"
+              accessibilityLabel="Weight in grams"
             />
           </Field>
 

@@ -89,6 +89,7 @@ draft proposed dropping `manufacturer`/`plastic`; that is reversed — see the n
 | category | enum | `DD` \| `FWD` \| `MID` \| `P&A` |
 | in_bag | boolean | Default false. True = in the bag; **false = shelved** (hidden from disc pickers) |
 | speed / glide / turn / fade | float (nullable) | Optional flight numbers |
+| weight_g | integer (nullable) | Disc weight in whole grams, 1–250 (CHECK). Optional; entered under Plastic in Add/Edit Disc with a number pad. Shown in My Bag as "175g", right-aligned on the name line above the flight numbers. |
 
 > **Disc display rule (single source of truth).** Manufacturer is never shown;
 > plastic type always is (when set). Vernacular puts plastic before the mold
