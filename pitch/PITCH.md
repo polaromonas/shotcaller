@@ -9,6 +9,8 @@ It's the **second screen** you keep next to your scorekeeping app (UDisc, PDGA).
 It doesn't keep score. It answers the one question you have on every tee box:
 *what am I throwing here, and where?*
 
+**Try it:** <https://polaromonas.github.io/shotcaller/> · **Slides:** [`ShotCaller-deck.pdf`](./ShotCaller-deck.pdf)
+
 ---
 
 ## The gist
@@ -17,13 +19,13 @@ Serious players already plan their rounds — but they do it in the Notes app or
 spreadsheet. It's clunky, and it's not built for disc golf. ShotCaller is:
 
 - **Two modes.** *Plan* at home (calm, thumbs and time to spare). *Play* on the
-  course (one hand, sunlight, eight seconds before you throw).
+  course (one hand, sunlight, seconds before you throw).
 - **Disc-golf native.** Real discs from your bag, real throws and shot shapes —
   not free-text notes.
-- **Offline, on-device.** No account, no upload, no server. It just works on the
-  course with no signal.
+- **On your phone only.** No account, no upload, no server.
 
-*(Screens below use mock data. Early prototype — feedback very welcome.)*
+*(Screens below use demo data: a fictional course, Cedar Ridge, and a realistic
+15-disc bag. Early prototype — feedback very welcome.)*
 
 ---
 
@@ -31,95 +33,77 @@ spreadsheet. It's clunky, and it's not built for disc golf. ShotCaller is:
 
 <table>
 <tr>
-<td width="33%"><img src="screens/01-home.png" width="100%"></td>
-<td width="33%"><img src="screens/04-grid.png" width="100%"></td>
-<td width="33%"><img src="screens/07-caddie.png" width="100%"></td>
+<td width="33%"><img src="framed/01-home.png" width="100%"></td>
+<td width="33%"><img src="framed/04-plan-hole.png" width="100%"></td>
+<td width="33%"><img src="framed/09-caddie-hole-4.png" width="100%"></td>
 </tr>
 <tr>
-<td align="center"><em>Home — resume a round, or dive into Plan / Play. The bag tile even matches your real bag's color.</em></td>
-<td align="center"><em>Every hole at a glance — what's planned, what's blank.</em></td>
+<td align="center"><em>Home — resume a round, or open Plan / Play.</em></td>
+<td align="center"><em>At home: disc, throw, shape, and where to aim.</em></td>
 <td align="center"><strong>The payoff:</strong> <em>on the tee, one glance = disc, shape, aim.</em></td>
 </tr>
 </table>
 
 ---
 
-## 📝 Plan — build it at home
+## Plan — build it at home
 
 For each hole: pick the **disc**, the **throw**, the **shot shape**, and jot a
-**note** on where to aim. Jot what you know — a partial plan is fine. Need a disc
+**note** on where to aim. Partial plans are fine — jot what you know. Need a disc
 or a shape that isn't there? Add it without leaving the flow.
 
 <table>
 <tr>
-<td width="33%"><img src="screens/03-courses.png" width="100%"></td>
-<td width="33%"><img src="screens/05-plan-hole.png" width="100%"></td>
-<td width="33%"><img src="screens/06-disc-picker.png" width="100%"></td>
+<td width="33%"><img src="framed/03-layout-holes.png" width="100%"></td>
+<td width="33%"><img src="framed/05-disc-picker.png" width="100%"></td>
+<td width="33%"><img src="framed/02-courses.png" width="100%"></td>
 </tr>
 <tr>
-<td align="center"><em>Your courses, each with multiple layouts.</em></td>
-<td align="center"><em>Plan a hole: disc · throw · shape · note.</em></td>
+<td align="center"><em>Every hole at a glance — planned, blank, or flagged.</em></td>
 <td align="center"><em>Pick from your bag, grouped by type, with flight numbers.</em></td>
+<td align="center"><em>Courses with multiple layouts (Blue tees, Red tees).</em></td>
 </tr>
 </table>
 
 ---
 
-## ⛳ Play — read it on the tee
+## Play — read it on the tee
 
-The caddie card (in the arc above) is the whole point: the disc name is the
-biggest thing on screen, the shot shape reads as one phrase ("BH HYZER"), the aim
-note sits right below — **sunlight-ready, one-handed, swipe to the next hole.** It
-**reopens right where you left off** when you bounce back from your scorekeeping app.
+The disc name is the biggest thing on screen, the throw and shape read as one
+phrase ("FH Flex"), and the aim note sits right below — **high contrast for
+sunlight, one-handed, swipe to the next hole.** It **reopens where you left off**
+when you come back from your scorekeeping app.
 
 <table>
 <tr>
-<td width="33%"><img src="screens/08-play-picker.png" width="100%"></td>
-<td width="66%"></td>
+<td width="33%"><img src="framed/08-play-picker.png" width="100%"></td>
+<td width="33%"><img src="framed/10-caddie-hole-6.png" width="100%"></td>
+<td width="33%"><img src="framed/12-caddie-thumber.png" width="100%"></td>
 </tr>
 <tr>
-<td align="center"><em>Pick a layout to play — resume where you were, or start fresh. Coverage bars show how planned each layout is.</em></td>
-<td></td>
+<td align="center"><em>Pick a layout — or resume the round you're in.</em></td>
+<td align="center"><em>A par 4: plan the drive, note the layup.</em></td>
+<td align="center"><em>Overhands too — a Thumber locks the throw to Overhand.</em></td>
 </tr>
 </table>
 
 ---
 
-## 🎒 Your bag
+## Flag it on the course, fix it at home
 
-Build your collection once. Type a disc name and it **autocompletes from a
-1,000+ disc database** — flight numbers fill themselves in. Mark what's in the
-bag; those are the discs you'll pick from while planning.
-
-<table>
-<tr>
-<td width="33%"><img src="screens/02-bag.png" width="100%"></td>
-<td width="33%"><img src="screens/09-add-disc.png" width="100%"></td>
-<td width="33%"></td>
-</tr>
-<tr>
-<td align="center"><em>Your bag — model, plastic, category, in-bag.</em></td>
-<td align="center"><em>Add a disc: the catalog does the typing for you.</em></td>
-<td></td>
-</tr>
-</table>
-
----
-
-## How it fits
+A plan didn't work? One tap on the tee flags it. Back home, the layout shows
+"1 to revise" and the hole opens with the flag waiting.
 
 <table>
 <tr>
-<td width="33%"><img src="screens/10-about.png" width="100%"></td>
-<td width="66%">
-
-ShotCaller runs <strong>alongside</strong> UDisc or the PDGA app — they keep
-score, ShotCaller tells you what to throw. Everything lives on your device;
-there's no account and no server.
-
-Built with React Native (Expo), so it runs on iOS and Android from one codebase.
-
-</td>
+<td width="33%"><img src="framed/11-caddie-flagged.png" width="100%"></td>
+<td width="33%"><img src="framed/06-plan-flagged.png" width="100%"></td>
+<td width="33%"><img src="framed/07-my-bag.png" width="100%"></td>
+</tr>
+<tr>
+<td align="center"><em>On the tee: tap the flag.</em></td>
+<td align="center"><em>At home: revise, then resolve.</em></td>
+<td align="center"><em>My Bag — type a mold and ~1,200 catalog discs fill in the flight numbers.</em></td>
 </tr>
 </table>
 
@@ -133,3 +117,9 @@ Built with React Native (Expo), so it runs on iOS and Android from one codebase.
 4. What's the one thing that would have to exist before you'd bring it to a real round?
 
 Thanks for taking a look — hit reply with anything, big or small.
+
+---
+
+<sub>Regenerate: start `npx expo start --web --port 8091`, then
+`node scripts/capture-screens.mjs && node scripts/build-deck.mjs`.
+`screens/` has the plain screenshots, `framed/` the phone mockups, `slides/` each slide as a PNG.</sub>

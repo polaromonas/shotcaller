@@ -1,0 +1,50 @@
+[
+  {
+    "name": "01-home",
+    "title": "Home"
+  },
+  {
+    "name": "02-courses",
+    "title": "Courses"
+  },
+  {
+    "name": "03-layout-holes",
+    "title": "Layout overview"
+  },
+  {
+    "name": "04-plan-hole",
+    "title": "Plan a hole"
+  },
+  {
+    "name": "05-disc-picker",
+    "title": "Disc picker"
+  },
+  {
+    "name": "06-plan-flagged",
+    "title": "Flagged to revise"
+  },
+  {
+    "name": "07-my-bag",
+    "title": "My Bag"
+  },
+  {
+    "name": "08-play-picker",
+    "title": "Pick a layout"
+  },
+  {
+    "name": "09-caddie-hole-4",
+    "title": "Caddie card"
+  },
+  {
+    "name": "10-caddie-hole-6",
+    "title": "Caddie card — par 4"
+  },
+  {
+    "name": "11-caddie-flagged",
+    "title": "Caddie card — flagged"
+  },
+  {
+    "name": "12-caddie-thumber",
+    "title": "Caddie card — overhand"
+  }
+]

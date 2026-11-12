@@ -39,6 +39,7 @@
     "@types/react": "~19.1.0",
     "better-sqlite3": "^12.9.0",
     "jest": "^30.3.0",
+    "puppeteer-core": "^25.17.0",
     "ts-jest": "^29.4.9",
     "typescript": "~5.9.2"
   },

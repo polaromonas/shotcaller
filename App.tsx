@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Platform, StyleSheet, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { DarkTheme, NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -48,6 +48,17 @@ export default function App() {
   useEffect(() => {
     (async () => {
       try {
+        // Dev-only demo data for screenshots: `?seed=demo` on the web dev
+        // server. __DEV__ is false in production builds, so this is stripped.
+        if (
+          __DEV__ &&
+          Platform.OS === 'web' &&
+          new URLSearchParams(window.location.search).get('seed') === 'demo'
+        ) {
+          const { seedDemo } = await import('./src/dev/seedDemo');
+          await seedDemo();
+          window.history.replaceState(null, '', window.location.pathname);
+        }
         await getDb();
         setState({ status: 'ready' });
       } catch (error) {
