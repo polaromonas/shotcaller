@@ -21,6 +21,7 @@ const BROWSER =
 const font = (pkg, file) =>
   pathToFileURL(join(ROOT, 'node_modules/@expo-google-fonts', pkg, file)).href;
 const shot = (name) => pathToFileURL(join(PITCH, 'framed', `${name}.png`)).href;
+const ICON = pathToFileURL(join(ROOT, 'assets/icon.png')).href; // from scripts/build-icons.mjs
 
 const PLAN = '#5B4FC7';
 const PLAY = '#0C8080';
@@ -37,6 +38,7 @@ const SLIDES = [
   // 1 — Title
   `<section class="title">
     <div class="copy">
+      <img class="icon" src="${ICON}" alt="ShotCaller app icon" style="--s:132px">
       <div class="wordmark">ShotCaller</div>
       <div class="tagline">You call the shots.</div>
       <p class="lede">A game-planning app for disc golf. Write a hole-by-hole plan at home,
@@ -141,6 +143,7 @@ const SLIDES = [
 
   // 9 — Close
   `<section class="close">
+    <img class="icon" src="${ICON}" alt="ShotCaller app icon" style="--s:200px">
     <div class="wordmark">ShotCaller</div>
     <div class="tagline">You call the shots.</div>
     <div class="cta">Try it: <b>${DEMO_URL}</b></div>
@@ -167,6 +170,10 @@ p,li{font-size:28px;line-height:1.4;color:#B7BBC6}
 b{color:#EDEEF2;font-weight:600}
 .kicker{font-family:BC;font-weight:700;font-size:30px;color:#8B909B;margin-bottom:20px}
 .wordmark{font-family:BC;font-weight:800;font-size:180px;line-height:.9}
+/* The icon's dark tile matches the slide, so a hairline edge and a shadow
+   lift it off the background the way a home screen would. */
+.icon{width:var(--s);height:var(--s);border-radius:22.37%;display:block;margin-bottom:44px;
+  box-shadow:0 0 0 1.5px rgba(255,255,255,.12), 0 24px 60px rgba(0,0,0,.55)}
 .tagline{font-family:B;font-weight:600;font-size:44px;color:#8B909B;margin-top:12px}
 .chip{display:inline-block;font-family:BC;font-weight:700;font-size:30px;color:#fff;
   padding:8px 22px;border-radius:12px}
