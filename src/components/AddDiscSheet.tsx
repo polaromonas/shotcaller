@@ -408,7 +408,6 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
               inputMode="numeric"
               keyboardType="number-pad"
               maxLength={3}
-              placeholder="e.g. 175"
               returnKeyType="done"
               accessibilityLabel="Weight in grams"
             />
