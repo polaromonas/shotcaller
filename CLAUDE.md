@@ -23,7 +23,7 @@ HTML. When a screen is ambiguous in prose, the canvas/PNG wins.
 
 **Approved deviations from the delivered design (product-owner overrides).** The
 design bundle omitted three things the prototype had and the owner wants kept (1–3), and the
-owner has since overridden two Home-screen decisions (4–5) and the teal (6) — implement these instead
+owner has since overridden two Home-screen decisions (4–5), the teal (6) and the resume card (7) — implement these instead
 of the bare design where they conflict:
 1. **Add-Disc keeps the disc-catalog autocomplete** (`searchCatalog` over the
    ~1,200-disc JSON) plus **Manufacturer** and **Plastic** fields. The design's 7a
@@ -55,6 +55,11 @@ of the bare design where they conflict:
    Mode is never signalled by color alone — every mode color sits next to a
    "Plan"/"Play" word — because indigo and teal are close in lightness (they blur
    together in grayscale, in sun glare, and for blue-yellow color blindness).
+7. **Home's "Resume round" card uses Play's light theme**, not a solid teal fill.
+   Teal resume card + indigo Plan tile + teal Play tile read as stripes; the light
+   card is a preview of the caddie card and is the one thing that stands out while
+   a round is in progress. The whole card is the tap target; a teal chevron keeps
+   the Play cue (no separate "Play" button).
 
 Locked design decisions (these override anything vaguer elsewhere):
 - **Mode colors:** PLAN indigo `#5B4FC7`, PLAY teal `#0C8080`. Applied to badges,

@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { countDiscs } from '../db/discs';
@@ -13,7 +14,7 @@ import {
 } from '../db/play';
 import { getBagColor } from '../db/settings';
 import { confirmAction } from '../util/confirm';
-import { FONT, MODE, SHELL } from '../theme/colors';
+import { FONT, MODE, PLAY_LIGHT, SHELL } from '../theme/colors';
 import type { RootStackParamList } from '../navigation/types';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'Home'>;
@@ -90,7 +91,12 @@ export function HomeScreen() {
 
       <View style={styles.body}>
         {resume && (
-          <Pressable style={styles.resume} onPress={resumeRound}>
+          <Pressable
+            style={styles.resume}
+            onPress={resumeRound}
+            accessibilityRole="button"
+            accessibilityLabel={`Resume round: ${resume.courseName}, ${resume.layoutName}, hole ${resume.lastHole} of ${resume.holeCount}`}
+          >
             <View style={styles.resumeTop}>
               <Text style={styles.resumeLabel}>Resume round</Text>
               <Pressable
@@ -108,9 +114,7 @@ export function HomeScreen() {
               <Text style={styles.resumeMeta}>
                 On hole {resume.lastHole} of {resume.holeCount}
               </Text>
-              <View style={styles.resumeBtn}>
-                <Text style={styles.resumeBtnLabel}>Play ›</Text>
-              </View>
+              <Ionicons name="chevron-forward" size={26} color={MODE.play} />
             </View>
           </Pressable>
         )}
@@ -168,25 +172,26 @@ const styles = StyleSheet.create({
   wordmark: { fontFamily: FONT.bc800, fontSize: 30, color: SHELL.text },
   tagline: { fontFamily: FONT.b500, fontSize: 14, color: SHELL.textMuted, marginTop: -2 },
   body: { flex: 1, paddingHorizontal: 20, paddingBottom: 16, gap: 12 },
+  // Resume card wears Play's light theme — a preview of the caddie card — so
+  // Home isn't three saturated blocks in a row. The teal chevron keeps a Play
+  // cue; "Resume round" names it in words.
   resume: {
-    backgroundColor: MODE.play,
+    backgroundColor: PLAY_LIGHT.bg,
     borderRadius: 16,
     padding: 16,
     gap: 2,
   },
   resumeTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  resumeLabel: { fontFamily: FONT.bc700, fontSize: 13, color: 'rgba(255,255,255,0.85)' },
-  resumeDismiss: { fontSize: 16, color: 'rgba(255,255,255,0.75)' },
-  resumeTitle: { fontFamily: FONT.bc800, fontSize: 22, color: '#fff' },
+  resumeLabel: { fontFamily: FONT.bc700, fontSize: 13, color: PLAY_LIGHT.secondary },
+  resumeDismiss: { fontSize: 16, color: PLAY_LIGHT.secondary },
+  resumeTitle: { fontFamily: FONT.bc800, fontSize: 22, color: PLAY_LIGHT.ink },
   resumeRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginTop: 6,
   },
-  resumeMeta: { fontFamily: FONT.b600, fontSize: 14, color: 'rgba(255,255,255,0.9)' },
-  resumeBtn: { backgroundColor: '#fff', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 10 },
-  resumeBtnLabel: { fontFamily: FONT.bc800, fontSize: 14, color: MODE.play },
+  resumeMeta: { fontFamily: FONT.b600, fontSize: 14, color: PLAY_LIGHT.secondary },
   tileWrap: { flex: 1, borderRadius: 20, overflow: 'hidden' },
   tile: { flex: 1, padding: 22, justifyContent: 'space-between' },
   tileLabel: { fontFamily: FONT.bc800, fontSize: 40, color: '#fff' },
