@@ -19,6 +19,7 @@ import {
 } from '@expo-google-fonts/barlow-condensed';
 import { getDb } from './src/db';
 import { RootStack } from './src/navigation/RootStack';
+import { linking } from './src/navigation/linking';
 import { UI } from './src/theme/colors';
 
 type InitState =
@@ -74,7 +75,11 @@ export default function App() {
     <GestureHandlerRootView style={styles.root}>
       <SafeAreaProvider>
         {state.status === 'ready' && (fontsLoaded || fontError) ? (
-          <NavigationContainer theme={navTheme}>
+          <NavigationContainer
+            theme={navTheme}
+            linking={linking}
+            documentTitle={{ formatter: () => 'ShotCaller' }}
+          >
             <RootStack />
           </NavigationContainer>
         ) : (

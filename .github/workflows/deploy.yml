@@ -42,6 +42,11 @@ jobs:
       - name: Export web build
         run: npx expo export --platform web
 
+      # Pages has no rewrites: serve the app for deep links like
+      # /shotcaller/play/3 on reload, so React Navigation can route them.
+      - name: Single-page app fallback
+        run: cp dist/index.html dist/404.html
+
       - name: Disable Jekyll processing
         run: touch dist/.nojekyll
 
