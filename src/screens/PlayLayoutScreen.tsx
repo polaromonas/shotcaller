@@ -363,15 +363,14 @@ const styles = StyleSheet.create({
     color: P.muted,
     marginHorizontal: 8,
   },
-  // 48pt tap targets with a visible edge and a clear gap between them; the
-  // old icons were ~22pt with overlapping hit slop, so taps hit the wrong one.
+  // 48pt tap targets with a clear gap between them; the old icons were ~22pt
+  // with overlapping hit slop, so taps hit the wrong one. No outline — the
+  // area is invisible until pressed.
   iconBtn: {
     width: 48,
     height: 48,
     marginLeft: 12,
     borderRadius: 14,
-    borderWidth: 2,
-    borderColor: P.border,
     alignItems: 'center',
     justifyContent: 'center',
   },
