@@ -46,6 +46,9 @@ export async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
       'ALTER TABLE hole_plan ADD COLUMN needs_review INTEGER NOT NULL DEFAULT 0'
     );
   }
+  if (holePlanCols.length > 0 && !holePlanCols.some((c) => c.name === 'review_note')) {
+    await db.execAsync('ALTER TABLE hole_plan ADD COLUMN review_note TEXT');
+  }
 }
 
 async function seedDefaultTags(db: SQLite.SQLiteDatabase): Promise<void> {

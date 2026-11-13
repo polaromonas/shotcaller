@@ -43,6 +43,9 @@ export type HolePlan = {
   // Set from Play when a hole's plan didn't work out — a note-to-self to revise
   // it back in Plan mode. Stored as 0/1 in SQLite; mapped to a boolean here.
   needs_review: boolean;
+  // Optional "what to change" jotted in Play alongside the flag. Only
+  // meaningful while needs_review is set; cleared when the flag is.
+  review_note: string | null;
   updated_at: string;
 };
 
@@ -82,17 +85,20 @@ export async function listHolePlans(layoutId: number): Promise<HolePlan[]> {
   return rows.map(mapPlan);
 }
 
-// Flag/unflag a hole's plan for revision — the Play → Plan note-to-self. Only
-// the flag is touched; the rest of the plan is left exactly as it was. A no-op
-// if the hole has no plan row (you can only flag a plan that exists).
+// Flag/unflag a hole's plan for revision — the Play → Plan note-to-self, with
+// an optional short note on what to change. Unflagging clears the note. Only
+// these two fields are touched; the rest of the plan is left exactly as it
+// was. A no-op if the hole has no plan row (you can only flag a plan).
 export async function setHolePlanReview(
   holeId: number,
-  value: boolean
+  value: boolean,
+  note: string | null = null
 ): Promise<void> {
   const db = await getDb();
+  const trimmed = value && note?.trim() ? note.trim() : null;
   await db.runAsync(
-    'UPDATE hole_plan SET needs_review = $value WHERE hole_id = $hole_id',
-    { $value: value ? 1 : 0, $hole_id: holeId }
+    'UPDATE hole_plan SET needs_review = $value, review_note = $note WHERE hole_id = $hole_id',
+    { $value: value ? 1 : 0, $note: trimmed, $hole_id: holeId }
   );
 }
 

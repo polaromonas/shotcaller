@@ -91,7 +91,7 @@ async function seedLayout(
         shot_shape: h.shape ?? null,
         aim_note: h.aim ?? null,
       });
-      if (h.revise) await setHolePlanReview(hole.id, true);
+      if (h.revise) await setHolePlanReview(hole.id, true, 'Wind pushed it left of the gap. Try the Buzzz on a hyzer?');
     }
   }
   return layoutId;

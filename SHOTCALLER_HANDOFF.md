@@ -133,6 +133,8 @@ shots — kept. Not surfaced in the canonical MVP screens; low priority.)*
 | throw_type | enum **(nullable)** | `Backhand` \| `Forehand` \| `Overhand` |
 | shot_shape | enum **(nullable)** | See §4. Thumber/Tomahawk coupling applies |
 | aim_note | text (nullable) | **Free text** — where to aim / what the disc should do. The heart of the plan in MVP |
+| needs_review | 0/1 | Flagged "to revise" from Play's caddie card; cleared by Resolve in Plan |
+| review_note | text (nullable) | Optional "what to change" typed with the flag in Play. A note about the **plan**, not a round log — cleared with the flag |
 | updated_at | text | ISO timestamp; drives "most recent" ordering and resume |
 
 **Progressive authoring is intentional.** All plan fields are nullable so a player
@@ -195,8 +197,8 @@ Freedom in structure (see design brief), but MVP needs at least these surfaces:
 | **Home** | Fast entry to Plan / Play; resume the last thing worked on / played. |
 | **Courses** | Courses list; each has one or more **Layouts**. Create/edit courses & layouts. Sort active/recent first. |
 | **Layout → Holes** | Holes under a layout, showing at a glance which holes are planned vs. blank. |
-| **Plan a Hole** (Plan mode) | Author the hole plan: disc (tap-pick), throw type, shot shape (chips), aim note (the one free-text field), par/distance editable. |
-| **Play a Layout** (Play mode) | The **caddie card**: one hole per screen, disc name in the largest type, `throw + shape` as one compact phrase, aim note below; swipe/large tap to advance; sunlight-first light theme; resumes on last hole. |
+| **Plan a Hole** (Plan mode) | Author the hole plan: disc (tap-pick), throw type, shot shape (chips), aim note (the one free-text field); par and distance are always-visible rows at the top. Shows the revise flag and its note, with Resolve. |
+| **Play a Layout** (Play mode) | The **caddie card**: one hole per screen, disc name in the largest type, `throw + shape` as one compact phrase, aim note below; swipe/large tap to advance; sunlight-first light theme; resumes on last hole. The flag opens a quick note ("what to change?") that shows up on the hole in Plan. |
 | **My Bag / Discs** | The disc collection; source list when picking a disc in a plan. Sort in-bag/recent first. |
 | **About** | Short "how it works" explainer. |
 

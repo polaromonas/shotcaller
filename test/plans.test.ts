@@ -14,6 +14,7 @@ import {
   listHolePlans,
   planSummary,
   saveHolePlan,
+  setHolePlanReview,
 } from '../src/db/plans';
 
 type HoleRow = { id: number; hole_number: number };
@@ -208,4 +209,32 @@ test('rejects an invalid enum via the CHECK constraint', async () => {
       { $l: layoutId, $h: holes[0].id }
     )
   ).rejects.toThrow();
+});
+
+test('a flag from Play can carry a note; unflagging clears it', async () => {
+  const { layoutId, holes } = await makeLayout();
+  const holeId = holes[0].id;
+  await saveHolePlan(layoutId, holeId, {
+    disc_id: null, throw_type: 'Backhand', shot_shape: null, aim_note: 'Gap left',
+  });
+
+  await setHolePlanReview(holeId, true, '  wind pushed it left  ');
+  let plan = await getHolePlan(holeId);
+  expect(plan?.needs_review).toBe(true);
+  expect(plan?.review_note).toBe('wind pushed it left');
+
+  // Re-saving the plan in Plan mode keeps the flag and its note.
+  await saveHolePlan(layoutId, holeId, {
+    disc_id: null, throw_type: 'Forehand', shot_shape: null, aim_note: 'Gap left',
+  });
+  expect((await getHolePlan(holeId))?.review_note).toBe('wind pushed it left');
+
+  await setHolePlanReview(holeId, true, '   ');
+  expect((await getHolePlan(holeId))?.review_note).toBeNull();
+
+  await setHolePlanReview(holeId, true, 'try a hyzer');
+  await setHolePlanReview(holeId, false, 'ignored');
+  plan = await getHolePlan(holeId);
+  expect(plan?.needs_review).toBe(false);
+  expect(plan?.review_note).toBeNull();
 });

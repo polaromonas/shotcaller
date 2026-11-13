@@ -99,6 +99,7 @@ CREATE TABLE IF NOT EXISTS hole_plan (
   shot_shape TEXT,
   aim_note   TEXT,
   needs_review INTEGER NOT NULL DEFAULT 0 CHECK (needs_review IN (0, 1)),
+  review_note  TEXT,
   updated_at TEXT NOT NULL,
   UNIQUE (hole_id)
 );

@@ -1,10 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Modal,
   PanResponder,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -93,22 +97,37 @@ export function PlayLayoutScreen() {
     [deck, layoutId]
   );
 
-  // Flag/unflag the current hole's plan for revision. Optimistically flips the
-  // in-memory deck so the flag reacts instantly, then persists. Only holes that
-  // already have a plan can be flagged (you're marking a plan to revise).
-  const toggleReview = useCallback(() => {
+  // Flag the current hole's plan to revise, with an optional quick note on
+  // what to change. The flag opens a small sheet; saving updates the in-memory
+  // deck right away, then persists. Only holes that already have a plan can be
+  // flagged (you're marking a plan to revise).
+  const [noteOpen, setNoteOpen] = useState(false);
+  const [noteDraft, setNoteDraft] = useState('');
+
+  const openNote = useCallback(() => {
     const cur = deck[index];
     if (!cur?.plan) return;
-    const nextVal = !cur.plan.needs_review;
-    setDeck((d) =>
-      d.map((h, i) =>
-        i === index && h.plan
-          ? { ...h, plan: { ...h.plan, needs_review: nextVal } }
-          : h
-      )
-    );
-    void setHolePlanReview(cur.hole.id, nextVal);
+    setNoteDraft(cur.plan.review_note ?? '');
+    setNoteOpen(true);
   }, [deck, index]);
+
+  const saveReview = useCallback(
+    (flagged: boolean) => {
+      const cur = deck[index];
+      setNoteOpen(false);
+      if (!cur?.plan) return;
+      const note = flagged && noteDraft.trim() ? noteDraft.trim() : null;
+      setDeck((d) =>
+        d.map((h, i) =>
+          i === index && h.plan
+            ? { ...h, plan: { ...h.plan, needs_review: flagged, review_note: note } }
+            : h
+        )
+      );
+      void setHolePlanReview(cur.hole.id, flagged, note);
+    },
+    [deck, index, noteDraft]
+  );
 
   // The PanResponder is created once (useRef), so it would otherwise capture the
   // first-render `go` — when deck is still empty — and drive index to -1 on
@@ -161,13 +180,14 @@ export function PlayLayoutScreen() {
         </Text>
         {plan && (
           <Pressable
-            onPress={toggleReview}
+            onPress={openNote}
             hitSlop={12}
             style={styles.flagBtn}
-            accessibilityRole="switch"
-            accessibilityState={{ checked: plan.needs_review }}
+            accessibilityRole="button"
             accessibilityLabel={
-              plan.needs_review ? 'Unflag this hole' : 'Flag this hole to revise later'
+              plan.needs_review
+                ? 'Flagged to revise. Edit the note or unflag'
+                : 'Flag this hole to revise later'
             }
           >
             <Ionicons
@@ -189,10 +209,15 @@ export function PlayLayoutScreen() {
         </Text>
       </View>
       {plan?.needs_review && (
-        <View style={styles.reviewTag}>
+        <Pressable style={styles.reviewTag} onPress={openNote} hitSlop={8}>
           <Ionicons name="flag" size={13} color={REVIEW_AMBER} />
           <Text style={styles.reviewTagLabel}>To revise</Text>
-        </View>
+          {plan.review_note && (
+            <Text style={styles.reviewNote} numberOfLines={2}>
+              {plan.review_note}
+            </Text>
+          )}
+        </Pressable>
       )}
 
       <View style={styles.center2} {...pan.panHandlers}>
@@ -249,6 +274,53 @@ export function PlayLayoutScreen() {
           </Pressable>
         )}
       </View>
+
+      <Modal
+        visible={noteOpen}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setNoteOpen(false)}
+      >
+        <KeyboardAvoidingView
+          style={styles.sheetWrap}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        >
+          <Pressable style={StyleSheet.absoluteFill} onPress={() => setNoteOpen(false)} />
+          <View style={styles.sheet}>
+            <View style={styles.sheetTitleRow}>
+              <Ionicons name="flag" size={16} color={REVIEW_AMBER} />
+              <Text style={styles.sheetTitle}>
+                Hole {hole.hole_number} · what to change?
+              </Text>
+            </View>
+            <TextInput
+              style={styles.sheetInput}
+              value={noteDraft}
+              onChangeText={setNoteDraft}
+              placeholder="Optional — e.g. wind pushed it left"
+              placeholderTextColor={P.muted}
+              multiline
+              autoFocus
+              maxLength={200}
+            />
+            <View style={styles.sheetActions}>
+              {plan?.needs_review && (
+                <Pressable onPress={() => saveReview(false)} hitSlop={8} style={styles.unflag}>
+                  <Text style={styles.unflagLabel}>Unflag</Text>
+                </Pressable>
+              )}
+              <Pressable onPress={() => setNoteOpen(false)} hitSlop={8}>
+                <Text style={styles.cancelLabel}>Cancel</Text>
+              </Pressable>
+              <Pressable style={styles.flagSave} onPress={() => saveReview(true)}>
+                <Text style={styles.flagSaveLabel}>
+                  {plan?.needs_review ? 'Save' : 'Flag'}
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -290,6 +362,35 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: REVIEW_AMBER,
   },
+  reviewNote: { flex: 1, fontFamily: FONT.b500, fontSize: 14, color: P.secondary },
+  sheetWrap: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.35)' },
+  sheet: {
+    backgroundColor: P.card,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+    paddingBottom: 32,
+    gap: 14,
+  },
+  sheetTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  sheetTitle: { fontFamily: FONT.bc700, fontSize: 18, color: P.ink },
+  sheetInput: {
+    minHeight: 76,
+    borderWidth: 2,
+    borderColor: P.border,
+    borderRadius: 12,
+    padding: 12,
+    fontFamily: FONT.b500,
+    fontSize: 17,
+    color: P.ink,
+    textAlignVertical: 'top',
+  },
+  sheetActions: { flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', gap: 20 },
+  unflag: { marginRight: 'auto' },
+  unflagLabel: { fontFamily: FONT.b600, fontSize: 16, color: P.secondary },
+  cancelLabel: { fontFamily: FONT.b600, fontSize: 16, color: P.secondary },
+  flagSave: { backgroundColor: P.ink, borderRadius: 12, paddingHorizontal: 22, paddingVertical: 12 },
+  flagSaveLabel: { fontFamily: FONT.bc800, fontSize: 18, color: '#fff' },
   holeRow: { flexDirection: 'row', alignItems: 'flex-end', gap: 14, marginTop: 4 },
   holeNumeral: { fontFamily: FONT.bc800, fontSize: 58, lineHeight: 58, color: P.ink },
   holeFacts: { fontFamily: FONT.b600, fontSize: 17, color: P.secondary, paddingBottom: 8 },
