@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
-  KeyboardAvoidingView,
   Modal,
   PanResponder,
   Platform,
@@ -11,7 +10,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import type { RouteProp } from '@react-navigation/native';
@@ -102,6 +101,16 @@ export function PlayLayoutScreen() {
   // deck right away, then persists. Only holes that already have a plan can be
   // flagged (you're marking a plan to revise).
   const [noteOpen, setNoteOpen] = useState(false);
+  const insets = useSafeAreaInsets();
+
+  // Phone browsers scroll the page when the keyboard opens; while the note is
+  // open, pin the card underneath so it doesn't drift as you type.
+  useEffect(() => {
+    if (Platform.OS !== 'web' || !noteOpen) return;
+    const pin = () => window.scrollTo(0, 0);
+    window.addEventListener('scroll', pin);
+    return () => window.removeEventListener('scroll', pin);
+  }, [noteOpen]);
   const [noteDraft, setNoteDraft] = useState('');
 
   const openNote = useCallback(() => {
@@ -281,10 +290,11 @@ export function PlayLayoutScreen() {
         animationType="fade"
         onRequestClose={() => setNoteOpen(false)}
       >
-        <KeyboardAvoidingView
-          style={styles.sheetWrap}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        >
+        {/* Drops down from the top, under the flag: the keyboard rises from
+            the bottom, so it never covers the box. (A bottom sheet hid behind
+            the keyboard on phone browsers, and Safari scrolled the page
+            underneath trying to reach it.) */}
+        <View style={[styles.sheetWrap, { paddingTop: insets.top }]}>
           <Pressable style={StyleSheet.absoluteFill} onPress={() => setNoteOpen(false)} />
           <View style={styles.sheet}>
             <View style={styles.sheetTitleRow}>
@@ -319,7 +329,7 @@ export function PlayLayoutScreen() {
               </Pressable>
             </View>
           </View>
-        </KeyboardAvoidingView>
+        </View>
       </Modal>
     </SafeAreaView>
   );
@@ -363,13 +373,12 @@ const styles = StyleSheet.create({
     color: REVIEW_AMBER,
   },
   reviewNote: { flex: 1, fontFamily: FONT.b500, fontSize: 14, color: P.secondary },
-  sheetWrap: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.35)' },
+  sheetWrap: { flex: 1, justifyContent: 'flex-start', backgroundColor: 'rgba(0,0,0,0.35)' },
   sheet: {
     backgroundColor: P.card,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
     padding: 20,
-    paddingBottom: 32,
     gap: 14,
   },
   sheetTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
