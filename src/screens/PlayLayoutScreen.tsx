@@ -190,8 +190,7 @@ export function PlayLayoutScreen() {
         {plan && (
           <Pressable
             onPress={openNote}
-            hitSlop={12}
-            style={styles.flagBtn}
+            style={({ pressed }) => [styles.iconBtn, pressed && styles.iconBtnPressed]}
             accessibilityRole="button"
             accessibilityLabel={
               plan.needs_review
@@ -201,13 +200,18 @@ export function PlayLayoutScreen() {
           >
             <Ionicons
               name={plan.needs_review ? 'flag' : 'flag-outline'}
-              size={22}
+              size={26}
               color={plan.needs_review ? REVIEW_AMBER : P.secondary}
             />
           </Pressable>
         )}
-        <Pressable onPress={() => navigation.goBack()} hitSlop={12}>
-          <Text style={styles.exit}>✕</Text>
+        <Pressable
+          onPress={() => navigation.goBack()}
+          style={({ pressed }) => [styles.iconBtn, pressed && styles.iconBtnPressed]}
+          accessibilityRole="button"
+          accessibilityLabel="Leave the round"
+        >
+          <Ionicons name="close" size={30} color={P.secondary} />
         </Pressable>
       </View>
 
@@ -359,8 +363,19 @@ const styles = StyleSheet.create({
     color: P.muted,
     marginHorizontal: 8,
   },
-  flagBtn: { paddingHorizontal: 4 },
-  exit: { fontSize: 20, color: P.secondary },
+  // 48pt tap targets with a visible edge and a clear gap between them; the
+  // old icons were ~22pt with overlapping hit slop, so taps hit the wrong one.
+  iconBtn: {
+    width: 48,
+    height: 48,
+    marginLeft: 12,
+    borderRadius: 14,
+    borderWidth: 2,
+    borderColor: P.border,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  iconBtnPressed: { backgroundColor: P.borderDim },
   reviewTag: {
     flexDirection: 'row',
     alignItems: 'center',
