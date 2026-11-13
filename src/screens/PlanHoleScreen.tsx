@@ -59,9 +59,9 @@ export function PlanHoleScreen() {
   const [shapes, setShapes] = useState<Shape[]>([]);
   const [aim, setAim] = useState('');
   const [needsReview, setNeedsReview] = useState(false);
+  const [reviewNote, setReviewNote] = useState<string | null>(null);
   const [par, setPar] = useState(3);
   const [distance, setDistance] = useState('');
-  const [editingFacts, setEditingFacts] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [addDiscOpen, setAddDiscOpen] = useState(false);
   const [addShapeOpen, setAddShapeOpen] = useState(false);
@@ -91,7 +91,7 @@ export function PlanHoleScreen() {
       setShotShape(plan?.shot_shape ?? null);
       setAim(plan?.aim_note ?? '');
       setNeedsReview(plan?.needs_review ?? false);
-      setEditingFacts(false);
+      setReviewNote(plan?.review_note ?? null);
       setLoading(false);
     })();
     return () => {
@@ -202,6 +202,7 @@ export function PlanHoleScreen() {
   // plan to look at it shouldn't dismiss the reminder.
   const handleResolveReview = useCallback(async () => {
     setNeedsReview(false);
+    setReviewNote(null);
     await setHolePlanReview(holeId, false);
   }, [holeId]);
 
@@ -212,8 +213,6 @@ export function PlanHoleScreen() {
       </View>
     );
   }
-
-  const distanceLabel = distance.trim() ? `${distance.trim()} ft` : 'distance —';
 
   return (
     <SafeAreaView style={styles.root} edges={['top']}>
@@ -234,7 +233,10 @@ export function PlanHoleScreen() {
           {needsReview && (
             <View style={styles.reviewBanner}>
               <Ionicons name="flag" size={16} color={REVIEW_AMBER} />
-              <Text style={styles.reviewBannerText}>Flagged to revise.</Text>
+              <View style={styles.reviewBannerBody}>
+                <Text style={styles.reviewBannerText}>Flagged to revise.</Text>
+                {reviewNote && <Text style={styles.reviewBannerNote}>“{reviewNote}”</Text>}
+              </View>
               <Pressable
                 onPress={() => void handleResolveReview()}
                 hitSlop={8}
@@ -245,23 +247,12 @@ export function PlanHoleScreen() {
             </View>
           )}
 
-          <View style={styles.holeRow}>
-            <Text style={styles.holeNumeral}>Hole {hole.hole_number}</Text>
-            <Pressable
-              style={styles.factsBtn}
-              onPress={() => setEditingFacts((v) => !v)}
-              hitSlop={8}
-            >
-              <Text style={styles.factsText}>
-                Par {par} · {distanceLabel}
-              </Text>
-              <Ionicons name="pencil" size={14} color={MODE.plan} />
-            </Pressable>
-          </View>
+          <Text style={styles.holeNumeral}>Hole {hole.hole_number}</Text>
 
-          {editingFacts && (
-            <View style={styles.factsEditor}>
-              <View style={styles.segmented}>
+          <View style={styles.factsCard}>
+            <View style={styles.factRow}>
+              <Text style={styles.factLabel}>Par</Text>
+              <View style={[styles.segmented, styles.factControl]}>
                 {PARS.map((p) => {
                   const on = par === p;
                   return (
@@ -269,28 +260,36 @@ export function PlanHoleScreen() {
                       key={p}
                       onPress={() => setPar(p)}
                       style={[styles.segment, on && styles.segmentOn]}
+                      accessibilityRole="radio"
+                      accessibilityState={{ selected: on }}
+                      accessibilityLabel={`Par ${p}`}
                     >
-                      <Text style={[styles.segmentLabel, on && styles.segmentLabelOn]}>
-                        Par {p}
-                      </Text>
+                      <Text style={[styles.segmentLabel, on && styles.segmentLabelOn]}>{p}</Text>
                     </Pressable>
                   );
                 })}
               </View>
-              <View style={styles.distRow}>
+            </View>
+            <View style={styles.factDivider} />
+            <View style={styles.factRow}>
+              <Text style={styles.factLabel}>Distance</Text>
+              <View style={[styles.distRow, styles.factControl]}>
                 <TextInput
                   style={styles.distInput}
                   value={distance}
-                  onChangeText={setDistance}
+                  onChangeText={(t) => setDistance(t.replace(/[^0-9]/g, '').slice(0, 4))}
                   keyboardType="number-pad"
-                  placeholder="0"
+                  inputMode="numeric"
+                  maxLength={4}
+                  placeholder="—"
                   placeholderTextColor={SHELL.textFaint}
                   returnKeyType="done"
+                  accessibilityLabel="Distance in feet"
                 />
-                <Text style={styles.distSuffix}>ft to basket</Text>
+                <Text style={styles.distSuffix}>ft</Text>
               </View>
             </View>
-          )}
+          </View>
 
           <Section label="Disc — from your bag">
             <View style={styles.chipWrap}>
@@ -517,7 +516,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(224,147,43,0.45)',
   },
-  reviewBannerText: { flex: 1, fontFamily: FONT.b600, fontSize: 14, color: SHELL.text },
+  reviewBannerBody: { flex: 1, gap: 4 },
+  reviewBannerText: { fontFamily: FONT.b600, fontSize: 14, color: SHELL.text },
+  reviewBannerNote: { fontFamily: FONT.b500, fontSize: 14, lineHeight: 19, color: SHELL.textSecondary },
   resolveBtn: {
     backgroundColor: REVIEW_AMBER,
     paddingHorizontal: 14,
@@ -525,29 +526,18 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   resolveLabel: { fontFamily: FONT.bc700, fontSize: 14, color: '#1a1200' },
-  holeRow: { flexDirection: 'row', alignItems: 'center', gap: 14, flexWrap: 'wrap' },
-  holeNumeral: { fontFamily: FONT.bc800, fontSize: 44, color: SHELL.text },
-  factsBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 7,
-    paddingHorizontal: 12,
-    paddingVertical: 7,
-    borderRadius: 10,
-    backgroundColor: SHELL.card,
-    borderWidth: 1,
-    borderColor: SHELL.border,
-  },
-  factsText: { fontFamily: FONT.b600, fontSize: 15, color: SHELL.textSecondary },
-  factsEditor: {
-    gap: 12,
-    padding: 14,
+  holeNumeral: { fontFamily: FONT.bc800, fontSize: 44, color: SHELL.text, marginBottom: -12 },
+  factsCard: {
+    paddingHorizontal: 14,
     borderRadius: 14,
     backgroundColor: SHELL.card,
     borderWidth: 1,
     borderColor: SHELL.border,
-    marginTop: -10,
   },
+  factRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 10, gap: 12 },
+  factLabel: { width: 72, fontFamily: FONT.bc700, fontSize: 16, color: SHELL.textSecondary },
+  factControl: { flex: 1 },
+  factDivider: { height: 1, backgroundColor: SHELL.border },
   distRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   distInput: {
     width: 96,
