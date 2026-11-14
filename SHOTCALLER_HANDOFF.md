@@ -118,7 +118,11 @@ shots — kept. Not surfaced in the canonical MVP screens; low priority.)*
 **Holes belong to a layout, not directly to a course.**
 
 **HOLE** — `id`, `layout_id` FK, `hole_number`, `par` (2–5), `distance_ft`.
-`UNIQUE(layout_id, hole_number)`.
+`UNIQUE(layout_id, hole_number)`. A layout has 1–27 holes, numbered 1..n with
+no gaps. A new layout starts with 9 or 18; Edit Layout adds and removes holes
+**at the end only**. Removing a hole deletes its plan. If it has a plan or a
+distance, the confirm says what will be lost; a blank hole is removed without
+asking. A round in progress on a removed hole moves back to the new last hole.
 
 ### Plans, play state, settings
 

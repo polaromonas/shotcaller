@@ -108,6 +108,10 @@ export async function findOrCreateLayout(input: {
   });
 }
 
+// Hole-count bounds for a layout, shared by create and add/remove.
+export const MIN_HOLES = 1;
+export const MAX_HOLES = 27;
+
 export type DeleteImpact = {
   holes: number;
   plannedHoles: number;
@@ -142,7 +146,7 @@ export async function createLayoutWithHoles(input: {
 }): Promise<number> {
   const db = await getDb();
   const count = input.holeCount;
-  if (!Number.isInteger(count) || count < 1 || count > 27) {
+  if (!Number.isInteger(count) || count < 1 || count > MAX_HOLES) {
     throw new Error(`Invalid hole count: ${count}`);
   }
 
@@ -235,4 +239,54 @@ export async function renameLayout(
     $name: name.trim(),
     $id: layoutId,
   });
+}
+
+// Append a hole after the current last one (par 3, no distance, like a new
+// layout's holes). Returns the new hole, or null if the layout is at MAX_HOLES.
+export async function addHole(layoutId: number): Promise<Hole | null> {
+  const db = await getDb();
+  const row = await db.getFirstAsync<{ count: number; max_n: number | null }>(
+    'SELECT COUNT(*) AS count, MAX(hole_number) AS max_n FROM hole WHERE layout_id = $id',
+    { $id: layoutId }
+  );
+  if ((row?.count ?? 0) >= MAX_HOLES) return null;
+  const holeNumber = (row?.max_n ?? 0) + 1;
+  const result = await db.runAsync(
+    `INSERT INTO hole (layout_id, hole_number, par, distance_ft)
+     VALUES ($layout_id, $hole_number, 3, 0)`,
+    { $layout_id: layoutId, $hole_number: holeNumber }
+  );
+  return {
+    id: result.lastInsertRowId,
+    layout_id: layoutId,
+    hole_number: holeNumber,
+    par: 3,
+    distance_ft: 0,
+  };
+}
+
+// Remove the layout's last hole. Only the last one, so hole numbers stay
+// 1..n with no gaps. Its plan cascades via the hole FK. If a round in
+// progress was on that hole, it moves back to the new last hole. Returns
+// false (and changes nothing) when only MIN_HOLES remain.
+export async function removeLastHole(layoutId: number): Promise<boolean> {
+  const db = await getDb();
+  let removed = false;
+  await db.withTransactionAsync(async () => {
+    const holes = await db.getAllAsync<{ id: number; hole_number: number }>(
+      `SELECT id, hole_number FROM hole WHERE layout_id = $id
+        ORDER BY hole_number DESC LIMIT 2`,
+      { $id: layoutId }
+    );
+    if (holes.length <= MIN_HOLES) return;
+    const [last, newLast] = holes;
+    await db.runAsync('DELETE FROM hole WHERE id = $id', { $id: last.id });
+    await db.runAsync(
+      `UPDATE play_state SET hole_number = $n
+        WHERE layout_id = $id AND hole_number > $n`,
+      { $id: layoutId, $n: newLast.hole_number }
+    );
+    removed = true;
+  });
+  return removed;
 }

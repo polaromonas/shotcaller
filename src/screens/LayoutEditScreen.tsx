@@ -10,18 +10,24 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import type { RouteProp } from '@react-navigation/native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
+  addHole,
   deleteLayout,
   getLayout,
   getLayoutImpact,
   listHoles,
+  MAX_HOLES,
+  MIN_HOLES,
+  removeLastHole,
   updateHole,
   type Hole,
   type Layout,
 } from '../db/courses';
+import { getHolePlan } from '../db/plans';
 import { confirmAction } from '../util/confirm';
 import { INBAG_GREEN, UI } from '../theme/colors';
 import type { RootStackParamList } from '../navigation/types';
@@ -62,6 +68,38 @@ export function LayoutEditScreen() {
     },
     []
   );
+
+  const handleAddHole = useCallback(async () => {
+    const hole = await addHole(layoutId);
+    if (hole) setHoles((prev) => (prev ? [...prev, hole] : prev));
+  }, [layoutId]);
+
+  const handleRemoveHole = useCallback(async () => {
+    if (!holes || holes.length <= MIN_HOLES) return;
+    const last = holes[holes.length - 1];
+    const remove = async () => {
+      if (await removeLastHole(layoutId)) {
+        setHoles((prev) => (prev ? prev.filter((h) => h.id !== last.id) : prev));
+      }
+    };
+    // A blank hole (no plan, no distance) goes without asking — Add hole
+    // brings it straight back. Anything with content gets a confirm that
+    // restates what's lost.
+    const plan = await getHolePlan(last.id);
+    if (!plan && last.distance_ft === 0) {
+      await remove();
+      return;
+    }
+    confirmAction({
+      title: `Remove hole ${last.hole_number}?`,
+      message: `${
+        plan ? 'Its hole plan will be deleted too. ' : ''
+      }This cannot be undone.`,
+      confirmLabel: plan ? 'Remove hole and plan' : 'Remove hole',
+      destructive: true,
+      onConfirm: () => void remove(),
+    });
+  }, [holes, layoutId]);
 
   if (!layout || !holes) {
     return (
@@ -104,6 +142,40 @@ export function LayoutEditScreen() {
         {holes.map((h) => (
           <HoleRow key={h.id} hole={h} onUpdate={handleUpdate} />
         ))}
+        <View style={styles.countRow}>
+          <Pressable
+            style={({ pressed }) => [
+              styles.countBtn,
+              pressed && styles.countBtnPressed,
+              holes.length <= MIN_HOLES && styles.countBtnDisabled,
+            ]}
+            onPress={() => void handleRemoveHole()}
+            disabled={holes.length <= MIN_HOLES}
+            accessibilityRole="button"
+            accessibilityLabel={`Remove hole ${holes.length}`}
+          >
+            <Ionicons name="remove" size={18} color={UI.text} />
+            <Text style={styles.countLabel}>Remove hole {holes.length}</Text>
+          </Pressable>
+          <Pressable
+            style={({ pressed }) => [
+              styles.countBtn,
+              pressed && styles.countBtnPressed,
+              holes.length >= MAX_HOLES && styles.countBtnDisabled,
+            ]}
+            onPress={() => void handleAddHole()}
+            disabled={holes.length >= MAX_HOLES}
+            accessibilityRole="button"
+            accessibilityLabel={`Add hole ${holes.length + 1}`}
+          >
+            <Ionicons name="add" size={18} color={UI.text} />
+            <Text style={styles.countLabel}>Add hole</Text>
+          </Pressable>
+        </View>
+        <Text style={styles.countHint}>
+          {holes.length} {holes.length === 1 ? 'hole' : 'holes'}. Holes are added
+          and removed at the end.
+        </Text>
         <Pressable
           style={styles.deleteBtn}
           onPress={() => void handleDelete()}
@@ -237,6 +309,23 @@ const styles = StyleSheet.create({
     borderColor: UI.border,
   },
   distSuffix: { fontSize: 13, color: UI.textMuted, width: 20 },
+  countRow: { flexDirection: 'row', gap: 12, marginTop: 4 },
+  countBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    minHeight: 48,
+    borderRadius: 12,
+    backgroundColor: UI.surface,
+    borderWidth: 1,
+    borderColor: UI.border,
+  },
+  countBtnPressed: { backgroundColor: UI.bg },
+  countBtnDisabled: { opacity: 0.4 },
+  countLabel: { fontSize: 14, fontWeight: '600', color: UI.text },
+  countHint: { fontSize: 12, color: UI.textMuted, textAlign: 'center' },
   deleteBtn: {
     marginTop: 16,
     paddingVertical: 12,
