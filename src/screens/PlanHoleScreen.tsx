@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -44,6 +44,34 @@ type Rt = RouteProp<RootStackParamList, 'PlanHole'>;
 
 const PARS = [2, 3, 4, 5];
 
+// The editable fields of one hole, as loaded and as on screen. Leaving a hole
+// saves only when these differ, so paging past a hole doesn't bump its
+// updated_at (which drives the "last edited" highlight on the holes grid).
+type Draft = {
+  discId: number | null;
+  throwType: ThrowType | null;
+  shotShape: string | null;
+  aim: string;
+  par: number;
+  distanceFt: number;
+};
+
+function parseDistance(text: string): number {
+  const parsed = Number(text.trim());
+  return Number.isFinite(parsed) && parsed > 0 ? Math.round(parsed) : 0;
+}
+
+function sameDraft(a: Draft, b: Draft): boolean {
+  return (
+    a.discId === b.discId &&
+    a.throwType === b.throwType &&
+    a.shotShape === b.shotShape &&
+    a.aim.trim() === b.aim.trim() &&
+    a.par === b.par &&
+    a.distanceFt === b.distanceFt
+  );
+}
+
 export function PlanHoleScreen() {
   const navigation = useNavigation<Nav>();
   const { layoutId, holeId } = useRoute<Rt>().params;
@@ -60,16 +88,20 @@ export function PlanHoleScreen() {
   const [aim, setAim] = useState('');
   const [needsReview, setNeedsReview] = useState(false);
   const [reviewNote, setReviewNote] = useState<string | null>(null);
+  const [reviewExpanded, setReviewExpanded] = useState(false);
   const [par, setPar] = useState(3);
   const [distance, setDistance] = useState('');
   const [pickerOpen, setPickerOpen] = useState(false);
   const [addDiscOpen, setAddDiscOpen] = useState(false);
   const [addShapeOpen, setAddShapeOpen] = useState(false);
   const [newShapeName, setNewShapeName] = useState('');
+  const loadedRef = useRef<Draft | null>(null);
+  const scrollRef = useRef<ScrollView>(null);
 
+  // Paging between holes swaps params in place (no push/replace animation), so
+  // only the first load shows the spinner.
   useEffect(() => {
     let alive = true;
-    setLoading(true);
     (async () => {
       const [l, hs, ds, plan, sh] = await Promise.all([
         getLayout(layoutId),
@@ -92,6 +124,16 @@ export function PlanHoleScreen() {
       setAim(plan?.aim_note ?? '');
       setNeedsReview(plan?.needs_review ?? false);
       setReviewNote(plan?.review_note ?? null);
+      setReviewExpanded(false);
+      loadedRef.current = {
+        discId: plan?.disc_id ?? null,
+        throwType: plan?.throw_type ?? null,
+        shotShape: plan?.shot_shape ?? null,
+        aim: plan?.aim_note ?? '',
+        par: hole?.par ?? 3,
+        distanceFt: hole?.distance_ft ?? 0,
+      };
+      scrollRef.current?.scrollTo({ y: 0, animated: false });
       setLoading(false);
     })();
     return () => {
@@ -177,26 +219,70 @@ export function PlanHoleScreen() {
     return holes.find((h) => h.hole_number > hole.hole_number) ?? null;
   }, [holes, hole]);
 
-  const handleSave = useCallback(async () => {
+  const prevHole = useMemo(() => {
+    if (!hole) return null;
+    return [...holes].reverse().find((h) => h.hole_number < hole.hole_number) ?? null;
+  }, [holes, hole]);
+
+  // Write this hole if anything changed since it loaded. Every way off the
+  // hole goes through here — the save button, the ‹ › arrows, and back (button,
+  // swipe, or Android back) — so leaving never drops edits.
+  const persist = useCallback(async () => {
+    const loaded = loadedRef.current;
+    if (!loaded) return;
+    const draft: Draft = {
+      discId,
+      throwType: overhandLocked ? 'Overhand' : throwType,
+      shotShape,
+      aim,
+      par,
+      distanceFt: parseDistance(distance),
+    };
+    if (sameDraft(draft, loaded)) return;
     await saveHolePlan(layoutId, holeId, {
-      disc_id: discId,
-      throw_type: overhandLocked ? 'Overhand' : throwType,
-      shot_shape: shotShape,
-      aim_note: aim,
+      disc_id: draft.discId,
+      throw_type: draft.throwType,
+      shot_shape: draft.shotShape,
+      aim_note: draft.aim,
     });
-    if (hole) {
-      const parsed = Number(distance.trim());
-      const dist = Number.isFinite(parsed) && parsed > 0 ? Math.round(parsed) : 0;
-      if (par !== hole.par || dist !== hole.distance_ft) {
-        await updateHole({ id: holeId, par, distance_ft: dist });
-      }
+    if (draft.par !== loaded.par || draft.distanceFt !== loaded.distanceFt) {
+      await updateHole({ id: holeId, par: draft.par, distance_ft: draft.distanceFt });
+      setHoles((prev) =>
+        prev.map((h) =>
+          h.id === holeId ? { ...h, par: draft.par, distance_ft: draft.distanceFt } : h
+        )
+      );
     }
+    loadedRef.current = draft;
+  }, [layoutId, holeId, discId, throwType, overhandLocked, shotShape, aim, par, distance]);
+
+  const persistRef = useRef(persist);
+  persistRef.current = persist;
+
+  useEffect(
+    () =>
+      navigation.addListener('beforeRemove', (e) => {
+        e.preventDefault();
+        void persistRef.current().finally(() => navigation.dispatch(e.data.action));
+      }),
+    [navigation]
+  );
+
+  const goToHole = useCallback(
+    async (target: Hole) => {
+      await persist();
+      navigation.setParams({ holeId: target.id });
+    },
+    [persist, navigation]
+  );
+
+  const handleSave = useCallback(async () => {
     if (nextHole) {
-      navigation.replace('PlanHole', { layoutId, holeId: nextHole.id });
+      await goToHole(nextHole);
     } else {
-      navigation.goBack();
+      navigation.goBack(); // beforeRemove saves
     }
-  }, [layoutId, holeId, discId, throwType, overhandLocked, shotShape, aim, hole, par, distance, nextHole, navigation]);
+  }, [nextHole, goToHole, navigation]);
 
   // Clear the revise flag once you've addressed it. Manual only — opening a
   // plan to look at it shouldn't dismiss the reminder.
@@ -229,25 +315,29 @@ export function PlanHoleScreen() {
         style={styles.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-        <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-          {needsReview && (
-            <View style={styles.reviewBanner}>
-              <Ionicons name="flag" size={16} color={REVIEW_AMBER} />
-              <View style={styles.reviewBannerBody}>
-                <Text style={styles.reviewBannerText}>Flagged to revise.</Text>
-                {reviewNote && <Text style={styles.reviewBannerNote}>“{reviewNote}”</Text>}
-              </View>
-              <Pressable
-                onPress={() => void handleResolveReview()}
-                hitSlop={8}
-                style={styles.resolveBtn}
-              >
-                <Text style={styles.resolveLabel}>Resolve</Text>
-              </Pressable>
+        <ScrollView
+          ref={scrollRef}
+          contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+          <View style={styles.holeRow}>
+            <Text style={styles.holeNumeral}>
+              Hole {hole.hole_number}
+              <Text style={styles.holeOf}> of {holes.length}</Text>
+            </Text>
+            <View style={styles.holeNav}>
+              <HoleArrow
+                icon="chevron-back"
+                target={prevHole}
+                label="Previous hole"
+                onPress={goToHole}
+              />
+              <HoleArrow
+                icon="chevron-forward"
+                target={nextHole}
+                label="Next hole"
+                onPress={goToHole}
+              />
             </View>
-          )}
-
-          <Text style={styles.holeNumeral}>Hole {hole.hole_number}</Text>
+          </View>
 
           <View style={styles.factsCard}>
             <View style={styles.factRow}>
@@ -404,6 +494,37 @@ export function PlanHoleScreen() {
         </ScrollView>
 
         <View style={styles.footer}>
+          {/* The revise flag lives in the footer, not the scroll, so the note
+              stays readable while you edit (it sits just above the keyboard
+              when typing the aim note) and Resolve is in thumb reach. */}
+          {needsReview && (
+            <View style={styles.reviewBanner}>
+              <Ionicons name="flag" size={16} color={REVIEW_AMBER} />
+              <Pressable
+                style={styles.reviewBannerBody}
+                onPress={() => setReviewExpanded((v) => !v)}
+                disabled={!reviewNote}
+                accessibilityHint={reviewNote ? 'Shows the whole note' : undefined}
+              >
+                <Text style={styles.reviewBannerText}>Flagged to revise.</Text>
+                {reviewNote && (
+                  <Text
+                    style={styles.reviewBannerNote}
+                    numberOfLines={reviewExpanded ? undefined : 2}
+                  >
+                    “{reviewNote}”
+                  </Text>
+                )}
+              </Pressable>
+              <Pressable
+                onPress={() => void handleResolveReview()}
+                hitSlop={8}
+                style={styles.resolveBtn}
+              >
+                <Text style={styles.resolveLabel}>Resolve</Text>
+              </Pressable>
+            </View>
+          )}
           <Pressable style={styles.saveBtn} onPress={() => void handleSave()}>
             <Text style={styles.saveLabel}>
               {nextHole ? 'Save · next hole ›' : 'Save · done ›'}
@@ -476,6 +597,35 @@ export function PlanHoleScreen() {
   );
 }
 
+function HoleArrow({
+  icon,
+  target,
+  label,
+  onPress,
+}: {
+  icon: 'chevron-back' | 'chevron-forward';
+  target: Hole | null;
+  label: string;
+  onPress: (hole: Hole) => void;
+}) {
+  return (
+    <Pressable
+      onPress={() => target && onPress(target)}
+      disabled={!target}
+      style={({ pressed }) => [styles.holeArrow, pressed && styles.holeArrowPressed]}
+      accessibilityRole="button"
+      accessibilityLabel={target ? `${label}: hole ${target.hole_number}` : label}
+      accessibilityState={{ disabled: !target }}
+    >
+      <Ionicons
+        name={icon}
+        size={28}
+        color={target ? SHELL.text : SHELL.textFaint}
+      />
+    </Pressable>
+  );
+}
+
 function Section({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <View style={styles.section}>
@@ -526,7 +676,23 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   resolveLabel: { fontFamily: FONT.bc700, fontSize: 14, color: '#1a1200' },
-  holeNumeral: { fontFamily: FONT.bc800, fontSize: 44, color: SHELL.text, marginBottom: -12 },
+  holeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: -12,
+  },
+  holeNumeral: { fontFamily: FONT.bc800, fontSize: 44, color: SHELL.text },
+  holeOf: { fontFamily: FONT.bc700, fontSize: 20, color: SHELL.textMuted },
+  holeNav: { flexDirection: 'row', gap: 8, marginRight: -8 },
+  holeArrow: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  holeArrowPressed: { backgroundColor: SHELL.card },
   factsCard: {
     paddingHorizontal: 14,
     borderRadius: 14,
@@ -675,6 +841,7 @@ const styles = StyleSheet.create({
     borderColor: SHELL.border,
   },
   footer: {
+    gap: 10,
     paddingHorizontal: 20,
     paddingTop: 10,
     paddingBottom: 16,
