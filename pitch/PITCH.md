@@ -49,8 +49,12 @@ spreadsheet. It's clunky, and it's not built for disc golf. ShotCaller is:
 ## Plan — build it at home
 
 For each hole: pick the **disc**, the **throw**, the **shot shape**, and jot a
-**note** on where to aim. Partial plans are fine — jot what you know. Need a disc
-or a shape that isn't there? Add it without leaving the flow.
+**note** on where to aim. Partial plans are fine — jot what you know. Page between
+holes with ‹ ›; every hole saves as you leave it. Need a disc or a shape that isn't
+there? Add it without leaving the flow. Layouts can have any number of holes.
+
+Keep **several bags** — main, glow, winter, travel. A disc can be in more than one;
+pick the bag you're carrying and Plan only offers its discs.
 
 <table>
 <tr>
@@ -91,8 +95,9 @@ when you come back from your scorekeeping app.
 
 ## Flag it on the course, fix it at home
 
-A plan didn't work? One tap on the tee flags it. Back home, the layout shows
-"1 to revise" and the hole opens with the flag waiting.
+A plan didn't work? One tap on the tee flags it, with an optional quick note on
+what to change. Back home, the layout shows "1 to revise" and the hole opens with
+your note pinned above the save button while you fix it.
 
 <table>
 <tr>
@@ -101,11 +106,18 @@ A plan didn't work? One tap on the tee flags it. Back home, the layout shows
 <td width="33%"><img src="framed/07-my-bag.png" width="100%"></td>
 </tr>
 <tr>
-<td align="center"><em>On the tee: tap the flag.</em></td>
-<td align="center"><em>At home: revise, then resolve.</em></td>
-<td align="center"><em>My Bag — type a mold and ~1,200 catalog discs fill in the flight numbers.</em></td>
+<td align="center"><em>On the tee: flag it, say what to change.</em></td>
+<td align="center"><em>At home: your note stays in view; fix it, then resolve.</em></td>
+<td align="center"><em>My Bag — several bags; type a mold and ~1,200 catalog discs fill in the flight numbers.</em></td>
 </tr>
 </table>
+
+---
+
+## Coming next
+
+- **Tee photo + aim line** — snap the tee pad and draw your line on it.
+- **Plan B** — a backup for when conditions change ("if headwind, FH roller").
 
 ---
 
@@ -115,6 +127,7 @@ A plan didn't work? One tap on the tee flags it. Back home, the layout shows
 2. Is the **Plan → Play** loop clear and worth the setup effort?
 3. On the tee, does the **caddie card** give you what you need in one glance?
 4. What's the one thing that would have to exist before you'd bring it to a real round?
+5. Of the two **coming next** features, which would you want first?
 
 Thanks for taking a look — hit reply with anything, big or small.
 
@@ -122,4 +135,5 @@ Thanks for taking a look — hit reply with anything, big or small.
 
 <sub>Regenerate: start `npx expo start --web --port 8091`, then
 `node scripts/capture-screens.mjs && node scripts/build-deck.mjs`.
-`screens/` has the plain screenshots, `framed/` the phone mockups, `slides/` each slide as a PNG.</sub>
+`screens/` has the plain screenshots, `framed/` the phone mockups, `slides/` each slide as a PNG.
+`node scripts/build-deck.mjs pitch` builds just this deck.</sub>

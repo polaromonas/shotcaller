@@ -107,7 +107,7 @@ const SHOTS = [
     go: async (p) => {
       await openLayouts(p);
       await tap(p, 'Blue tees'); await waitForText(p, 'Par 3 · 290');
-      await tap(p, 'Par 3 · 290'); await waitForText(p, 'from your bag');
+      await tap(p, 'Par 3 · 290'); await waitForText(p, 'Disc — from');
     },
   },
   {
@@ -115,7 +115,7 @@ const SHOTS = [
     go: async (p) => {
       await openLayouts(p);
       await tap(p, 'Blue tees'); await waitForText(p, 'Par 3 · 290');
-      await tap(p, 'Par 3 · 290'); await waitForText(p, 'from your bag');
+      await tap(p, 'Par 3 · 290'); await waitForText(p, 'Disc — from');
       await tap(p, 'discs…'); await waitForText(p, 'Pick a disc');
     },
   },
@@ -129,7 +129,33 @@ const SHOTS = [
   },
   {
     name: '07-my-bag', bar: DARK, title: 'My Bag',
-    go: async (p) => { await tap(p, 'My Bag'); await waitForText(p, 'in bag'); },
+    go: async (p) => { await tap(p, 'My Bag'); await waitForText(p, '+ New bag'); },
+  },
+  {
+    name: '14-plan-switch-bag', bar: DARK, title: 'Plan — switch bag',
+    go: async (p) => {
+      await openLayouts(p);
+      await tap(p, 'Blue tees'); await waitForText(p, 'Par 3 · 290');
+      await tap(p, 'Par 3 · 290'); await waitForText(p, 'Disc — from');
+      await tap(p, 'Switch bag'); await waitForText(p, 'Which bag are you carrying?');
+    },
+  },
+  {
+    name: '13-edit-layout', bar: DARK, title: 'Edit layout — add or remove holes',
+    go: async (p) => {
+      await openLayouts(p);
+      await tap(p, 'Blue tees'); await waitForText(p, 'holes planned');
+      await tap(p, 'Edit layout'); await waitForText(p, 'Add hole');
+      // Scroll the hole list to the end so the add/remove buttons show.
+      await p.evaluate(() => {
+        for (const el of document.querySelectorAll('*')) {
+          if (el.scrollHeight > el.clientHeight + 20 && getComputedStyle(el).overflowY !== 'visible') {
+            el.scrollTop = el.scrollHeight;
+          }
+        }
+      });
+      await sleep(500);
+    },
   },
   // ---- Play ---- (opening a round moves the saved hole, so these run last)
   {

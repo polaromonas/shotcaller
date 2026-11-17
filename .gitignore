@@ -39,3 +39,6 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# Private pitch decks: slide copy and built output (see scripts/build-deck.mjs).
+pitch/private/

@@ -1,14 +1,20 @@
 #!/usr/bin/env node
 /**
- * Builds the pitch slide deck from the framed phone screenshots.
+ * Builds the pitch slide decks from the framed phone screenshots.
  *
- *   node scripts/capture-screens.mjs   # first: pitch/framed/*.png
- *   node scripts/build-deck.mjs        # writes pitch/ShotCaller-deck.pdf
- *                                      #    and pitch/slides/NN.png
+ *   node scripts/capture-screens.mjs          # first: pitch/framed/*.png
+ *   node scripts/build-deck.mjs [deck|all]    # default: all
+ *
+ * Decks:
+ *   pitch  → pitch/ShotCaller-deck.pdf + pitch/slides/NN.png (players, feedback)
+ *   + any private decks: pitch/private/<name>.deck.mjs (gitignored), each
+ *     exporting `pdf` and a default (helpers) => slides[]. Their output is
+ *     written inside pitch/private/ so it never reaches the repo.
  *
  * Slides are 1920×1080, in the app's own palette and Barlow fonts (loaded from
  * node_modules, so this works offline).
  */
+import { existsSync, readdirSync } from 'node:fs';
 import { mkdir, rm, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -34,7 +40,7 @@ const phone = (name, caption = '', h = 680) => `
     ${caption ? `<figcaption>${caption}</figcaption>` : ''}
   </figure>`;
 
-const SLIDES = [
+const PITCH_SLIDES = [
   // 1 — Title
   `<section class="title">
     <div class="copy">
@@ -84,19 +90,20 @@ const SLIDES = [
       <p>Partial plans are fine — jot what you know, fill in the rest later.</p></div>
     <div class="row">
       ${phone('03-layout-holes', 'Every hole at a glance — planned, blank, flagged')}
-      ${phone('04-plan-hole', 'Disc, throw, shape, and an aim note')}
+      ${phone('04-plan-hole', 'Disc, throw, shape, aim — ‹ › to the next hole')}
       ${phone('05-disc-picker', 'Your whole bag, with real flight numbers')}
     </div>
   </section>`,
 
   // 5 — Bag & courses
   `<section class="gallery">
-    <div class="head"><span class="chip neutral">Setup</span><h2>Your bag. Your courses.</h2>
-      <p>Type a mold and the built-in catalog of ~1,200 discs fills in the flight numbers.</p></div>
-    <div class="row">
-      ${phone('07-my-bag', 'My Bag — grouped by category, shelved discs kept')}
-      ${phone('02-courses', 'Courses with multiple layouts (Blue tees, Red tees)')}
-      ${phone('08-play-picker', 'Most-planned layouts first')}
+    <div class="head"><span class="chip neutral">Setup</span><h2>Your bags. Your courses.</h2>
+      <p>Keep a bag for every occasion — main, glow, winter, travel. Type a mold and ~1,200 catalog discs fill in the flight numbers.</p></div>
+    <div class="row tight">
+      ${phone('07-my-bag', 'Several bags; a disc can be in more than one', 600)}
+      ${phone('14-plan-switch-bag', 'Plan offers only the bag you’re carrying', 600)}
+      ${phone('02-courses', 'Courses with multiple layouts', 600)}
+      ${phone('13-edit-layout', 'Any number of holes', 600)}
     </div>
   </section>`,
 
@@ -114,13 +121,13 @@ const SLIDES = [
   // 7 — The loop
   `<section class="gallery">
     <div class="head"><span class="chip review">Revise</span><h2>Flag it on the course. Fix it at home.</h2>
-      <p>One tap on the tee marks a plan that didn't work. It's waiting for you in Plan.</p></div>
+      <p>One tap on the tee flags a plan that didn't work — add a quick note on what to change. It's waiting for you in Plan.</p></div>
     <div class="row">
-      ${phone('11-caddie-flagged', 'On the tee: tap the flag')}
+      ${phone('11-caddie-flagged', 'On the tee: flag it, say what to change')}
       <div class="arrow">→</div>
       ${phone('03-layout-holes', 'At home: "1 to revise"')}
       <div class="arrow">→</div>
-      ${phone('06-plan-flagged', 'Revise, then resolve')}
+      ${phone('06-plan-flagged', 'Your note stays in view while you fix it')}
     </div>
   </section>`,
 
@@ -141,7 +148,17 @@ const SLIDES = [
     </div>
   </section>`,
 
-  // 9 — Close
+  // 9 — What's next (asks testers to rank it)
+  `<section class="text">
+    <div class="kicker">Coming next — which do you want first?</div>
+    <h1>Where ShotCaller goes from here.</h1>
+    <div class="cards two">
+      <div class="card"><h3>Tee photo + aim line</h3><p>Snap the tee pad and draw your line on it. On the tee, the plan shows exactly where to throw.</p></div>
+      <div class="card"><h3>Plan B</h3><p>A backup for when conditions change — “if headwind, FH roller” — one tap away on the caddie card.</p></div>
+    </div>
+  </section>`,
+
+  // 10 — Close
   `<section class="close">
     <img class="icon" src="${ICON}" alt="ShotCaller app icon" style="--s:200px">
     <div class="wordmark">ShotCaller</div>
@@ -150,6 +167,24 @@ const SLIDES = [
     <p class="note">Early prototype — feedback very welcome. Screens show demo data.</p>
   </section>`,
 ];
+
+const DECKS = {
+  pitch: { pdf: 'ShotCaller-deck.pdf', slidesDir: 'slides', slides: PITCH_SLIDES },
+};
+
+// Private decks: slide copy and output both stay in pitch/private/ (gitignored).
+const PRIVATE = join(PITCH, 'private');
+if (existsSync(PRIVATE)) {
+  for (const file of readdirSync(PRIVATE).filter((f) => f.endsWith('.deck.mjs'))) {
+    const name = file.replace(/\.deck\.mjs$/, '');
+    const mod = await import(pathToFileURL(join(PRIVATE, file)).href);
+    DECKS[name] = {
+      pdf: join('private', mod.pdf ?? `${name}.pdf`),
+      slidesDir: join('private', `slides-${name}`),
+      slides: mod.default({ phone, ICON, DEMO_URL }),
+    };
+  }
+}
 
 const css = `
 @font-face{font-family:BC;font-weight:700;src:url(${font('barlow-condensed', '700Bold/BarlowCondensed_700Bold.ttf')})}
@@ -209,16 +244,23 @@ ul{padding-left:28px;margin:0}li{margin:0 0 22px}
 .close{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
 .close .cta{font-size:44px;margin-top:80px;color:#B7BBC6}
 .close .cta b{color:#fff;border-bottom:4px solid ${PLAY};padding-bottom:4px}
+.close .note{max-width:1100px}
+.cards.two{grid-template-columns:repeat(2,1fr);max-width:1300px}
+.row.tight{gap:40px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;margin-top:64px}
+.steps .card{padding:40px}
+.steps .num{font-family:BC;font-weight:800;font-size:64px;line-height:1;color:${PLAN};margin-bottom:20px}
 `;
 
-async function main() {
+async function buildDeck(browser, name) {
+  const deck = DECKS[name];
   const html = `<!doctype html><html><head><meta charset="utf-8"><title>ShotCaller</title>
-    <style>${css}</style></head><body>${SLIDES.join('\n')}</body></html>`;
-  const tmp = join(PITCH, '.deck.html');
+    <style>${css}</style></head><body>${deck.slides.join('\n')}</body></html>`;
+  const tmp = join(PITCH, `.deck-${name}.html`);
   await writeFile(tmp, html);
-  await mkdir(join(PITCH, 'slides'), { recursive: true });
-
-  const browser = await puppeteer.launch({ executablePath: BROWSER, headless: true });
+  const outDir = join(PITCH, deck.slidesDir);
+  await rm(outDir, { recursive: true, force: true }); // drop stale slide PNGs
+  await mkdir(outDir, { recursive: true });
   try {
     const page = await browser.newPage();
     await page.setViewport({ width: 1920, height: 1080, deviceScaleFactor: 1 });
@@ -226,7 +268,7 @@ async function main() {
     await page.evaluateHandle('document.fonts.ready');
 
     await page.pdf({
-      path: join(PITCH, 'ShotCaller-deck.pdf'),
+      path: join(PITCH, deck.pdf),
       width: '1920px',
       height: '1080px',
       printBackground: true,
@@ -234,12 +276,26 @@ async function main() {
 
     const sections = await page.$$('section');
     for (const [i, el] of sections.entries()) {
-      await el.screenshot({ path: join(PITCH, 'slides', `${String(i + 1).padStart(2, '0')}.png`) });
+      await el.screenshot({ path: join(outDir, `${String(i + 1).padStart(2, '0')}.png`) });
     }
-    console.log(`wrote pitch/ShotCaller-deck.pdf and ${sections.length} slide PNGs`);
+    console.log(`wrote pitch/${deck.pdf} and ${sections.length} slide PNGs in pitch/${deck.slidesDir}/`);
+    await page.close();
+  } finally {
+    await rm(tmp, { force: true });
+  }
+}
+
+async function main() {
+  const which = process.argv[2] ?? 'all';
+  const names = which === 'all' ? Object.keys(DECKS) : [which];
+  for (const n of names) {
+    if (!DECKS[n]) throw new Error(`Unknown deck "${n}". Use one of: ${Object.keys(DECKS).join(', ')}, all`);
+  }
+  const browser = await puppeteer.launch({ executablePath: BROWSER, headless: true });
+  try {
+    for (const n of names) await buildDeck(browser, n);
   } finally {
     await browser.close();
-    await rm(tmp, { force: true });
   }
 }
 
