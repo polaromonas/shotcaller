@@ -1,6 +1,7 @@
 import * as SQLite from 'expo-sqlite';
 import { DISC_WEIGHT_CHECK, SCHEMA_SQL } from './schema';
 import { DEFAULT_TAGS } from './types';
+import { ensureBags } from './bags';
 
 // The "v2b" in the name is historical. Do NOT rename it: players already have
 // data in this file, and a new name would silently start them on an empty DB.
@@ -15,6 +16,7 @@ export async function getDb(): Promise<SQLite.SQLiteDatabase> {
       await migrate(db);
       await db.execAsync(SCHEMA_SQL);
       await seedDefaultTags(db);
+      await ensureBags(db);
       return db;
     });
   }
@@ -29,6 +31,9 @@ export async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
   );
   if (settingsCols.length > 0 && !settingsCols.some((c) => c.name === 'bag_color')) {
     await db.execAsync('ALTER TABLE app_settings ADD COLUMN bag_color TEXT');
+  }
+  if (settingsCols.length > 0 && !settingsCols.some((c) => c.name === 'active_bag_id')) {
+    await db.execAsync('ALTER TABLE app_settings ADD COLUMN active_bag_id INTEGER');
   }
 
   const discCols = await db.getAllAsync<{ name: string }>("PRAGMA table_info('disc')");

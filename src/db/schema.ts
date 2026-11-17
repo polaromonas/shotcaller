@@ -42,6 +42,9 @@ CREATE TABLE IF NOT EXISTS disc (
   model TEXT NOT NULL,
   color TEXT NOT NULL,
   category TEXT NOT NULL CHECK (${DISC_CATEGORY_CHECK}),
+  -- LEGACY: the single-bag flag from before multiple bags. Read once by
+  -- ensureBags() to fill the first bag on upgrade; nothing writes it now.
+  -- Bag membership lives in bag_disc.
   in_bag INTEGER NOT NULL DEFAULT 0 CHECK (in_bag IN (0, 1)),
   speed REAL,
   glide REAL,
@@ -125,10 +128,30 @@ CREATE TABLE IF NOT EXISTS shape (
 );
 INSERT OR IGNORE INTO shape (name, is_overhand, is_builtin, sort_order) VALUES ${SHAPE_SEED};
 
+-- Bags: named groups of discs (main bag, glow bag, travel bag…). A disc can be
+-- in any number of bags; a disc in no bag is "shelved". Deleting a bag only
+-- removes the grouping — discs stay. The app always keeps at least one bag.
+CREATE TABLE IF NOT EXISTS bag (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  color TEXT
+);
+
+CREATE TABLE IF NOT EXISTS bag_disc (
+  bag_id  INTEGER NOT NULL REFERENCES bag(id)  ON DELETE CASCADE,
+  disc_id INTEGER NOT NULL REFERENCES disc(id) ON DELETE CASCADE,
+  PRIMARY KEY (bag_id, disc_id)
+);
+CREATE INDEX IF NOT EXISTS idx_bag_disc_disc ON bag_disc(disc_id);
+
+-- bag_color is LEGACY (now bag.color); ensureBags() copies it to the first bag.
+-- active_bag_id is the bag the player is carrying: it filters disc pickers in
+-- Plan and is the bag My Bag shows. Code falls back to the first bag if unset.
 CREATE TABLE IF NOT EXISTS app_settings (
   id INTEGER PRIMARY KEY CHECK (id = 1),
   disc_sort TEXT NOT NULL DEFAULT 'bag-order' CHECK (${DISC_SORT_CHECK}),
-  bag_color TEXT
+  bag_color TEXT,
+  active_bag_id INTEGER
 );
 INSERT OR IGNORE INTO app_settings (id, disc_sort) VALUES (1, 'bag-order');
 `;

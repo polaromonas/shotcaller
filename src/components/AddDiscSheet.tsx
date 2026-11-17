@@ -29,6 +29,8 @@ type Props = {
   disc?: DiscWithTags | null;
   onClose: () => void;
   onSubmit: (input: NewDiscInput) => Promise<void>;
+  /** Name of the active bag — where a new disc goes when "In {bag}" is on. */
+  bagName?: string;
 };
 
 const flightToText = (n: number | null): string =>
@@ -43,7 +45,7 @@ const FLIGHT_FIELDS: { key: FlightField; label: string }[] = [
   { key: 'fade', label: 'Fade' },
 ];
 
-export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
+export function AddDiscSheet({ visible, disc, onClose, onSubmit, bagName = 'My Bag' }: Props) {
   const isEditing = disc != null;
 
   const [manufacturer, setManufacturer] = useState('');
@@ -54,8 +56,9 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
   const [nickname, setNickname] = useState('');
   const [category, setCategory] = useState<DiscCategory | null>(null);
   const [color, setColor] = useState<string | null>(null);
-  // New discs default to in-bag — you're usually adding a disc you'll throw.
-  // Only shown when adding; existing discs toggle in/out from the bag list.
+  // New discs default to going in the active bag — you're usually adding a
+  // disc you'll throw. Only shown when adding; existing discs toggle in/out
+  // from the bag list.
   const [inBag, setInBag] = useState(true);
   const [flight, setFlight] = useState<Record<FlightField, string>>({
     speed: '',
@@ -542,9 +545,11 @@ export function AddDiscSheet({ visible, disc, onClose, onSubmit }: Props) {
           {!isEditing && (
             <View style={styles.inBagRow}>
               <View style={styles.inBagText}>
-                <Text style={styles.inBagLabel}>In my bag</Text>
+                <Text style={styles.inBagLabel} numberOfLines={1}>
+                  In {bagName}
+                </Text>
                 <Text style={styles.inBagCaption}>
-                  Shelved discs don't show in disc pickers
+                  Plan only offers discs in the bag you're carrying
                 </Text>
               </View>
               <Switch

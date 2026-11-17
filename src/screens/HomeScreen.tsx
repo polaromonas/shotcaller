@@ -5,14 +5,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { countDiscs } from '../db/discs';
+import { getActiveBag, type Bag } from '../db/bags';
 import {
   clearPlayState,
   listPlayableLayouts,
   mostRecentlyPlayed,
   type PlayableLayout,
 } from '../db/play';
-import { getBagColor } from '../db/settings';
 import { confirmAction } from '../util/confirm';
 import { FONT, MODE, PLAY_LIGHT, SHELL } from '../theme/colors';
 import type { RootStackParamList } from '../navigation/types';
@@ -22,18 +21,13 @@ type Nav = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 export function HomeScreen() {
   const navigation = useNavigation<Nav>();
   const [resume, setResume] = useState<PlayableLayout | null>(null);
-  const [discCount, setDiscCount] = useState<number | null>(null);
-  const [bagColor, setBagColor] = useState<string | null>(null);
+  // The bag you're carrying (the active bag): name, color dot, disc count.
+  const [bag, setBag] = useState<Bag | null>(null);
 
   const load = useCallback(async () => {
-    const [layouts, count, color] = await Promise.all([
-      listPlayableLayouts(),
-      countDiscs(),
-      getBagColor(),
-    ]);
+    const [layouts, activeBag] = await Promise.all([listPlayableLayouts(), getActiveBag()]);
     setResume(mostRecentlyPlayed(layouts));
-    setDiscCount(count);
-    setBagColor(color);
+    setBag(activeBag);
   }, []);
 
   useFocusEffect(
@@ -74,18 +68,18 @@ export function HomeScreen() {
           onPress={openBag}
           hitSlop={8}
           accessibilityRole="button"
-          accessibilityLabel={
-            discCount === null ? 'My Bag' : `My Bag, ${discCount} discs`
-          }
+          accessibilityLabel={bag ? `${bag.name}, ${bag.disc_count} discs` : 'My Bag'}
         >
           <View
             style={[
               styles.bagDot,
-              bagColor ? { backgroundColor: bagColor, borderColor: bagColor } : null,
+              bag?.color ? { backgroundColor: bag.color, borderColor: bag.color } : null,
             ]}
           />
-          <Text style={styles.bagBtnLabel}>My Bag</Text>
-          {discCount !== null && <Text style={styles.bagBtnCount}>{discCount}</Text>}
+          <Text style={styles.bagBtnLabel} numberOfLines={1}>
+            {bag?.name ?? 'My Bag'}
+          </Text>
+          {bag && <Text style={styles.bagBtnCount}>{bag.disc_count}</Text>}
         </Pressable>
       </View>
 
@@ -200,6 +194,7 @@ const styles = StyleSheet.create({
   // Neutral pill — the bag is not a mode surface, so it never takes a mode
   // color. The user's bag color rides on the dot only.
   bagBtn: {
+    maxWidth: '50%',
     flexDirection: 'row',
     alignItems: 'center',
     gap: 7,
@@ -218,7 +213,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: SHELL.dashed,
   },
-  bagBtnLabel: { fontFamily: FONT.bc700, fontSize: 15, color: SHELL.text },
+  bagBtnLabel: { flexShrink: 1, fontFamily: FONT.bc700, fontSize: 15, color: SHELL.text },
   bagBtnCount: { fontFamily: FONT.b600, fontSize: 13, color: SHELL.textMuted },
   aboutLink: { alignSelf: 'center', paddingVertical: 4 },
   aboutLabel: { fontFamily: FONT.b500, fontSize: 13, color: SHELL.textFaint },

@@ -1,5 +1,6 @@
 import { getDb } from './index';
 import { getDiscSort } from './settings';
+import { getActiveBagId, setDiscInBag } from './bags';
 import { CATEGORY_LABELS, type DiscCategory, type DiscSort } from './types';
 
 export type Disc = {
@@ -8,7 +9,10 @@ export type Disc = {
   model: string;
   color: string;
   category: DiscCategory;
+  /** In the ACTIVE bag (the one you're carrying). Not the legacy column. */
   in_bag: boolean;
+  /** Every bag this disc is in. Empty = shelved. */
+  bag_ids: number[];
   speed: number | null;
   glide: number | null;
   turn: number | null;
@@ -20,12 +24,16 @@ export type Disc = {
 
 export type DiscWithTags = Disc & { tags: { id: number; name: string }[] };
 
-type DiscRow = Omit<Disc, 'in_bag'> & { in_bag: number };
+// `in_active` is computed per query; the table's own in_bag column is legacy
+// and dropped here so it can't be mistaken for membership.
+type DiscRow = Omit<Disc, 'in_bag' | 'bag_ids'> & { in_bag: number; in_active: number };
 
-const toDisc = (row: DiscRow): Disc => ({
-  ...row,
-  in_bag: row.in_bag === 1,
-});
+const toDisc = (row: DiscRow, bagIds: number[]): Disc => {
+  const { in_active, in_bag: _legacy, ...rest } = row;
+  return { ...rest, in_bag: in_active === 1, bag_ids: bagIds };
+};
+
+export const isShelved = (d: Pick<Disc, 'bag_ids'>): boolean => d.bag_ids.length === 0;
 
 // Single source of truth for "what to display as a disc's primary name."
 // Falls back to model when no nickname is set. Use this everywhere a disc is
@@ -89,6 +97,7 @@ export type NewDiscInput = {
   model: string;
   color: string;
   category: DiscCategory;
+  /** Put the new disc in the active bag. */
   in_bag?: boolean;
   speed?: number | null;
   glide?: number | null;
@@ -101,23 +110,23 @@ export type NewDiscInput = {
 };
 
 function orderBySql(sort: DiscSort): string {
-  // In-bag always sorts first regardless of mode — players want bagged discs
-  // up top during a round. Display name (nickname OR model) drives every
+  // Discs in the active bag always sort first regardless of mode — players
+  // want bagged discs up top. Display name (nickname OR model) drives every
   // alphabetical tiebreak so the visible order matches the visible label.
   const nameExpr = "COALESCE(NULLIF(nickname, ''), model) COLLATE NOCASE ASC";
   switch (sort) {
     case 'alphabetical':
-      return `in_bag DESC, ${nameExpr}`;
+      return `in_active DESC, ${nameExpr}`;
     case 'speed-fast':
       // `speed IS NULL` puts unset speeds at the end whether ASC or DESC.
-      return `in_bag DESC, speed IS NULL, speed DESC, ${nameExpr}`;
+      return `in_active DESC, speed IS NULL, speed DESC, ${nameExpr}`;
     case 'speed-slow':
-      return `in_bag DESC, speed IS NULL, speed ASC, ${nameExpr}`;
+      return `in_active DESC, speed IS NULL, speed ASC, ${nameExpr}`;
     case 'bag-order':
     default:
       // Mirrors a physical bag: drivers, fairways, mids, putters; within each,
       // fastest first; ties break by display name.
-      return `in_bag DESC,
+      return `in_active DESC,
         CASE category
           WHEN 'DD' THEN 1
           WHEN 'FWD' THEN 2
@@ -128,24 +137,29 @@ function orderBySql(sort: DiscSort): string {
   }
 }
 
-export async function countDiscs(): Promise<number> {
-  const db = await getDb();
-  const row = await db.getFirstAsync<{ count: number }>(
-    'SELECT COUNT(*) AS count FROM disc'
-  );
-  return row?.count ?? 0;
-}
-
 export async function listDiscs(): Promise<DiscWithTags[]> {
   const db = await getDb();
-  const sort = await getDiscSort();
-  const discs = (
-    await db.getAllAsync<DiscRow>(
-      `SELECT * FROM disc ORDER BY ${orderBySql(sort)}`
-    )
-  ).map(toDisc);
+  const [sort, activeBag] = await Promise.all([getDiscSort(), getActiveBagId()]);
+  const rows = await db.getAllAsync<DiscRow>(
+    `SELECT d.*,
+            EXISTS (SELECT 1 FROM bag_disc bd
+                     WHERE bd.disc_id = d.id AND bd.bag_id = $bag) AS in_active
+       FROM disc d
+      ORDER BY ${orderBySql(sort)}`,
+    { $bag: activeBag }
+  );
+  if (rows.length === 0) return [];
 
-  if (discs.length === 0) return [];
+  const memberships = await db.getAllAsync<{ disc_id: number; bag_id: number }>(
+    'SELECT disc_id, bag_id FROM bag_disc ORDER BY bag_id'
+  );
+  const bagsByDisc = new Map<number, number[]>();
+  for (const m of memberships) {
+    const list = bagsByDisc.get(m.disc_id) ?? [];
+    list.push(m.bag_id);
+    bagsByDisc.set(m.disc_id, list);
+  }
+  const discs = rows.map((r) => toDisc(r, bagsByDisc.get(r.id) ?? []));
 
   const joins = await db.getAllAsync<{
     disc_id: number;
@@ -171,14 +185,13 @@ export async function listDiscs(): Promise<DiscWithTags[]> {
 export async function createDisc(input: NewDiscInput): Promise<number> {
   const db = await getDb();
   const result = await db.runAsync(
-    `INSERT INTO disc (manufacturer, model, color, category, in_bag, speed, glide, turn, fade, plastic, nickname, weight_g)
-     VALUES ($manufacturer, $model, $color, $category, $in_bag, $speed, $glide, $turn, $fade, $plastic, $nickname, $weight_g)`,
+    `INSERT INTO disc (manufacturer, model, color, category, speed, glide, turn, fade, plastic, nickname, weight_g)
+     VALUES ($manufacturer, $model, $color, $category, $speed, $glide, $turn, $fade, $plastic, $nickname, $weight_g)`,
     {
       $manufacturer: input.manufacturer.trim(),
       $model: input.model.trim(),
       $color: input.color,
       $category: input.category,
-      $in_bag: input.in_bag ? 1 : 0,
       $speed: input.speed ?? null,
       $glide: input.glide ?? null,
       $turn: input.turn ?? null,
@@ -190,6 +203,7 @@ export async function createDisc(input: NewDiscInput): Promise<number> {
   );
 
   const discId = result.lastInsertRowId;
+  if (input.in_bag) await setDiscInBag(await getActiveBagId(), discId, true);
   if (input.tagIds && input.tagIds.length > 0) {
     await setDiscTags(discId, input.tagIds);
   }
@@ -254,12 +268,9 @@ export async function updateDisc(
   await setDiscTags(discId, input.tagIds ?? []);
 }
 
+// Add to / remove from the ACTIVE bag. Other bags are untouched.
 export async function setInBag(discId: number, inBag: boolean): Promise<void> {
-  const db = await getDb();
-  await db.runAsync('UPDATE disc SET in_bag = $in_bag WHERE id = $id', {
-    $in_bag: inBag ? 1 : 0,
-    $id: discId,
-  });
+  await setDiscInBag(await getActiveBagId(), discId, inBag);
 }
 
 export async function deleteDisc(discId: number): Promise<void> {

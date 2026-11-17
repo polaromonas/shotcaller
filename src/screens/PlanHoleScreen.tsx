@@ -33,6 +33,7 @@ import {
 } from '../db/discs';
 import { getHolePlan, saveHolePlan, setHolePlanReview } from '../db/plans';
 import { listShapes, createShape, deleteShape, type Shape } from '../db/shapes';
+import { getActiveBagId, listBags, setActiveBag, type Bag } from '../db/bags';
 import { DiscPickerSheet } from '../components/DiscPickerSheet';
 import { AddDiscSheet } from '../components/AddDiscSheet';
 import { confirmAction } from '../util/confirm';
@@ -85,6 +86,9 @@ export function PlanHoleScreen() {
   const [throwType, setThrowType] = useState<ThrowType | null>(null);
   const [shotShape, setShotShape] = useState<string | null>(null);
   const [shapes, setShapes] = useState<Shape[]>([]);
+  const [bags, setBags] = useState<Bag[]>([]);
+  const [activeBagId, setActiveBagId] = useState<number | null>(null);
+  const [bagMenuOpen, setBagMenuOpen] = useState(false);
   const [aim, setAim] = useState('');
   const [needsReview, setNeedsReview] = useState(false);
   const [reviewNote, setReviewNote] = useState<string | null>(null);
@@ -103,17 +107,21 @@ export function PlanHoleScreen() {
   useEffect(() => {
     let alive = true;
     (async () => {
-      const [l, hs, ds, plan, sh] = await Promise.all([
+      const [l, hs, ds, plan, sh, bs, activeId] = await Promise.all([
         getLayout(layoutId),
         listHoles(layoutId),
         listDiscs(),
         getHolePlan(holeId),
         listShapes(),
+        listBags(),
+        getActiveBagId(),
       ]);
       if (!alive) return;
       setLayout(l);
       setHoles([...hs].sort((a, b) => a.hole_number - b.hole_number));
       setDiscs(ds);
+      setBags(bs);
+      setActiveBagId(activeId);
       setShapes(sh);
       const hole = hs.find((h) => h.id === holeId);
       setPar(hole?.par ?? 3);
@@ -142,7 +150,21 @@ export function PlanHoleScreen() {
   }, [layoutId, holeId]);
 
   const hole = useMemo(() => holes.find((h) => h.id === holeId) ?? null, [holes, holeId]);
+  // in_bag = in the ACTIVE bag. Switching bags here changes the active bag
+  // app-wide (it's the bag you're carrying), not just for this hole.
   const bagDiscs = useMemo(() => discs.filter((d) => d.in_bag), [discs]);
+  const activeBag = useMemo(
+    () => bags.find((b) => b.id === activeBagId) ?? null,
+    [bags, activeBagId]
+  );
+  const switchBag = useCallback(async (bagId: number) => {
+    setBagMenuOpen(false);
+    await setActiveBag(bagId);
+    const [ds, bs] = await Promise.all([listDiscs(), listBags()]);
+    setDiscs(ds);
+    setBags(bs);
+    setActiveBagId(bagId);
+  }, []);
   const selectedDisc = useMemo(
     () => discs.find((d) => d.id === discId) ?? null,
     [discs, discId]
@@ -381,7 +403,23 @@ export function PlanHoleScreen() {
             </View>
           </View>
 
-          <Section label="Disc — from your bag">
+          <Section
+            label={`Disc — from ${activeBag?.name ?? 'your bag'}`}
+            accessory={
+              bags.length > 1 ? (
+                <Pressable
+                  onPress={() => setBagMenuOpen(true)}
+                  hitSlop={10}
+                  style={styles.switchBag}
+                  accessibilityRole="button"
+                  accessibilityLabel="Switch bag"
+                >
+                  <Text style={styles.switchBagLabel}>Switch bag</Text>
+                  <Ionicons name="chevron-down" size={14} color={SHELL.textSecondary} />
+                </Pressable>
+              ) : null
+            }
+          >
             <View style={styles.chipWrap}>
               {quickChips.map((d) => {
                 const on = d.id === discId;
@@ -542,6 +580,7 @@ export function PlanHoleScreen() {
           setPickerOpen(false);
         }}
         onClose={() => setPickerOpen(false)}
+        bagName={activeBag?.name}
         onAddDisc={() => {
           setPickerOpen(false);
           setAddDiscOpen(true);
@@ -552,7 +591,47 @@ export function PlanHoleScreen() {
         visible={addDiscOpen}
         onClose={() => setAddDiscOpen(false)}
         onSubmit={handleAddDisc}
+        bagName={activeBag?.name}
       />
+
+      <Modal
+        visible={bagMenuOpen}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setBagMenuOpen(false)}
+      >
+        <Pressable style={styles.modalWrap} onPress={() => setBagMenuOpen(false)}>
+          <Pressable style={styles.modalCard} onPress={() => undefined}>
+            <Text style={styles.modalTitle}>Which bag are you carrying?</Text>
+            {bags.map((b) => {
+              const on = b.id === activeBagId;
+              return (
+                <Pressable
+                  key={b.id}
+                  onPress={() => void switchBag(b.id)}
+                  style={({ pressed }) => [styles.bagOption, pressed && styles.bagOptionPressed]}
+                  accessibilityRole="radio"
+                  accessibilityState={{ selected: on }}
+                >
+                  <View
+                    style={[
+                      styles.bagOptionDot,
+                      b.color ? { backgroundColor: b.color, borderColor: b.color } : null,
+                    ]}
+                  />
+                  <Text style={styles.bagOptionName} numberOfLines={1}>
+                    {b.name}
+                  </Text>
+                  <Text style={styles.bagOptionCount}>{b.disc_count}</Text>
+                  <View style={styles.bagOptionCheck}>
+                    {on && <Ionicons name="checkmark" size={20} color={SHELL.text} />}
+                  </View>
+                </Pressable>
+              );
+            })}
+          </Pressable>
+        </Pressable>
+      </Modal>
 
       <Modal
         visible={addShapeOpen}
@@ -626,10 +705,23 @@ function HoleArrow({
   );
 }
 
-function Section({ label, children }: { label: string; children: React.ReactNode }) {
+function Section({
+  label,
+  accessory,
+  children,
+}: {
+  label: string;
+  accessory?: React.ReactNode;
+  children: React.ReactNode;
+}) {
   return (
     <View style={styles.section}>
-      <Text style={styles.sectionLabel}>{label}</Text>
+      <View style={styles.sectionHead}>
+        <Text style={styles.sectionLabel} numberOfLines={1}>
+          {label}
+        </Text>
+        {accessory}
+      </View>
       {children}
     </View>
   );
@@ -719,7 +811,35 @@ const styles = StyleSheet.create({
   },
   distSuffix: { fontFamily: FONT.b500, fontSize: 14, color: SHELL.textMuted },
   section: { gap: 10 },
+  sectionHead: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  switchBag: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingVertical: 2 },
+  switchBagLabel: { fontFamily: FONT.b600, fontSize: 13, color: SHELL.textSecondary },
+  bagOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    minHeight: 48,
+    paddingHorizontal: 8,
+    borderRadius: 10,
+  },
+  bagOptionPressed: { backgroundColor: SHELL.bg },
+  bagOptionDot: {
+    width: 14,
+    height: 14,
+    borderRadius: 7,
+    borderWidth: 1.5,
+    borderColor: SHELL.textMuted,
+  },
+  bagOptionName: { flex: 1, fontFamily: FONT.b600, fontSize: 16, color: SHELL.text },
+  bagOptionCount: { fontFamily: FONT.b600, fontSize: 14, color: SHELL.textMuted },
+  bagOptionCheck: { width: 22, alignItems: 'center' },
   sectionLabel: {
+    flexShrink: 1,
     fontFamily: FONT.bc700,
     fontSize: 12,
     color: SHELL.textMuted,

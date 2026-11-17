@@ -22,6 +22,8 @@ type Props = {
   onPick: (discId: number) => void;
   onClose: () => void;
   onAddDisc?: () => void;
+  /** The active bag's name — the picker only offers its discs. */
+  bagName?: string;
 };
 
 type Filter = 'All' | DiscCategory;
@@ -39,10 +41,11 @@ export function DiscPickerSheet({
   onPick,
   onClose,
   onAddDisc,
+  bagName = 'your bag',
 }: Props) {
   const [filter, setFilter] = useState<Filter>('All');
 
-  // Shelved discs aren't offered in the picker — only what's in the bag.
+  // Only discs in the active bag are offered (in_bag = in the active bag).
   const inBag = useMemo(() => discs.filter((d) => d.in_bag), [discs]);
 
   const groups = useMemo(() => {
@@ -100,8 +103,8 @@ export function DiscPickerSheet({
         <ScrollView style={styles.listScroll} contentContainerStyle={styles.list}>
           {groups.length === 0 ? (
             <Text style={styles.empty}>
-              No discs in your bag{filter === 'All' ? '' : ` in ${filter}`}. Add
-              discs and mark them in-bag from My Bag.
+              No discs in {bagName}{filter === 'All' ? '' : ` in ${filter}`}. Add
+              discs to it from My Bag.
             </Text>
           ) : (
             groups.map((g) => (
@@ -139,7 +142,7 @@ export function DiscPickerSheet({
         </ScrollView>
 
         <Text style={styles.footer}>
-          {inBag.length} in bag · shelved discs live in My Bag
+          {inBag.length} {inBag.length === 1 ? 'disc' : 'discs'} in {bagName}
         </Text>
       </View>
     </Modal>

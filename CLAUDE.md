@@ -47,7 +47,7 @@ of the bare design where they conflict:
    "FH FLEX" (matches the phrasing documented under Architecture notes).
 5. **My Bag is a header pill on Home, not a bottom tile.** The design's bottom
    "My Bag · {n} discs" card is gone; the bag lives top-right as a neutral pill
-   (bag-color dot + "My Bag" + disc count). The two mode tiles take the reclaimed
+   (active bag's color dot + its name + disc count). The two mode tiles take the reclaimed
    height. "About ShotCaller" stays the small centered link at the bottom (the
    design put About top-right; the bag took that slot).
 6. **Play teal is `#0C8080`, not the design's `#0E8C8C`.** Darkened slightly so
@@ -79,8 +79,13 @@ Locked design decisions (these override anything vaguer elsewhere):
   set** — the same mold is bagged in different plastics. Never show the model twice.
 - **Courses are NOT deletable** — only layouts and discs are. (Deleting a layout
   cascades its hole plans; the confirm button restates the cost.)
-- **Discs shelve, not just delete:** `in_bag = false` = shelved (hidden from disc
-  pickers). The delete-disc sheet offers "shelve instead" as the safe first option.
+- **Multiple bags; discs shelve, not just delete.** Bags are `bag` + `bag_disc`
+  (many-to-many — a disc can be in several bags). The **active bag**
+  (`app_settings.active_bag_id`) is what Plan's disc pickers offer and what My Bag
+  shows. A disc in no bag is **shelved**. In TS, `Disc.in_bag` means "in the active
+  bag" (computed) and `bag_ids` lists every bag; the `disc.in_bag` *column* is legacy —
+  don't read or write it. Deleting a bag never deletes discs; at least one bag always
+  exists. The delete-disc sheet offers "shelve instead" (out of every bag) first.
 - **Plan B** (conditional alternative) is designed on the Play caddie card (collapsed
   strip → dark expanded card) but is a **fast-follow**; MVP may omit the strip.
   Build the caddie card so the strip can slot in later without relayout.

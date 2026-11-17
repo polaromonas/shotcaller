@@ -10,30 +10,44 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { SwipeableMethods } from 'react-native-gesture-handler/ReanimatedSwipeable';
 import { AddDiscSheet } from '../components/AddDiscSheet';
 import { DeleteDiscSheet } from '../components/DeleteDiscSheet';
+import { BagSheet } from '../components/BagSheet';
 import { DiscCard } from '../components/DiscCard';
 import { countPlansUsingDisc } from '../db/plans';
 import {
   createDisc,
   deleteDisc,
+  isShelved,
   listDiscs,
   setInBag,
   updateDisc,
   type DiscWithTags,
   type NewDiscInput,
 } from '../db/discs';
-import { getDiscSort, setDiscSort, getBagColor, setBagColor } from '../db/settings';
+import { getDiscSort, setDiscSort } from '../db/settings';
+import {
+  createBag,
+  deleteBag,
+  getActiveBagId,
+  listBags,
+  setActiveBag,
+  shelveDisc,
+  updateBag,
+  type Bag,
+} from '../db/bags';
+import { confirmAction } from '../util/confirm';
 import {
   CATEGORY_GROUP_LABELS,
   DEFAULT_DISC_SORT,
   DISC_CATEGORIES,
   type DiscSort,
 } from '../db/types';
-import { DISC_SWATCHES, FONT, SHELL, UI } from '../theme/colors';
+import { FONT, SHELL, UI } from '../theme/colors';
 import type { RootStackParamList } from '../navigation/types';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'MyDiscs'>;
@@ -66,9 +80,9 @@ const labelFor = (s: DiscSort): string =>
 
 type DiscSection = { key: string; title: string; data: DiscWithTags[] };
 
-// Grouped by category in bag order (drivers → fairways → mids → putters), with
-// shelved discs in their own section at the bottom. The active sort still
-// applies — it just orders discs *within* each group now.
+// The active bag's discs grouped by category in bag order (drivers → fairways
+// → mids → putters), then discs that are only in other bags, then shelved
+// discs (in no bag). The active sort orders discs *within* each group.
 function buildSections(rows: DiscWithTags[]): DiscSection[] {
   const sections: DiscSection[] = [];
   for (const cat of DISC_CATEGORIES) {
@@ -77,7 +91,11 @@ function buildSections(rows: DiscWithTags[]): DiscSection[] {
       sections.push({ key: cat, title: CATEGORY_GROUP_LABELS[cat], data });
     }
   }
-  const shelved = rows.filter((d) => !d.in_bag);
+  const elsewhere = rows.filter((d) => !d.in_bag && !isShelved(d));
+  if (elsewhere.length > 0) {
+    sections.push({ key: 'elsewhere', title: 'In other bags', data: elsewhere });
+  }
+  const shelved = rows.filter((d) => isShelved(d));
   if (shelved.length > 0) {
     sections.push({ key: 'shelved', title: 'Shelved', data: shelved });
   }
@@ -88,36 +106,88 @@ export function MyDiscsScreen() {
   const navigation = useNavigation<Nav>();
   const [discs, setDiscs] = useState<DiscWithTags[] | null>(null);
   const [sortValue, setSortValue] = useState<DiscSort>(DEFAULT_DISC_SORT);
-  const [bagColor, setBagColorState] = useState<string | null>(null);
+  const [bags, setBags] = useState<Bag[]>([]);
+  const [activeBagId, setActiveBagId] = useState<number | null>(null);
+  // undefined = closed; null = creating; a Bag = editing it.
+  const [bagSheet, setBagSheet] = useState<Bag | null | undefined>(undefined);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [editingDisc, setEditingDisc] = useState<DiscWithTags | null>(null);
   const [sortPickerOpen, setSortPickerOpen] = useState(false);
   const openRow = useRef<SwipeableMethods | null>(null);
 
   const refresh = useCallback(async () => {
-    const [rows, sort, color] = await Promise.all([
+    const [rows, sort, allBags, activeId] = await Promise.all([
       listDiscs(),
       getDiscSort(),
-      getBagColor(),
+      listBags(),
+      getActiveBagId(),
     ]);
     setDiscs(rows);
     setSortValue(sort);
-    setBagColorState(color);
+    setBags(allBags);
+    setActiveBagId(activeId);
   }, []);
+
+  const activeBag = useMemo(
+    () => bags.find((b) => b.id === activeBagId) ?? null,
+    [bags, activeBagId]
+  );
+  const bagColor = activeBag?.color ?? null;
 
   const sections = useMemo(() => buildSections(discs ?? []), [discs]);
   const caption = useMemo(() => {
     if (discs === null) return '';
     const inBag = discs.filter((d) => d.in_bag).length;
-    const shelved = discs.length - inBag;
-    const bag = `${inBag} in bag`;
+    const shelved = discs.filter((d) => isShelved(d)).length;
+    const bag = `${inBag} ${inBag === 1 ? 'disc' : 'discs'}`;
     return shelved > 0 ? `${bag} · ${shelved} shelved` : bag;
   }, [discs]);
 
-  const pickBagColor = useCallback(async (color: string | null) => {
-    setBagColorState(color);
-    await setBagColor(color);
-  }, []);
+  const switchBag = useCallback(
+    async (bagId: number) => {
+      if (bagId === activeBagId) return;
+      openRow.current?.close();
+      openRow.current = null;
+      await setActiveBag(bagId);
+      await refresh();
+    },
+    [activeBagId, refresh]
+  );
+
+  const saveBag = useCallback(
+    async (input: { name: string; color: string | null }) => {
+      const editing = bagSheet;
+      setBagSheet(undefined);
+      if (editing) {
+        await updateBag(editing.id, input);
+      } else {
+        // A new bag becomes the one you're looking at, ready to fill.
+        await setActiveBag(await createBag(input));
+      }
+      await refresh();
+    },
+    [bagSheet, refresh]
+  );
+
+  const confirmDeleteBag = useCallback(() => {
+    const bag = bagSheet;
+    if (!bag) return;
+    setBagSheet(undefined);
+    const discs = bag.disc_count === 1 ? '1 disc' : `${bag.disc_count} discs`;
+    confirmAction({
+      title: `Delete ${bag.name}?`,
+      message:
+        bag.disc_count > 0
+          ? `Its ${discs} stay in your collection and in any other bags. Only the bag is removed.`
+          : 'This bag is empty. Only the bag is removed.',
+      confirmLabel: 'Delete bag',
+      destructive: true,
+      onConfirm: async () => {
+        await deleteBag(bag.id);
+        await refresh();
+      },
+    });
+  }, [bagSheet, refresh]);
 
   useEffect(() => {
     void refresh();
@@ -193,7 +263,7 @@ export function MyDiscsScreen() {
       if (!pendingDelete) return;
       const { disc } = pendingDelete;
       setPendingDelete(null);
-      if (action === 'shelve') await setInBag(disc.id, false);
+      if (action === 'shelve') await shelveDisc(disc.id);
       else await deleteDisc(disc.id);
       openRow.current?.close();
       openRow.current = null;
@@ -209,12 +279,22 @@ export function MyDiscsScreen() {
           <Pressable onPress={() => navigation.goBack()} hitSlop={12}>
             <Text style={styles.back}>‹</Text>
           </Pressable>
-          <View>
-            <Text style={styles.title}>My Bag</Text>
+          <Pressable
+            onPress={() => activeBag && setBagSheet(activeBag)}
+            style={styles.titleBtn}
+            accessibilityRole="button"
+            accessibilityLabel={`Edit bag ${activeBag?.name ?? ''}`}
+          >
+            <View style={styles.titleRow}>
+              <Text style={styles.title} numberOfLines={1}>
+                {activeBag?.name ?? 'My Bag'}
+              </Text>
+              <Ionicons name="pencil" size={16} color={SHELL.textMuted} />
+            </View>
             {caption.length > 0 && (
               <Text style={styles.caption}>{caption}</Text>
             )}
-          </View>
+          </Pressable>
         </View>
         <Pressable
           onPress={openAddSheet}
@@ -226,34 +306,46 @@ export function MyDiscsScreen() {
         </Pressable>
       </View>
 
-      <View style={styles.bagColorRow}>
-        <Text style={styles.bagColorLabel}>Bag color</Text>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.swatchStrip}
-        >
-          <Pressable
-            onPress={() => void pickBagColor(null)}
-            style={[styles.swatchNone, bagColor === null && styles.swatchSel]}
-            accessibilityLabel="Default bag color"
-          >
-            <Text style={styles.swatchNoneLabel}>None</Text>
-          </Pressable>
-          {DISC_SWATCHES.map((hex) => (
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.bagRow}
+        contentContainerStyle={styles.bagStrip}
+      >
+        {bags.map((b) => {
+          const on = b.id === activeBagId;
+          return (
             <Pressable
-              key={hex}
-              onPress={() => void pickBagColor(hex)}
-              style={[
-                styles.swatch,
-                { backgroundColor: hex },
-                bagColor === hex && styles.swatchSel,
-              ]}
-              accessibilityLabel={`Bag color ${hex}`}
-            />
-          ))}
-        </ScrollView>
-      </View>
+              key={b.id}
+              onPress={() => void switchBag(b.id)}
+              style={[styles.bagChip, on && styles.bagChipOn]}
+              accessibilityRole="tab"
+              accessibilityState={{ selected: on }}
+              accessibilityLabel={`${b.name}, ${b.disc_count} discs`}
+            >
+              <View
+                style={[
+                  styles.bagDot,
+                  b.color ? { backgroundColor: b.color, borderColor: b.color } : null,
+                ]}
+              />
+              <Text style={[styles.bagChipLabel, on && styles.bagChipLabelOn]} numberOfLines={1}>
+                {b.name}
+              </Text>
+              <Text style={[styles.bagChipCount, on && styles.bagChipCountOn]}>
+                {b.disc_count}
+              </Text>
+            </Pressable>
+          );
+        })}
+        <Pressable
+          onPress={() => setBagSheet(null)}
+          style={styles.newBagChip}
+          accessibilityRole="button"
+        >
+          <Text style={styles.newBagLabel}>+ New bag</Text>
+        </Pressable>
+      </ScrollView>
 
       {discs !== null && discs.length > 0 && (
         <View style={styles.sortBar}>
@@ -303,6 +395,7 @@ export function MyDiscsScreen() {
         disc={editingDisc}
         onClose={closeSheet}
         onSubmit={handleSubmit}
+        bagName={activeBag?.name}
       />
 
       <DeleteDiscSheet
@@ -311,6 +404,15 @@ export function MyDiscsScreen() {
         onShelve={() => void finishDelete('shelve')}
         onDelete={() => void finishDelete('delete')}
         onClose={() => setPendingDelete(null)}
+      />
+
+      <BagSheet
+        visible={bagSheet !== undefined}
+        bag={bagSheet ?? null}
+        canDelete={bags.length > 1}
+        onSave={(input) => void saveBag(input)}
+        onDelete={confirmDeleteBag}
+        onClose={() => setBagSheet(undefined)}
       />
 
       <SortPicker
@@ -374,7 +476,7 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
     <View style={styles.center}>
       <Text style={styles.emptyTitle}>No discs yet</Text>
       <Text style={styles.emptyBody}>
-        Add the discs you throw. Mark favorites as in-bag for tournaments.
+        Add the discs you own, then put them in bags — a disc can be in more than one.
       </Text>
       <Pressable style={styles.emptyBtn} onPress={onAdd}>
         <Text style={styles.emptyBtnLabel}>Add your first disc</Text>
@@ -394,9 +496,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: UI.border,
   },
-  headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  headerLeft: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 10, marginRight: 12 },
+  titleBtn: { flexShrink: 1, paddingVertical: 4 },
+  titleRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   back: { fontSize: 28, color: UI.textMuted, lineHeight: 30 },
-  title: { fontFamily: FONT.bc800, fontSize: 28, color: SHELL.text },
+  title: { flexShrink: 1, fontFamily: FONT.bc800, fontSize: 28, color: SHELL.text },
   caption: { fontFamily: FONT.b500, fontSize: 13, color: SHELL.textMuted, marginTop: -2 },
   listContent: { paddingTop: 4, paddingBottom: 24 },
   sectionLabel: {
@@ -416,36 +520,47 @@ const styles = StyleSheet.create({
     borderColor: UI.border,
   },
   addBtnLabel: { fontFamily: FONT.b600, fontSize: 14, color: SHELL.text },
-  bagColorRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
+  bagRow: {
+    flexGrow: 0,
+    flexShrink: 0,
     borderBottomWidth: 1,
     borderBottomColor: UI.border,
   },
-  bagColorLabel: { fontFamily: FONT.bc700, fontSize: 13, color: SHELL.textMuted },
-  swatchStrip: { gap: 8, alignItems: 'center', paddingRight: 8 },
-  swatch: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.15)',
-  },
-  swatchNone: {
-    height: 28,
-    paddingHorizontal: 12,
-    borderRadius: 14,
+  bagStrip: { gap: 8, alignItems: 'center', paddingHorizontal: 16, paddingVertical: 10 },
+  bagChip: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    gap: 8,
+    maxWidth: 220,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 999,
+    backgroundColor: UI.surface,
     borderWidth: 1,
     borderColor: UI.border,
-    backgroundColor: UI.surface,
   },
-  swatchNoneLabel: { fontFamily: FONT.b600, fontSize: 12, color: SHELL.textMuted },
-  swatchSel: { borderWidth: 3, borderColor: UI.text },
+  // Neutral surface: white selection, never a mode color.
+  bagChipOn: { backgroundColor: SHELL.text, borderColor: SHELL.text },
+  bagDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    borderWidth: 1.5,
+    borderColor: SHELL.textMuted,
+  },
+  bagChipLabel: { flexShrink: 1, fontFamily: FONT.b600, fontSize: 14, color: SHELL.text },
+  bagChipLabelOn: { color: SHELL.bg },
+  bagChipCount: { fontFamily: FONT.b600, fontSize: 13, color: SHELL.textMuted },
+  bagChipCountOn: { color: SHELL.bg, opacity: 0.6 },
+  newBagChip: {
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderStyle: 'dashed',
+    borderColor: SHELL.dashed,
+  },
+  newBagLabel: { fontFamily: FONT.b600, fontSize: 14, color: SHELL.textSecondary },
   sortBar: {
     flexDirection: 'row',
     alignItems: 'center',

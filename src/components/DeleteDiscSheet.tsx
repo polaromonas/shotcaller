@@ -1,5 +1,5 @@
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
-import { discDisplayName, type DiscWithTags } from '../db/discs';
+import { discDisplayName, isShelved, type DiscWithTags } from '../db/discs';
 import { FONT, SHELL, UI } from '../theme/colors';
 
 type Props = {
@@ -13,8 +13,9 @@ type Props = {
 };
 
 // Confirm-delete for a disc (design 8b). Shelving is the safe way out and is
-// listed first: it hides the disc from pickers but leaves every plan intact.
-// Already-shelved discs only get Delete / Cancel.
+// listed first: it takes the disc out of every bag (so pickers stop offering
+// it) but leaves it in the collection and every plan intact. Already-shelved
+// discs (in no bag) only get Delete / Cancel.
 export function DeleteDiscSheet({ disc, planCount, onShelve, onDelete, onClose }: Props) {
   const plans = planCount === 1 ? '1 hole plan' : `${planCount} hole plans`;
   return (
@@ -42,10 +43,12 @@ export function DeleteDiscSheet({ disc, planCount, onShelve, onDelete, onClose }
             )}
           </Text>
 
-          {disc.in_bag && (
+          {!isShelved(disc) && (
             <Pressable style={[styles.btn, styles.shelveBtn]} onPress={onShelve}>
               <Text style={styles.shelveLabel}>
-                {planCount > 0 ? 'Shelve instead — keep plans intact' : 'Shelve instead'}
+                {planCount > 0
+                  ? 'Shelve instead — out of every bag, plans intact'
+                  : 'Shelve instead — take it out of every bag'}
               </Text>
             </Pressable>
           )}

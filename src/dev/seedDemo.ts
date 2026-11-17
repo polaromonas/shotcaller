@@ -10,7 +10,7 @@ import { createDisc, type NewDiscInput } from '../db/discs';
 import { getDb, resetDb } from '../db';
 import { saveHolePlan, setHolePlanReview } from '../db/plans';
 import { setPlayHoleNumber } from '../db/play';
-import { setBagColor } from '../db/settings';
+import { createBag, getActiveBagId, setDiscInBag, updateBag } from '../db/bags';
 import type { ThrowType } from '../db/types';
 
 type DiscKey =
@@ -106,7 +106,12 @@ export async function seedDemo(): Promise<void> {
     discIds[key] = await createDisc({ ...disc, in_bag: true });
   }
   for (const disc of SHELVED) await createDisc({ ...disc, in_bag: false });
-  await setBagColor('#2a9d8f');
+  await updateBag(await getActiveBagId(), { name: 'My Bag', color: '#2a9d8f' });
+  // A second, smaller bag — the same discs can be in both.
+  const travel = await createBag({ name: 'Travel bag', color: '#E87A2C' });
+  for (const key of ['wraith', 'firebird', 'buzzz', 'mako', 'judge'] as DiscKey[]) {
+    await setDiscInBag(travel, discIds[key], true);
+  }
 
   const cedar = await createCourse({ name: 'Cedar Ridge', location: 'Hillsborough, NC' });
   const blue = await seedLayout(cedar, 'Blue tees', CEDAR_BLUE, discIds);

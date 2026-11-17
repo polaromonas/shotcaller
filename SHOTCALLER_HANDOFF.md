@@ -87,7 +87,7 @@ draft proposed dropping `manufacturer`/`plastic`; that is reversed — see the n
 | nickname | string (nullable) | When set, used as the disc's **primary display name** everywhere |
 | color | string | Hex from the curated plastic-**color** swatch set — the disc's colored dot everywhere. Independent of `plastic` (a Star Firebird can be any color). |
 | category | enum | `DD` \| `FWD` \| `MID` \| `P&A` |
-| in_bag | boolean | Default false. True = in the bag; **false = shelved** (hidden from disc pickers) |
+| in_bag | boolean | **Legacy** (single-bag era). Read once on upgrade to fill the first bag; nothing writes it now. Bag membership lives in `BAG_DISC`. |
 | speed / glide / turn / fade | float (nullable) | Optional flight numbers |
 | weight_g | integer (nullable) | Disc weight in whole grams, 1–250 (CHECK). Optional; entered under Plastic in Add/Edit Disc with a number pad. Shown in My Bag as "175g", right-aligned on the name line above the flight numbers. |
 
@@ -151,7 +151,19 @@ Play mode reopens exactly where the player left off after they bounce back from
 UDisc; the most recent row drives Home's "Resume round" card. Finishing a round
 (DONE on the last hole) or ending it deletes the row.
 
-**APP_SETTINGS** (single row, `id = 1`) — `disc_sort` and `bag_color`.
+**BAG** — `id`, `name`, `color` (nullable; the real-life bag's color). Players keep
+several bags (main, glow, winter, travel…). **BAG_DISC** — `(bag_id, disc_id)` PK,
+both FKs `ON DELETE CASCADE`. A disc can be in **any number of bags** — how players
+curate their bags is up to them. A disc in no bag is **shelved**. Deleting a bag
+removes only the grouping (discs stay); the app always keeps at least one bag. On
+first open, `ensureBags()` creates "My Bag" — on upgrade, from the old `bag_color`
+and every `in_bag = 1` disc.
+
+**APP_SETTINGS** (single row, `id = 1`) — `disc_sort`, `active_bag_id` (the bag the
+player is carrying; falls back to the first bag), and legacy `bag_color` (now
+`bag.color`). The **active bag** is the one My Bag shows, Home's pill names, and
+Plan's disc chips/picker offer ("Disc — from {bag}", with Switch bag). Switching
+bags anywhere switches it app-wide. Plans keep their disc whatever bag is active.
 
 ### Reserved for later (do NOT build in MVP; do not paint the schema into a corner)
 - **Tee-pad photo + aim-line annotation** (post-MVP hero feature): will add a
@@ -203,7 +215,7 @@ Freedom in structure (see design brief), but MVP needs at least these surfaces:
 | **Layout → Holes** | Holes under a layout, showing at a glance which holes are planned vs. blank. |
 | **Plan a Hole** (Plan mode) | Author the hole plan: disc (tap-pick), throw type, shot shape (chips), aim note (the one free-text field); par and distance are always-visible rows at the top. ‹ › arrows beside "Hole N of M" page to the previous/next hole; the primary button is "Save · next hole". Leaving a hole by any route (arrows, button, back) saves it if anything changed. While a hole is flagged, the revise note and Resolve are pinned in the footer above the save button (note clipped to 2 lines; tap to expand), so they stay visible while editing. |
 | **Play a Layout** (Play mode) | The **caddie card**: one hole per screen, disc name in the largest type, `throw + shape` as one compact phrase, aim note below; swipe/large tap to advance; sunlight-first light theme; resumes on last hole. The flag opens a quick note ("what to change?") that shows up on the hole in Plan. |
-| **My Bag / Discs** | The disc collection; source list when picking a disc in a plan. Sort in-bag/recent first. |
+| **My Bag / Discs** | The disc collection, viewed through the active bag: a bag switcher row (+ New bag), the bag's name as the title (tap to rename/recolor/delete), its discs by category, then "In other bags", then "Shelved". The active bag is the source list when picking a disc in a plan. |
 | **About** | Short "how it works" explainer. |
 
 There is **no** Stats tab.
@@ -225,7 +237,7 @@ There is **no** Stats tab.
 - **Confirm destructive actions.** Deleting a layout, plan, or disc gets a
   confirmation whose button restates the cost (e.g. "DELETE LAYOUT + 16 PLANS").
   **Courses are not deletable** (design decision). Deleting a disc offers
-  **"shelve instead"** (set `in_bag = false`) as the safe first option.
+  **"shelve instead"** (take it out of every bag) as the safe first option.
 - **Progressive authoring.** Partial plans are valid and expected — don't force all
   fields before a hole can be saved.
 - **Offline-first.** Fully functional with no connection. No UI implies login/sync.
